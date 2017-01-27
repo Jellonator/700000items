@@ -1,6 +1,16 @@
+#!/usr/bin/python3
 from generators import namegen
 from generators.item import IsaacItem
 import os
+import sys
+
+# Generate X number of items
+# Used to be 700,000 but its really not good to have that many items
+MAGIC_NUMBER = 5000
+if len(sys.argv) > 1:
+    MAGIC_NUMBER = int(sys.argv[1])
+
+print("Generating {} items!".format(MAGIC_NUMBER))
 
 # Make sure folders exists
 def check_folder(dir):
@@ -8,10 +18,6 @@ def check_folder(dir):
         os.makedirs(dir)
 check_folder('content')
 check_folder('resources/gfx/items/collectibles')
-
-# Generate X number of items
-# Used to be 700,000 but its really not good to have that many items
-MAGIC_NUMBER = 100#0
 
 # List of all pools
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
@@ -25,13 +31,18 @@ ITEMPOOL_DEF = "\t\t<Item Name=\"{}\" Weight=\"1\" DecreaseBy=\"1\" RemoveOn=\"0
 
 # Generate a metric crap-tonne of items
 items = {}
-for i in range(0, MAGIC_NUMBER):
-    num = i + 1
+max_failed_tries = MAGIC_NUMBER
+item_number = 1
+while len(items) < MAGIC_NUMBER and max_failed_tries > 0:
     name = namegen.generate_name()
+    if name in items:
+        max_failed_tries -= 1
+        continue
     seed = hash(name)
-    full_name = str(num) + " " + name
+    full_name = str(item_number) + " " + name
     item = IsaacItem(full_name, seed)
     items[name] = item
+    item_number += 1
 
 # Write out items to xml files
 xml_items_name = 'content/items.xml'
@@ -78,3 +89,6 @@ with open("main.lua", 'w') as script:
     # footer
     with open("generators/script/footer.lua", 'r') as footer:
         script.write(footer.read())
+
+print("Done!")
+print("Generated {} items.".format(len(items)))
