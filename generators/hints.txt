@@ -1,0 +1,43 @@
+#These are weights, not actual values!
+:super
+	value+2
+:heart
+	health+2
+:satanic
+	stat-damage+2
+	pool-devil+3
+	heart-spirit+2
+	heart-black+2
+:ultra
+	value+3
+:bob|bomb|explos
+	pickup-bomb+2
+	bomb-troll+1
+:key
+	pickup-key+2
+:coin|penny|cent|greed
+	pickup-coin+2
+:sack
+	pickup-sack+1
+:bag|sack
+	effect-drop+4
+:book
+	active+99999
+:worm
+	trinket+99999
+	effect-tear+10
+:tear
+	effect-tear+8
+	stat-tear+3
+:cursed|myster
+	bad+2
+:sacred|myster
+	good+2
+:eye
+	effect-tear+2
+:fly|guppy
+	effect-fly+2
+:sacred|holy|god
+	pool-angel+4
+:shop|bank|greed
+	pool-shop+3

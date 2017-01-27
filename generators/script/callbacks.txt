@@ -1,0 +1,8 @@
+List of callbacks:
+evaluate_cache
+room_change
+on_usage
+player_take_damage
+enemy_take_damage
+take_pill
+use_card
