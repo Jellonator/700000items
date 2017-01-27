@@ -16,6 +16,18 @@ STAT_RANGES_SPECIAL = {
     'black': (2, 4)
 }
 
+def choice_weights(choices, weights):
+    total = sum(weights)
+    rng = random.random() * total
+    i = 0
+    for i in range(0, len(choices)):
+        weight = weights[i]
+        name = choices[i]
+        rng -= weight
+        if rng <= 0:
+            return name
+        i += 1
+
 STAT_NAMES   = ['speed', 'luck', 'tears', 'shot_speed', 'damage']
 STAT_WEIGHTS = [     10,      3,      10,            7,        8]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
