@@ -1,3 +1,4 @@
 content/
 resources/
 **/*.pyc
+main.lua

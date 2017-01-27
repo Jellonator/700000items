@@ -6,13 +6,12 @@ import os
 def check_folder(dir):
     if not os.path.isdir(dir):
         os.makedirs(dir)
-
 check_folder('content')
 check_folder('resources/gfx/items/collectibles')
 
 # Generate X number of items
-# Used to be 700,000 but thats too slow
-MAGIC_NUMBER = 1000#0
+# Used to be 700,000 but its really not good to have that many items
+MAGIC_NUMBER = 100#0
 
 # List of all pools
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\

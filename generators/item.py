@@ -1,4 +1,5 @@
 from .stat import IsaacStats
+from .state import IsaacGenState
 import random
 
 STAT_RANGES = {
@@ -6,7 +7,7 @@ STAT_RANGES = {
     'luck': 1,
     'tears': 1,
     'shot_speed': 0.1,
-    'damage': 1.0
+    'damage': 0.75
 }
 
 STAT_RANGES_SPECIAL = {
@@ -45,34 +46,65 @@ def generate_random_stat(statname, value):
         return random.randint(a_value, b_value)
     else:
         return round(random.uniform(a_value, b_value), 2)
-
 class IsaacItem:
-    name = ""
+    name = "XX - No Name"
+    seed = 0x42069420
+    type = "passive"
     def __init__(self, name, seed):
-        rand_state = random.getstate()
+        # Initialize variables
         self.name = name
         self.seed = seed
         self.stats = IsaacStats()
-        value = random.randint(2, 6)
+        self.genstate = IsaacGenState()
+
+        # Seeding
+        rand_state = random.getstate()
+        random.seed(self.seed)
+
+        # Hints
+        self.genstate.parse_hints_from_name(self.name)
+        hint_good = self.genstate.get_hint("good")
+        hint_bad = self.genstate.get_hint("bad")
+        name_lower = self.name.lower()
+
+        # Start to add stats and effects
+        value = random.randint(2, 5) + random.randint(0, hint_good)
+        negative_value = random.randint(0, hint_bad)
+        # Randomly add bad things to item heh heh heh
+        for i in range(0, 2):
+            if random.random() < 0.20:
+                negative_value += 3
+                value += 2
+        # Add benefits from value
         while value > 0:
             take_value = random.randint(1, value)
+            # Random special value (health)
             if take_value >= STAT_SPECIAL_VALUE and random.randint(1, take_value) >= STAT_SPECIAL_VALUE:
-                value -= STAT_SPECIAL_VALUE
-                stat_name = random.choice(STAT_NAMES_SPECIAL)
-                stat_inc = generate_random_stat_special(stat_name)
-                self.stats.increment_stat(stat_name, stat_inc)
+                value -= self.add_random_stat_special()
+            # Random stat upgrade
             else:
-                value -= take_value
-                stat_name = random.choice(STAT_NAMES)
-                stat_inc = generate_random_stat(stat_name, take_value)
-                self.stats.increment_stat(stat_name, stat_inc)
-
-        random.seed(self.seed)
+                value -= self.add_random_stat(value, 1)
+        # Add bad stuff
+        while negative_value > 0:
+            negative_value -= self.add_random_stat(negative_value, -1)
         random.setstate(rand_state)
+    def add_random_stat_special(self):
+        stat_name = random.choice(STAT_NAMES_SPECIAL)
+        stat_inc = generate_random_stat_special(stat_name)
+        self.stats.increment_stat(stat_name, stat_inc)
+        return STAT_SPECIAL_VALUE
+    def add_random_stat(self, maxvalue, multiplier):
+        stat_name = random.choice(STAT_NAMES)
+        if stat_name == "luck":
+            maxvalue = min(2, maxvalue)
+        take_value = random.randint(1, maxvalue)
+        stat_inc = generate_random_stat(stat_name, take_value)*multiplier
+        self.stats.increment_stat(stat_name, stat_inc)
+        return take_value
     def get_cacheflags(self):
         return self.stats.get_cacheflags()
     def gen_xml(self):
-        ret = "<passive description=\"It's an Item!\" "
+        ret = "<{} description=\"It's an Item!\" ".format(self.type)
         ret = ret + " name=\"{}\" ".format(self.name)
         ret = ret + " gfx=\"Collectibles_Default.png\" "
         ret = ret + self.stats.gen_xml()
