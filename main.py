@@ -3,21 +3,40 @@ from generators import namegen
 from generators.item import IsaacItem
 import os
 import sys
+import shutil
+
+# Utility functions
+def get_output_path(dir):
+    return TARGET_FOLDER + "/" + dir
+
+def check_folder(dir):
+    if not os.path.isdir(dir):
+        os.makedirs(dir)
 
 # Generate X number of items
 # Used to be 700,000 but its really not good to have that many items
 MAGIC_NUMBER = 5000
+TARGET_FOLDER = "700000items"
 if len(sys.argv) > 1:
     MAGIC_NUMBER = int(sys.argv[1])
 
-print("Generating {} items!".format(MAGIC_NUMBER))
+if os.path.exists(TARGET_FOLDER):
+    print("Removing previous mod folder...")
+    shutil.rmtree(TARGET_FOLDER)
 
-# Make sure folders exists
-def check_folder(dir):
-    if not os.path.isdir(dir):
-        os.makedirs(dir)
-check_folder('content')
-check_folder('resources/gfx/items/collectibles')
+# Confirm number of items
+print("{} items will be generated.".format(MAGIC_NUMBER))
+if MAGIC_NUMBER > 10000:
+    print("This is a lot of items, generating these may be a slow process.")
+while True:
+    value = input("Do you wish to continue? Y/n")
+    if value.lower().strip() in ['y', 'yes', '']:
+        break
+    print("")
+
+# Make sure folders exist
+check_folder(get_output_path('/content'))
+check_folder(get_output_path('/resources/gfx/items/collectibles'))
 
 # List of all pools
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
@@ -45,8 +64,8 @@ while len(items) < MAGIC_NUMBER and max_failed_tries > 0:
     item_number += 1
 
 # Write out items to xml files
-xml_items_name = 'content/items.xml'
-xml_pools_name = 'content/itempools.xml'
+xml_items_name = get_output_path('content/items.xml')
+xml_pools_name = get_output_path('content/itempools.xml')
 with open(xml_items_name, 'w') as xml_items,\
 open(xml_pools_name, 'w') as xml_pools:
     pools = {}
@@ -71,7 +90,7 @@ open(xml_pools_name, 'w') as xml_pools:
     xml_pools.write("</ItemPools>\n")
 
 # Generate Lua script
-with open("main.lua", 'w') as script:
+with open(get_output_path("main.lua"), 'w') as script:
     # header
     with open("generators/script/header.lua", 'r') as header:
         script.write(header.read())
@@ -89,6 +108,6 @@ with open("main.lua", 'w') as script:
     # footer
     with open("generators/script/footer.lua", 'r') as footer:
         script.write(footer.read())
-
+shutil.copy("metadata.xml", TARGET_FOLDER)
 print("Done!")
 print("Generated {} items.".format(len(items)))
