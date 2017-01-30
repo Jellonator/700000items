@@ -1,6 +1,6 @@
+#!/usr/bin/python3
 import shutil
 import os
-if os.path.exists('content'):
-    shutil.rmtree('content')
-if os.path.exists('main.lua'):
-    os.remove('main.lua')
+
+if os.path.exists('700000items'):
+    shutil.rmtree('700000items')

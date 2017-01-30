@@ -29,10 +29,13 @@ print("{} items will be generated.".format(MAGIC_NUMBER))
 if MAGIC_NUMBER > 10000:
     print("This is a lot of items, generating these may be a slow process.")
 while True:
-    value = input("Do you wish to continue? Y/n")
-    if value.lower().strip() in ['y', 'yes', '']:
+    value = input("Do you wish to continue? Y/n: ").lower().strip()
+    if value in ['y', 'yes', '']:
         break
-    print("")
+    if value in ['n', 'no', 'quit', 'q', 'stop']:
+        print("abort")
+        quit()
+    print("Not a valid yes or no answer")
 
 # Make sure folders exist
 check_folder(get_output_path('/content'))
