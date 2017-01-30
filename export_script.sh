@@ -9,3 +9,4 @@ if [ -a "$mod_dest" ]
 fi
 echo "Putting in new"
 cp -r 700000items "$mod_dest"
+echo "Done!"

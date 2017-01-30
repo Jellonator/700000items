@@ -29,7 +29,7 @@ print("{} items will be generated.".format(MAGIC_NUMBER))
 if MAGIC_NUMBER > 10000:
     print("This is a lot of items, generating these may be a slow process.")
 while True:
-    value = input("Do you wish to continue? Y/n")
+    value = raw_input("Do you wish to continue? Y/n")
     if value.lower().strip() in ['y', 'yes', '']:
         break
     print("")
