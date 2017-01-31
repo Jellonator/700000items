@@ -59,11 +59,37 @@ def test_gradient_color(color):
 def mult_color(color, mult, alpha):
     return ((color[0]*mult)//255, (color[1]*mult)//255, (color[2]*mult)//255, color[3]*alpha//255)
 
+# This is a function which finds the most common color near a given pixel
+def sample_nearby(image, pos):
+    x = pos[0]
+    y = pos[1]
+    colors = {}
+    color_values = {}
+    for ix in range(max(0, x-1), min(x+2, image.width)):
+        for iy in range(max(0, y-1), min(y+2, image.height)):
+            if ix != x or iy != y:
+                color = image.getpixel((ix, iy))
+                if color[3] > 0:
+                    rgba = color[0]*0x01000000 + color[1]*0x00010000\
+                         + color[2]*0x00000100 + color[3]*0x00000001
+                    if not rgba in colors:
+                        colors[rgba] = 0
+                        color_values[rgba] = color
+                    colors[rgba] += 1
+    highest_count = 0
+    highest_rgba = 0
+    for rgba, count in colors.items():
+        if count > highest_count:
+            highest_count = count
+            highest_rgba = rgba
+    return color_values[highest_rgba]
+
 def load_part(path, can_face):
     palette = random.choice(PALETTE)
     image = Image.open(path).convert("RGBA")
     draw = ImageDraw.Draw(image)
     portions = []
+    # Find key colors and palettize blues
     for y in range(0, image.height):
         for x in range(0, image.width):
             pos = (x, y)
@@ -71,19 +97,23 @@ def load_part(path, can_face):
             replace_key = test_get_pixel_key(color)
             if replace_key != None:
                 portions.append((pos, replace_key))
-            # print(color)
             if test_gradient_color(color):
                 color = mult_color(palette, color[2], color[3])
                 draw.point(pos, color)
+    # Replace key colors with sample of nearby colors (by most common)
+    # Removes annoying dots
     for data in portions:
-        # print("WOW")
+        pos = data[0]
+        repl_color = sample_nearby(image, pos)
+        draw.point(pos, repl_color)
+    # paste images on top of graphic
+    for data in portions:
         part_pos = data[0]
         part_key = data[1]
         part_x = part_pos[0]
         part_y = part_pos[1]
         part = request_part(part_key)
         pos = (part_x - part.width//2 + 1, part_y - part.height//2)
-        # image.paste(part, pos, part)
         temp = create_image(image.width, image.height)
         temp.paste(part, pos, part)
         image = Image.alpha_composite(image, temp)
