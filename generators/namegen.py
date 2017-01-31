@@ -7,6 +7,11 @@ genname_noun = []
 genname_end = []
 
 def load_names_to_list(fname, ls):
+    """
+    Load every line in a fine to a list
+    -- fname: Name of the file to load
+    -- ls: List to load lines to
+    """
     with open(fname, 'r') as fh:
         for line in fh:
             data = line.strip()
@@ -24,6 +29,9 @@ possible_item_num = len(genname_adj) * len(genname_noun) * len(genname_post) *\
 print("{} possible items".format(possible_item_num))
 
 def generate_name():
+    """
+    Generate a random name for an item
+    """
     flags = random.randint(1, 7)
     do_end = random.randint(1, 3) == 1
     do_adj2 = random.randint(1, 3) == 1

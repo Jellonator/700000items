@@ -1,6 +1,13 @@
 import random
 
 def genStatStr(flagstr, propertystr, op, value):
+    """
+    Generate Lua code for modifying stats
+    -- flagstr: Name of the CacheFlag
+    -- propertystr: Name of the property to modify
+    -- op: Operator to use
+    -- value: How much the stat will change
+    """
     if isinstance(value, bool):
         value = "true" if value else "false"
     elif isinstance(value, float):
@@ -11,11 +18,14 @@ def genStatStr(flagstr, propertystr, op, value):
     else:
         operation = "player.{1} = player.{1} {2} {3}"
 
-    return ("""\t\tif flag == CacheFlag.{0} then
-\t\t\t""" + operation + """
-\t\tend\n""").format(flagstr, propertystr, op, value)
+    return "\t\tif flag == CacheFlag.{0} then\n".format(flagstr)+\
+    "\t\t\t" + operation.format(flagstr, propertystr, op, value) + "\n" +\
+    "\t\tend\n"
 
 class IsaacStats:
+    """
+    Class which represents stat upgrades
+    """
     tears = 0
     damage = 0
     speed = 0
@@ -30,6 +40,11 @@ class IsaacStats:
     heal = 0
     flying = None
     def increment_stat(self, stat, value):
+        """
+        Add a value to a stat
+        -- stat: Name of the stat to modify
+        -- value: How much to modify the stat by
+        """
         if stat == "speed":
             self.speed += value
         elif stat == "luck":
@@ -54,6 +69,9 @@ class IsaacStats:
         else:
             raise ValueError("{} is not a valid name for a stat!".format(stat))
     def get_cacheflags(self):
+        """
+        Get a list of cacheflags
+        """
         ret = []
         if self.tears != 0:
             ret.append("firedelay")
@@ -71,6 +89,9 @@ class IsaacStats:
             ret.append("flying")
         return ret
     def gen_xml(self):
+        """
+        Generate the XML definition for these stats
+        """
         ret = ""
         if self.heal != 0:
             ret = ret + " hearts=\"{}\" ".format(self.heal)
@@ -85,8 +106,14 @@ class IsaacStats:
             ret = ret + " cache=\"{}\" ".format(" ".join(flags))
         return ret
     def does_mod_stats(self):
+        """
+        Return whether or not stats are modified
+        """
         return len(self.get_cacheflags()) > 0
     def gen_eval_cache(self):
+        """
+        generate Lua code for the evaluate_cache callback
+        """
         if not self.does_mod_stats():
             return "nil"
         ret = "function (self, player, flag)\n"

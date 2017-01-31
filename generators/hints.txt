@@ -2,10 +2,14 @@
 :super
 	good+2
 :heart
-	health+2
-:satan
+	stat-health+2
+	stat-special+2
+	pickup-heart+2
+:satan|demon|evil
 	stat-damage+2
-	pool-devil+3
+	pool-devil+2
+	stat-spirit+2
+	stat-black+2
 	heart-spirit+2
 	heart-black+2
 :ultra
@@ -23,6 +27,7 @@
 	effect-drop+4
 :book
 	active+99999
+	pool-library+10
 :worm
 	trinket+99999
 	effect-tear+10
@@ -34,6 +39,7 @@
 :sacred|myster
 	good+2
 :eye
+	stat-tear+2
 	effect-tear+2
 :fly|guppy
 	effect-fly+2
@@ -41,3 +47,11 @@
 	pool-angel+4
 :shop|bank|greed
 	pool-shop+3
+:mom
+	stat-range+3
+	stat-health+3
+	stat-special+1
+:luck
+	stat-luck+4
+:head
+	pool-goldenChest+8

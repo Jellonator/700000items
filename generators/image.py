@@ -5,12 +5,14 @@ import glob
 import random
 import os
 
+# Dictionary of parts and associated directories
 data_paths = {
     "face": "generators/graphics/face",
     "body": "generators/graphics/body",
     "accessory": "generators/graphics/accessory"
 }
 
+# Load files from part directories into table
 data_files = {}
 for name, path in data_paths.items():
     generator = glob.glob(path+"/**/*.png", recursive=True)
@@ -18,6 +20,7 @@ for name, path in data_paths.items():
 
 OUTPUT_PATH = "700000items/resources/gfx/items/collectibles"
 
+# Palette colors to replace blue-keyed areas in sprites
 PALETTE = [
     [100,  80, 200, 255], #RED
     [255, 255, 255, 255], #WHITE
@@ -34,33 +37,57 @@ PALETTE = [
     [160, 205, 140, 255], #GREEN
 ]
 
+# Pixel colors that will be replaced
 SPECIAL_PIXEL_COLORS = {
     "face": [0, 255, 0, 255],
     "accessory": [255, 255, 0, 255],
 }
 
 def test_colors(color, test):
+    """
+    Check if two colors are equal
+    -- color: color to test
+    -- test: other color to test
+    """
     for i in range(0, 4):
         if test[i] != color[i]:
             return False
     return True
 
 def test_get_pixel_key(color):
+    """
+    Get the keyname for a key color if applicable
+    -- color: color to test
+    """
     for name, value in SPECIAL_PIXEL_COLORS.items():
         if test_colors(color, value):
             return name
     return None
 
 def test_gradient_color(color):
+    """
+    Check if a color is a palette gradient (blue)
+    -- color: color to test
+    """
     if color[3] == 255 and color[0] == 0 and color[1] == 0:
         return True
     return False
 
 def mult_color(color, mult, alpha):
+    """
+    Multiply two colors together
+    -- color: Color to multiply
+    -- mult: Palette color to multiply color with
+    -- alpha: Alpha scalar
+    """
     return ((color[0]*mult)//255, (color[1]*mult)//255, (color[2]*mult)//255, color[3]*alpha//255)
 
-# This is a function which finds the most common color near a given pixel
 def sample_nearby(image, pos):
+    """
+    Get most common color near a pixel
+    image: Image to sample from
+    pos: Position of the pixel
+    """
     x = pos[0]
     y = pos[1]
     colors = {}
@@ -85,6 +112,11 @@ def sample_nearby(image, pos):
     return color_values[highest_rgba]
 
 def load_part(path, can_face):
+    """
+    Load a part from a path
+    path: image path to load from
+    can_face: Does nothing actually
+    """
     palette = random.choice(PALETTE)
     image = Image.open(path).convert("RGBA")
     draw = ImageDraw.Draw(image)
@@ -120,14 +152,28 @@ def load_part(path, can_face):
     return image
 
 def request_part(key):
+    """
+    Request for a part to be loaded, return image of part
+    key: Name of part list to load from
+    """
     path = random.choice(data_files[key])
     return load_part(path, True)
 
-def create_image(width, height, func=None):
+def create_image(width, height):
+    """
+    create a new image
+    If you can't figure out what 'width' and 'height' are, I'm sorry for your loss
+     |   | |
+    | |  | _
+    """
     ret = Image.new('RGBA', (width, height), (0,0,0,0))
     return ret
 
 def generate_image(name):
+    """
+    Generate a random image
+    -- name: Name to save image as
+    """
     output = os.path.join(OUTPUT_PATH, name)
     image = request_part("body")
     image.save(output)

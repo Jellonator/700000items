@@ -1,25 +1,35 @@
 #!/usr/bin/python3
 from generators import namegen
 from generators.item import IsaacItem
+from generators.item import POOL_NAMES
 import os
 import sys
 import shutil
-
-# Utility functions
-def get_output_path(dir):
-    return TARGET_FOLDER + "/" + dir
-
-def check_folder(dir):
-    if not os.path.isdir(dir):
-        os.makedirs(dir)
 
 # Generate X number of items
 # Used to be 700,000 but its really not good to have that many items
 MAGIC_NUMBER = 1000
 TARGET_FOLDER = "700000items"
+
+# Utility functions
+def get_output_path(dir):
+    """
+    Get a path under the output path
+    """
+    return os.path.join(TARGET_FOLDER, dir)
+
+def check_folder(dir):
+    """
+    Ensures that a folder exists
+    """
+    if not os.path.isdir(dir):
+        os.makedirs(dir)
+
+# Parse arguments
 if len(sys.argv) > 1:
     MAGIC_NUMBER = int(sys.argv[1])
 
+# Remove previous mod folder
 if os.path.exists(TARGET_FOLDER):
     print("Removing previous mod folder...")
     shutil.rmtree(TARGET_FOLDER)
@@ -38,15 +48,8 @@ while True:
     print("Not a valid yes or no answer")
 
 # Make sure folders exist
-check_folder(get_output_path('/content'))
-check_folder(get_output_path('/resources/gfx/items/collectibles'))
-
-# List of all pools
-POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
-    "challenge", "goldenChest", "redChest", "beggar", "demonBeggar", "curse",\
-    "keyMaster", "bossrush", "dungeon", "bombBum", "greedTreasure", "greedBoss",\
-    "greedShop", "greedCurse", "greedDevil", "greedAngel", "greedLibrary",\
-    "greedSecret", "greedGoldenChest"]
+check_folder(get_output_path('content'))
+check_folder(get_output_path('resources/gfx/items/collectibles'))
 
 # XML definition of item pool entry
 ITEMPOOL_DEF = "\t\t<Item Name=\"{}\" Weight=\"1\" DecreaseBy=\"1\" RemoveOn=\"0.1\"/>\n"
@@ -106,11 +109,15 @@ with open(get_output_path("main.lua"), 'w') as script:
 
     # export item definitions
     for name, item in items.items():
-        script.write("Mod.items[\"{}\"] = {}\n".format(item.name, item.gen_definition()))
+        script.write("Mod.items[\"{}\"] = {}\n".format(item.name, item.get_definition()))
 
     # footer
     with open("generators/script/footer.lua", 'r') as footer:
         script.write(footer.read())
+
+# Output metadata
 shutil.copy("metadata.xml", TARGET_FOLDER)
+
+# Final prints
 print("Done!")
 print("Generated {} items.".format(len(items)))
