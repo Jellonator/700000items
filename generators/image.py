@@ -3,17 +3,20 @@ from PIL import Image
 from PIL import ImageDraw
 import glob
 import random
+import os
 
-PATH_TO_FACES = "generators/graphics/face"
-PATH_TO_BODIES = "generators/graphics/body"
-PATH_TO_ACCESSORIES = "generators/graphics/accessory"
-data_files = {
-    "face": [fname for fname in glob.glob(PATH_TO_FACES+"/**/*.png", recursive=True)],
-    "body": [fname for fname in glob.glob(PATH_TO_BODIES+"/**/*.png", recursive=True)],
-    "accessory": [fname for fname in glob.glob(PATH_TO_ACCESSORIES+"/**/*.png", recursive=True)],
+data_paths = {
+    "face": "generators/graphics/face",
+    "body": "generators/graphics/body",
+    "accessory": "generators/graphics/accessory"
 }
 
-OUTPUT_FILE = "test.png"
+data_files = {}
+for name, path in data_paths.items():
+    generator = glob.glob(path+"/**/*.png", recursive=True)
+    data_files[name] = [fname for fname in generator]
+
+OUTPUT_PATH = "700000items/resources/gfx/items/collectibles"
 
 PALETTE = [
     [100,  80, 200, 255], #RED
@@ -73,7 +76,7 @@ def load_part(path, can_face):
                 color = mult_color(palette, color[2], color[3])
                 draw.point(pos, color)
     for data in portions:
-        print("WOW")
+        # print("WOW")
         part_pos = data[0]
         part_key = data[1]
         part_x = part_pos[0]
@@ -94,8 +97,13 @@ def create_image(width, height, func=None):
     ret = Image.new('RGBA', (width, height), (0,0,0,0))
     return ret
 
-image = request_part("body")
-image.save(OUTPUT_FILE)
+def generate_image(name):
+    output = os.path.join(OUTPUT_PATH, name)
+    image = request_part("body")
+    image.save(output)
+
+# image = request_part("body")
+# image.save(OUTPUT_FILE)
 
 # print(face_files)
 # print(body_files)

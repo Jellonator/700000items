@@ -3,6 +3,8 @@ import random
 def genStatStr(flagstr, propertystr, op, value):
     if isinstance(value, bool):
         value = "true" if value else "false"
+    elif isinstance(value, float):
+        value = "{:.2f}".format(value);
     operation = None
     if op == "=":
         operation = "player.{1} = {3}"
@@ -19,9 +21,7 @@ class IsaacStats:
     speed = 0
     luck = 0
     shot_speed = 0
-    tear_height = 0
-    tear_falling_speed = 0
-    tear_falling_acceleration = 0
+    shot_range = 0
     chance_devil = 0
     chance_angel = 0
     hearts = 0
@@ -40,6 +40,8 @@ class IsaacStats:
             self.tears += value
         elif stat == "damage":
             self.damage += value
+        elif stat == "range":
+            self.shot_range += value
         elif stat == "health":
             self.hearts += value
             for i in range(0, value):
@@ -63,7 +65,7 @@ class IsaacStats:
             ret.append("shotspeed")
         if self.luck != 0:
             ret.append("luck")
-        if self.tear_height != 0 or self.tear_falling_speed != 0 or self.tear_falling_acceleration != 0:
+        if self.shot_range != 0:
             ret.append("range")
         if self.flying != None:
             ret.append("flying")
@@ -98,12 +100,12 @@ class IsaacStats:
             ret += genStatStr("CACHE_SHOTSPEED", "ShotSpeed", "+", self.shot_speed)
         if self.luck != 0:
             ret += genStatStr("CACHE_LUCK", "Luck", "+", self.luck)
-        if self.tear_height != 0 or self.tear_falling_speed != 0 or self.tear_falling_acceleration != 0:
-            ret += """\t\tif flag == CacheFlag.CACHE_RANGE then
-\t\t\tplayer.TearHeight = player.TearHeight + {}
-\t\t\tplayer.TearFallingSpeed = player.TearFallingSpeed + {}
-\t\t\tplayer.TearFallingAcceleration = player.TearFallingAcceleration + {}
-\t\tend\n""".format(self.tear_height, self.tear_falling_speed, self.tear_falling_acceleration)
+        if self.shot_range != 0:
+            ret +=\
+            "\t\tif flag == CacheFlag.CACHE_RANGE then\n"+\
+            "\t\t\tplayer.TearHeight = player.TearHeight + {:.2f}\n".format(self.shot_range)+\
+            "\t\t\tplayer.TearFallingSpeed = player.TearFallingSpeed + 0.5\n"+\
+            "\t\tend\n"
         if self.flying != None:
             ret += genStatStr("CACHE_FLYING", "CanFly", "=", self.flying)
         ret += "\tend"

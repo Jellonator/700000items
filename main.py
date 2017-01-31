@@ -15,7 +15,7 @@ def check_folder(dir):
 
 # Generate X number of items
 # Used to be 700,000 but its really not good to have that many items
-MAGIC_NUMBER = 5000
+MAGIC_NUMBER = 1000
 TARGET_FOLDER = "700000items"
 if len(sys.argv) > 1:
     MAGIC_NUMBER = int(sys.argv[1])
