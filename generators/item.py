@@ -185,7 +185,7 @@ class IsaacItem:
         name_lower = self.name.lower()
 
         # Start to add stats and effects
-        value = random.randint(1, 5) + random.randint(0, hint_good)
+        value = random.randint(2, 5) + random.randint(0, hint_good)
         negative_value = random.randint(0, hint_bad)
         # Randomly add bad things to item heh heh heh
         for i in range(0, 2):
@@ -194,7 +194,7 @@ class IsaacItem:
                 value += random.randint(1, 2)
         # Add benefits from value
         while value > 0:
-            take_value = random.randint(1, value)
+            take_value = random.randint(1, take_value)
             # Random special value (health)
             if take_value >= STAT_SPECIAL_VALUE and random.randint(0, take_value) >= STAT_SPECIAL_VALUE:
                 value -= self.add_random_stat_special()
@@ -275,6 +275,6 @@ class IsaacItem:
         """
         Get the definition for the item
         """
-        return "{{\n" +\
+        return "{\n" +\
         "\tevaluate_cache = {},\n".format(self.stats.gen_eval_cache()) +\
-        "}}\n"
+        "}\n"

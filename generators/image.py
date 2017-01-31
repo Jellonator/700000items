@@ -9,7 +9,8 @@ import os
 data_paths = {
     "face": "generators/graphics/face",
     "body": "generators/graphics/body",
-    "accessory": "generators/graphics/accessory"
+    "accessory": "generators/graphics/accessory",
+    "symbol": "generators/graphics/symbol"
 }
 
 # Load files from part directories into table
@@ -38,9 +39,13 @@ PALETTE = [
 ]
 
 # Pixel colors that will be replaced
+# White, Blue, and Black can not be used. Colors with only `255` and `0` recommended
 SPECIAL_PIXEL_COLORS = {
-    "face": [0, 255, 0, 255],
-    "accessory": [255, 255, 0, 255],
+    "face":      [  0, 255,   0, 255],
+    "accessory": [255, 255,   0, 255],
+    "symbol":    [255,   0,   0, 255],
+    # "unused":  [255,   0, 255, 255],
+    # "unused":  [  0, 255, 255, 255],
 }
 
 def test_colors(color, test):

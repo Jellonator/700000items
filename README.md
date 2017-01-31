@@ -50,6 +50,5 @@ requested.
 
 * Random item effects
 * Random active items
-* Random item pools
 * Hint system for stats
 * Random trinkets? cards? pills?

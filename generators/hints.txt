@@ -12,6 +12,8 @@
 	stat-black+2
 	heart-spirit+2
 	heart-black+2
+	good+3
+	bad+1
 :ultra
 	good+3
 :bob|bomb|explos
@@ -45,6 +47,7 @@
 	effect-fly+2
 :sacred|holy|god
 	pool-angel+4
+	good+2
 :shop|bank|greed
 	pool-shop+3
 :mom
