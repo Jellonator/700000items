@@ -89,13 +89,25 @@ end
 Callback functions
 --]]
 Mod.callbacks = {}
+Mod._cache_firedelay_need_update = false
 function Mod.callbacks:evaluate_cache(player, flag)
-	Mod:call_callbacks(player, "evaluate_cache", flag)
+	if flag == CacheFlag.CACHE_FIREDELAY then
+		Mod._cache_firedelay_need_update = true
+	else
+		Mod:call_callbacks(player, "evaluate_cache", flag)
+	end
 end
 
 local _room_id = -1
 function Mod.callbacks:update()
 	local game = Game()
+	if Mod._cache_firedelay_need_update then
+		Mod._cache_firedelay_need_update = false
+		for i = 1, game:GetNumPlayers() do
+			local player = game:GetPlayer(i-1)
+			Mod:call_callbacks(player, "evaluate_cache", CacheFlag.CACHE_FIREDELAY)
+		end
+	end
 	-- refresh for room change
 	local level = game:GetLevel()
 	local room_id = level:GetCurrentRoomIndex()

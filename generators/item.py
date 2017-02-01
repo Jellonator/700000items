@@ -84,9 +84,9 @@ STAT_RANGES = {
     'speed': 0.1,
     'luck': 1,
     'tears': 1,
-    'shot_speed': 0.1,
+    'shot_speed': 0.08,
     'damage': 0.6,
-    'range': 3.0
+    'range': 3.0,
 }
 
 # Special, rarer stats (health) for items
@@ -114,10 +114,11 @@ def choice_weights(choices, weights):
         i += 1
 
 # Stats and their weights
-STAT_NAMES   = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
-STAT_WEIGHTS = [      8,      2,       7,            5,        7,       8]
+STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
+STAT_WEIGHTS     = [    4.0,    0.5,     4.2,          1.0,      4.4,     4.6]
+STAT_WEIGHTS_BAD = [    3.2,    0.3,     4.0,          2.2,      2.0,     4.0]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
-STAT_WEIGHTS_SPECIAL = [      10,      5,       3]
+STAT_WEIGHTS_SPECIAL = [      9,      3,       1]
 
 # Value of a special stat
 STAT_SPECIAL_VALUE = 2
@@ -134,13 +135,15 @@ def generate_random_stat_special(statname):
         return 2
     return random.randint(a, b)
 
-def generate_random_stat(statname, value):
+def generate_random_stat(statname, value, weights=None):
     """
     Generate a random value for a given stat upgrade
     -- statname: Name of the stat to generate a value for
     -- value: How highly valued the stat being generated is
     Higher value = higher returned stats
     """
+    if weights == None:
+        weights = STAT_WEIGHTS
     a_value = STAT_RANGES[statname] * value
     b_value = STAT_RANGES[statname] * (value+1)
     if a_value > b_value:
@@ -185,22 +188,24 @@ class IsaacItem:
         name_lower = self.name.lower()
 
         # Start to add stats and effects
-        value = random.randint(2, 5) + random.randint(0, hint_good)
+        value = random.randint(3, 5) + random.randint(0, hint_good)
         negative_value = random.randint(0, hint_bad)
         # Randomly add bad things to item heh heh heh
+        for i in range(0, 3):
+            if random.random() < 0.12:
+                negative_value += 1
+                value += 1
+        # Apply up to two health upgrades
         for i in range(0, 2):
-            if random.random() < 0.20:
-                negative_value += 2
-                value += random.randint(1, 2)
+            if value >= STAT_SPECIAL_VALUE:
+                if random.random() < 0.12:
+                    value -= self.add_random_stat_special()
         # Add benefits from value
         while value > 0:
-            take_value = random.randint(1, take_value)
-            # Random special value (health)
-            if take_value >= STAT_SPECIAL_VALUE and random.randint(0, take_value) >= STAT_SPECIAL_VALUE:
-                value -= self.add_random_stat_special()
             # Random stat upgrade
-            else:
-                value -= self.add_random_stat(value, 1)
+            take_value = random.randint(1, value)
+            take_value = random.randint(take_value, value)
+            value -= self.add_random_stat(value, 1)
         # Add bad stuff
         while negative_value > 0:
             negative_value -= self.add_random_stat(negative_value, -1)
@@ -240,11 +245,12 @@ class IsaacItem:
         -- multiplier: What the generated stat will be multiplied
         Returns how much of the maxvalue was taken
         """
+        weights = STAT_WEIGHTS if multiplier > 0 else STAT_WEIGHTS_BAD
         stat_name = random.choice(STAT_NAMES)
         if stat_name == "luck":
             maxvalue = min(2, maxvalue)
         take_value = random.randint(1, maxvalue)
-        stat_inc = generate_random_stat(stat_name, take_value)*multiplier
+        stat_inc = generate_random_stat(stat_name, take_value, weights)*multiplier
         self.stats.increment_stat(stat_name, stat_inc)
         return take_value
     def get_cacheflags(self):

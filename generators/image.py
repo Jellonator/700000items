@@ -150,7 +150,7 @@ def load_part(path, can_face):
         part_x = part_pos[0]
         part_y = part_pos[1]
         part = request_part(part_key)
-        pos = (part_x - part.width//2 + 1, part_y - part.height//2)
+        pos = (part_x - part.width//2, part_y - part.height//2)
         temp = create_image(image.width, image.height)
         temp.paste(part, pos, part)
         image = Image.alpha_composite(image, temp)
