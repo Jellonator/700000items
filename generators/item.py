@@ -1,6 +1,7 @@
 from .stat import IsaacStats
 from .state import IsaacGenState
 from . import image
+from . import scriptgen
 import random
 
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
@@ -163,6 +164,7 @@ class IsaacItem:
     name = "XX - No Name"
     seed = 0x42069420
     type = "passive"
+    effect = ""
     def __init__(self, name, seed):
         """
         Create a new item
@@ -176,6 +178,7 @@ class IsaacItem:
         self.stats = IsaacStats()
         self.genstate = IsaacGenState()
         self.pools = {}
+        self.effect = ""
 
         # Seeding
         rand_state = random.getstate()
@@ -195,6 +198,11 @@ class IsaacItem:
             if random.random() < 0.12:
                 negative_value += 1
                 value += 1
+        # Apply effect to item maybe?
+        if value >= STAT_SPECIAL_VALUE:
+            if random.random() < 0.40:
+                value -= STAT_SPECIAL_VALUE
+                self.add_effect()
         # Apply up to two health upgrades
         for i in range(0, 2):
             if value >= STAT_SPECIAL_VALUE:
@@ -229,6 +237,9 @@ class IsaacItem:
         """
         name = self.name.replace(" ", "_").lower()
         return "collectibles_{}.png".format(name)
+    def add_effect(self):
+        self.effect += ','
+        self.effect += scriptgen.generate_effect(self).get_output()
     def add_random_stat_special(self):
         """
         Add a random special stat to this item
@@ -282,5 +293,6 @@ class IsaacItem:
         Get the definition for the item
         """
         return "{\n" +\
-        "\tevaluate_cache = {},\n".format(self.stats.gen_eval_cache()) +\
+        "\tevaluate_cache = {}\n".format(self.stats.gen_eval_cache()) +\
+        self.effect +\
         "}\n"

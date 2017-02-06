@@ -1,5 +1,4 @@
---TYPE active
+python[[gen.item.type = "active"]]
 on_usage = function(self, player, rng)
-	--INCLUDE active_stipulations
-	--INCLUDE actives
+	python[[gen.include("effect_instant")]]
 end

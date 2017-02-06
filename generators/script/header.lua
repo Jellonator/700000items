@@ -1,5 +1,4 @@
 Mod = RegisterMod("700000Items", 1)
-
 --[[
 Per-Item data, such as: stats, item variants, functionality, etc.
 --]]
@@ -49,6 +48,15 @@ Mod.args = {}
 --[[
 Utility functions
 --]]
+function inf_norm(x, n)
+	n = n or 1
+	return x / (math.abs(x) + n)
+end
+
+function inf_norm_positive(x, n)
+	return (inf_norm(x, n) + 1) / 2
+end
+
 _player_items = {}
 function _get_player_items(id)
 	if not _player_items[id] then
@@ -192,8 +200,11 @@ function Mod.callbacks:use_item(item, rng)
 end
 
 function Mod.callbacks:player_take_damage(player, amount, ...)
+	player = player:ToPlayer()
 	Mod:call_callbacks(player, "player_take_damage", amount, ...)
+	print("TOOK " .. tostring(amount) .. " DAMAGE!")
 	Mod.args.damage_taken = Mod.args.damage_taken + amount
+	print("NOW AT " .. tostring(Mod.args.damage_taken) .. " DAMAGE")
 end
 
 function Mod.callbacks:enemy_take_damage(enemy, amount, ...)
@@ -203,18 +214,18 @@ function Mod.callbacks:enemy_take_damage(enemy, amount, ...)
 end
 
 function Mod.callbacks:use_pill(pill_effect)
-	Mod:call_callbacks(Isaac.GetPlayer(1), "take_pill", pill_effect)
+	Mod:call_callbacks(Isaac.GetPlayer(0), "take_pill", pill_effect)
 end
 
-function Mod.callbacks.use_card(card)
-	Mod:call_callbacks(Isaac.GetPlayer(1), "use_card", card)
+function Mod.callbacks:use_card(card)
+	Mod:call_callbacks(Isaac.GetPlayer(0), "use_card", card)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, Mod.callbacks.update)
 Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Mod.callbacks.evaluate_cache)
 Mod:AddCallback(ModCallbacks.MC_POST_RENDER, Mod.callbacks.render)
 Mod:AddCallback(ModCallbacks.MC_USE_ITEM, Mod.callbacks.use_item)
-Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG , Mod.callbacks.player_take_damage, EntityType.ENTITY_PLAYER)
-Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG , Mod.callbacks.enemy_take_damage)
-Mod:AddCallback(ModCallbacks.MC_USE_CARD , Mod.callbacks.use_card)
-Mod:AddCallback(ModCallbacks.MC_USE_PILL , Mod.callbacks.use_pill)
+Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.player_take_damage, EntityType.ENTITY_PLAYER)
+Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.enemy_take_damage)
+Mod:AddCallback(ModCallbacks.MC_USE_CARD, Mod.callbacks.use_card)
+Mod:AddCallback(ModCallbacks.MC_USE_PILL, Mod.callbacks.use_pill)
