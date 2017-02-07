@@ -73,11 +73,11 @@ def add_hints_to_poolchances(poolchances, state):
 
 # Common stats
 STAT_RANGES = {
-    'speed': 0.1,
+    'speed': 0.09,
     'luck': 1,
     'tears': 1,
-    'shot_speed': 0.08,
-    'damage': 0.6,
+    'shot_speed': 0.07,
+    'damage': 0.7,
     'range': 3.0,
 }
 
@@ -90,8 +90,8 @@ STAT_RANGES_SPECIAL = {
 
 # Stats and their weights
 STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
-STAT_WEIGHTS     = [    4.0,    0.5,     4.0,          1.0,      4.4,     4.6]
-STAT_WEIGHTS_BAD = [    3.2,    0.3,     4.0,          2.8,      2.0,     3.8]
+STAT_WEIGHTS     = [    3.0,    1.0,     4.0,          1.8,      4.4,     4.6]
+STAT_WEIGHTS_BAD = [    3.2,    0.6,     4.0,          2.8,      2.0,     3.8]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
 STAT_WEIGHTS_SPECIAL = [      9,      3,       1]
 
@@ -115,15 +115,34 @@ def generate_random_stat_special(statname):
         return 2
     return random.randint(a, b)
 
-def generate_random_stat(statname, value, weights=None):
+def pick_random_stat_special(state):
+    weights = [x for x in STAT_WEIGHTS_SPECIAL]
+    weights[0] += state.get_hint("stat-health") # HP
+    weights[1] += state.get_hint("stat-spirit") # Spirit hearts
+    weights[2] += state.get_hint("stat-black") # Black hearts
+    return util.choice_weights(STAT_NAMES_SPECIAL, weights)
+
+def pick_random_stat(is_good, state):
+    weights = None
+    if is_good:
+        weights = [x for x in STAT_WEIGHTS]
+        weights[0] += state.get_hint("stat-speed") # Speed
+        weights[1] += state.get_hint("stat-luck") # Luck
+        weights[2] += state.get_hint("stat-tears") # Tears
+        weights[3] += state.get_hint("stat-shotspeed") # ShotSpeed
+        weights[4] += state.get_hint("stat-damage") # Damage
+        weights[5] += state.get_hint("stat-range") # Range
+    else:
+        weights = STAT_WEIGHTS_BAD
+    return util.choice_weights(STAT_NAMES, weights)
+
+def generate_random_stat(statname, value):
     """
     Generate a random value for a given stat upgrade
     -- statname: Name of the stat to generate a value for
     -- value: How highly valued the stat being generated is
     Higher value = higher returned stats
     """
-    if weights == None:
-        weights = STAT_WEIGHTS
     a_value = STAT_RANGES[statname] * value
     b_value = STAT_RANGES[statname] * (value+1)
     if a_value > b_value:
@@ -175,7 +194,7 @@ class IsaacItem:
         negative_value = random.randint(0, hint_bad)
         # Randomly add bad things to item heh heh heh
         for i in range(0, 3):
-            if random.random() < 0.11:
+            if random.random() < 0.12:
                 negative_value += 1
                 value += 1
         # Apply effect to item maybe?
@@ -192,13 +211,10 @@ class IsaacItem:
         # Apply up to two health upgrades
         for i in range(0, 2):
             if value >= STAT_SPECIAL_VALUE:
-                if random.random() < 0.12:
+                if random.random() < 0.13:
                     value -= self.add_random_stat_special()
         # Add benefits from value
         while value > 0:
-            # Random stat upgrade
-            take_value = random.randint(1, value)
-            take_value = random.randint(take_value, value)
             value -= self.add_random_stat(value, 1)
         # Add bad stuff
         while negative_value > 0:
@@ -248,7 +264,7 @@ class IsaacItem:
         Add a random special stat to this item
         Returns how much of the maxvalue was taken
         """
-        stat_name = random.choice(STAT_NAMES_SPECIAL)
+        stat_name = pick_random_stat_special(self.genstate)
         stat_inc = generate_random_stat_special(stat_name)
         self.stats.increment_stat(stat_name, stat_inc)
         return STAT_SPECIAL_VALUE
@@ -259,12 +275,11 @@ class IsaacItem:
         -- multiplier: What the generated stat will be multiplied
         Returns how much of the maxvalue was taken
         """
-        weights = STAT_WEIGHTS if multiplier > 0 else STAT_WEIGHTS_BAD
-        stat_name = random.choice(STAT_NAMES)
+        stat_name = pick_random_stat(multiplier > 0, self.genstate)
         if stat_name == "luck":
             maxvalue = min(2, maxvalue)
         take_value = random.randint(1, maxvalue)
-        stat_inc = generate_random_stat(stat_name, take_value, weights)*multiplier
+        stat_inc = generate_random_stat(stat_name, take_value)*multiplier
         self.stats.increment_stat(stat_name, stat_inc)
         return take_value
     def get_cacheflags(self):

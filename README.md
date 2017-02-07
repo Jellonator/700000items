@@ -48,6 +48,4 @@ requested.
 ## Todo
 
 * Hint system for stats
-* Hint system for images
-* Hint system for effects
 * Random trinkets? cards? pills?
