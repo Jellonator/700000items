@@ -48,6 +48,14 @@ Mod.args = {}
 --[[
 Utility functions
 --]]
+function add_function_to_def(item_name, func_name, func)
+	--TODO
+end
+
+function add_tears_to_formula(player, tears)
+	--TODO
+end
+
 function inf_norm(x, n)
 	n = n or 1
 	return x / (math.abs(x) + n)

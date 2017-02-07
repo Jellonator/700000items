@@ -1,6 +1,9 @@
-for _, enemy in pairs(Isaac.GetRoomEnemies()) do
-    local pos = enemy.Position
-    python[[
+for _, entity in pairs(Isaac.GetRoomEntities()) do
+    if entity:IsVulnerableEnemy() then
+        local enemy = entity:ToNPC()
+        local pos = enemy.Position
+        python[[
 gen.include("effect_enemy")
-    ]]
+        ]]
+    end
 end
