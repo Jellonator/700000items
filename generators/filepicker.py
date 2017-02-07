@@ -5,7 +5,6 @@ import random
 import glob
 
 CONST_HINTS_PRE = ":"
-CONST_WEIGHT_INC = 20.0
 
 cached_filepickers = {}
 
@@ -49,7 +48,7 @@ class PickFolder:
         self.files = [PickFile(x) for x in glob.glob(selection, recursive=True)]
     def choose_random(self):
         return random.choice(self.files)
-    def choose_random_with_name(self, name, hint_def):
+    def choose_random_with_name(self, name, hint_def, base_weight=4):
         words = [x.lower() for x in name.split()]
         hints = {}
         for key, value in hint_def.items():
@@ -57,7 +56,7 @@ class PickFolder:
         for name in words:
             if not name in hints:
                 hints[name] = 0
-            hints[name] += CONST_WEIGHT_INC
+            hints[name] += base_weight
         weights = {}
         for filedef in self.files:
             weight = filedef.get_weight(hints)

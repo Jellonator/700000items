@@ -163,7 +163,7 @@ def request_part(key, name, hints):
     key: Name of part list to load from
     """
     picker = filepicker.get_path(data_paths[key])
-    filedef = picker.choose_random_with_name(name, hints)
+    filedef = picker.choose_random_with_name(name, hints, 20)
     path = filedef.get_path()
 
     # path = random.choice(data_files[key])

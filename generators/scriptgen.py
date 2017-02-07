@@ -1,3 +1,4 @@
+from . import filepicker
 import os
 import random
 import glob
@@ -163,10 +164,13 @@ class ScriptBuilder:
             for key, value in result.data.items():
                 self.set_var(key, value)
         elif os.path.isdir(fname):
-            path = os.path.join(fname, "**/*.*")
-            file_list = glob.glob(path, recursive=True)
-            file_random = random.choice(file_list)
-            self.include(file_random)
+            # path = os.path.join(fname, "**/*.*")
+            # file_list = glob.glob(path, recursive=True)
+            # file_random = random.choice(file_list)
+            picker = filepicker.get_path(fname)
+            filedef = picker.choose_random_with_name(self.item.name, self.item.genstate.hints)
+            path = filedef.get_path()
+            self.include(path)
         else:
             base_dir = os.path.dirname(fname)
             if not base_dir.startswith(CONST_GEN_PATH):

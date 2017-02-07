@@ -26,15 +26,12 @@
 :sack
 	pickup-sack+1
 :bag|sack
-	effect-drop+4
 :book
 	active+99999
 	pool-library+10
 :worm
 	trinket+99999
-	effect-tear+10
 :tear
-	effect-tear+8
 	stat-tear+3
 :curse|myster
 	bad+2
@@ -42,9 +39,7 @@
 	good+2
 :eye
 	stat-tear+2
-	effect-tear+2
 :fly|guppy
-	effect-fly+2
 :sacred|holy|god
 	pool-angel+4
 	good+2
