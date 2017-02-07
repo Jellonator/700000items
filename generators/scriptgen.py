@@ -81,11 +81,11 @@ def get_pickup_name(name):
 
 def load_file(fname, item):
     with open(fname, 'r') as fh:
-        return load_string(fh.read(), item)
+        return load_string(fh.read(), item, fname)
 
-def load_string(string, item):
+def load_string(string, item, fname):
     sb = ScriptBuilder(item);
-    sb.parse(string);
+    sb.parse(string, fname);
     return sb
 
 def generate_effect(item):
@@ -108,7 +108,7 @@ class ScriptBuilder:
     def get_var(name):
         if name in self.data:
             return self.data[name]
-    def parse(self, string):
+    def parse(self, string, fname):
         while len(string) > 0:
             if CONST_PYTHON_BEGIN in string and CONST_PYTHON_END in string:
                 # Find positions
@@ -120,9 +120,13 @@ class ScriptBuilder:
                 string = string[python_pos_end+CONST_PYTHON_END_LEN:]
                 # Append strings
                 self.write(append_string)
-                exec(python_string, globals(), {
-                    "gen": self
-                })
+                try:
+                    exec(python_string, globals(), {
+                        "gen": self
+                    })
+                except Exception as err:
+                    print(err)
+                    print("Occurred in file {}!".format())
             else:
                 self.write(string)
                 string = ""
