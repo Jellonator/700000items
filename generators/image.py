@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from PIL import Image
 from PIL import ImageDraw
+from . import filepicker
 import glob
 import random
 import os
@@ -116,7 +117,7 @@ def sample_nearby(image, pos):
             highest_rgba = rgba
     return color_values[highest_rgba]
 
-def load_part(path, can_face):
+def load_part(path, can_face, name, hints):
     """
     Load a part from a path
     path: image path to load from
@@ -149,20 +150,24 @@ def load_part(path, can_face):
         part_key = data[1]
         part_x = part_pos[0]
         part_y = part_pos[1]
-        part = request_part(part_key)
+        part = request_part(part_key, name, hints)
         pos = (part_x - part.width//2, part_y - part.height//2)
         temp = create_image(image.width, image.height)
         temp.paste(part, pos, part)
         image = Image.alpha_composite(image, temp)
     return image
 
-def request_part(key):
+def request_part(key, name, hints):
     """
     Request for a part to be loaded, return image of part
     key: Name of part list to load from
     """
-    path = random.choice(data_files[key])
-    return load_part(path, True)
+    picker = filepicker.get_path(data_paths[key])
+    filedef = picker.choose_random_with_name(name, hints)
+    path = filedef.get_path()
+
+    # path = random.choice(data_files[key])
+    return load_part(path, True, name, hints)
 
 def create_image(width, height):
     """
@@ -174,16 +179,16 @@ def create_image(width, height):
     ret = Image.new('RGBA', (width, height), (0,0,0,0))
     return ret
 
-def generate_image(name):
+def generate_image(name, item_name, hints):
     """
     Generate a random image
     -- name: Name to save image as
     """
     output = os.path.join(OUTPUT_PATH, name)
-    image = request_part("body")
+    image = request_part("body", item_name, hints)
     image.save(output)
 
-# image = request_part("body")
+# image = request_part("body", name, hints)
 # image.save(OUTPUT_FILE)
 
 # print(face_files)

@@ -39,8 +39,7 @@ patience and a fairly beefy computer.
 All items generated with this mod are seeded. Items with the same name will have
 the same stats and effects.
 
-There is not actually 700,000 items. Currently, the name generator can not even
-generate 700,000 item names. Beyond that, Having 700,000 items in the game would
+There is not actually 700,000 items. Having 700,000 items in the game would
 likely have huge performance repercussions(as noted above).
 
 Due to name collisions, this mod may not generate all of the items that are

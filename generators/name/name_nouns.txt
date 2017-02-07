@@ -11,3 +11,6 @@ Meat
 Paw
 Ring
 Poop
+Acid
+Liquid
+Shield

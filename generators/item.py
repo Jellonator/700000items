@@ -2,6 +2,7 @@ from .stat import IsaacStats
 from .state import IsaacGenState
 from . import image
 from . import scriptgen
+from . import util
 import random
 
 CHARGE_VALUES = [2, 3, 4, 6]
@@ -62,18 +63,6 @@ def get_base_pool_chances():
         ret[key] = value
     return ret
 
-def dict_to_lists(dict):
-    """
-    Convert a dictionary into two lists
-    -- dict: dictionary to convert
-    """
-    reta = []
-    retb = []
-    for key, value in dict.items():
-        reta.append(key)
-        retb.append(value)
-    return (reta, retb)
-
 def add_hints_to_poolchances(poolchances, state):
     """
     Add chances for pools based on hints
@@ -98,23 +87,6 @@ STAT_RANGES_SPECIAL = {
     'soul': (3, 5),
     'black': (2, 4)
 }
-
-def choice_weights(choices, weights):
-    """
-    Pick a random item from choices given a list of weights for each item
-    -- choices: A choice that can be chosen
-    -- weights: The weights that correspond to each choice
-    """
-    total = sum(weights)
-    rng = random.random() * total
-    i = 0
-    for i in range(0, len(choices)):
-        weight = weights[i]
-        name = choices[i]
-        rng -= weight
-        if rng <= 0:
-            return name
-        i += 1
 
 # Stats and their weights
 STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
@@ -237,10 +209,10 @@ class IsaacItem:
         # Add to pools
         pool_chances = get_base_pool_chances()
         add_hints_to_poolchances(pool_chances, self.genstate)
-        (pool_names, pool_weights) = dict_to_lists(pool_chances)
+        (pool_names, pool_weights) = util.dict_to_lists(pool_chances)
         num_pools = max(random.randint(0, 4), random.randint(1, 5))
         for i in range(0, num_pools):
-            pname = choice_weights(pool_names, pool_weights)
+            pname = util.choice_weights(pool_names, pool_weights)
             gname = get_greed_name(pname)
             self.pools[pname] = True
             if gname != None:
@@ -315,12 +287,12 @@ class IsaacItem:
         """
         Generate and save a random sprite for this item
         """
-        image.generate_image(self.get_image_name())
+        image.generate_image(self.get_image_name(), self.name, self.genstate.hints)
     def get_pools(self):
         """
         Get a list of item pools this item belongs to
         """
-        return dict_to_lists(self.pools)[0]
+        return util.dict_to_lists(self.pools)[0]
     def get_definition(self):
         """
         Get the definition for the item
