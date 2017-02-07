@@ -1,5 +1,6 @@
 python[[gen.item.type = "active"]]
 on_usage = function(self, player, rng)
+	local pos = player.Position
 	python[[
 rng = random.uniform(0.1, 0.9)
 gen.writeln("if math.random() < {:.2f} then".format(rng))

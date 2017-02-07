@@ -4,6 +4,8 @@ from . import image
 from . import scriptgen
 import random
 
+CHARGE_VALUES = [2, 3, 4, 6]
+
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
     "challenge", "goldenChest", "redChest", "beggar", "demonBeggar", "curse",\
     "keyMaster", "bossrush", "dungeon", "bombBum", "greedTreasure", "greedBoss",\
@@ -116,13 +118,16 @@ def choice_weights(choices, weights):
 
 # Stats and their weights
 STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
-STAT_WEIGHTS     = [    4.0,    0.5,     4.2,          1.0,      4.4,     4.6]
-STAT_WEIGHTS_BAD = [    3.2,    0.3,     4.0,          2.2,      2.0,     4.0]
+STAT_WEIGHTS     = [    4.0,    0.5,     4.0,          1.0,      4.4,     4.6]
+STAT_WEIGHTS_BAD = [    3.2,    0.3,     4.0,          2.8,      2.0,     4.0]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
 STAT_WEIGHTS_SPECIAL = [      9,      3,       1]
 
 # Value of a special stat
 STAT_SPECIAL_VALUE = 2
+
+# Value of an item effect
+EFFECT_VALUE = 3
 
 def generate_random_stat_special(statname):
     """
@@ -199,9 +204,9 @@ class IsaacItem:
                 negative_value += 1
                 value += 1
         # Apply effect to item maybe?
-        if value >= STAT_SPECIAL_VALUE:
-            if random.random() < 0.40:
-                value -= STAT_SPECIAL_VALUE
+        if value >= EFFECT_VALUE:
+            if random.random() < 0.70:
+                value -= EFFECT_VALUE
                 self.add_effect()
         # Apply up to two health upgrades
         for i in range(0, 2):
@@ -277,6 +282,8 @@ class IsaacItem:
         ret = ret + " name=\"{}\" ".format(self.name)
         ret = ret + " gfx=\"{}\" ".format(self.get_image_name())
         ret = ret + self.stats.gen_xml()
+        if self.type == "active":
+            ret = ret + " maxcharges=\"{}\" cooldown=\"180\" ".format(random.choice(CHARGE_VALUES))
         return ret + " />"
     def gen_image(self):
         """

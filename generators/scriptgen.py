@@ -4,6 +4,23 @@ import glob
 
 CONST_BASE_FILE = "generators/script/base.lua"
 
+CONST_EFFECT_TYPES_COMMON = [
+    "EffectVariant.PLAYER_CREEP_WHITE",
+    "EffectVariant.PLAYER_CREEP_BLACK",
+    "EffectVariant.PLAYER_CREEP_RED",
+    "EffectVariant.PLAYER_CREEP_GREEN",
+    "EffectVariant.HOT_BOMB_FIRE",
+]
+
+CONST_EFFECT_TYPES_RARE = [
+    "EffectVariant.MONSTROS_TOOTH",
+    "EffectVariant.MOM_FOOT_STOMP",
+    "EffectVariant.PLAYER_CREEP_LEMON_MISHAP",
+    "EffectVariant.SHOCKWAVE",
+    "EffectVariant.SHOCKWAVE_DIRECTIONAL",
+    "EffectVariant.FIREWORKS",#Useless but kek
+]
+
 CONST_ENTITY_PICKUP = "EntityType.ENTITY_PICKUP"
 CONST_PICKUP_VARIANTS = {
     "any": "PickupVariant.PICKUP_NULL",
@@ -37,6 +54,15 @@ CONST_PICKUP_SUBTYPES = {
     "card": ["0"],
     "trinket": ["0"],
 }
+
+def choose_random_effect_common():
+    return random.choice(CONST_EFFECT_TYPES_COMMON)
+
+def choose_random_effect_rare():
+    return random.choice(CONST_EFFECT_TYPES_RARE)
+
+def does_effect_need_velocity(name):
+    return name == "EffectVariant.SHOCKWAVE_DIRECTIONAL"
 
 def choose_random_pickup_subtype(name):
     if name in CONST_PICKUP_SUBTYPES:

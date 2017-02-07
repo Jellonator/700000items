@@ -107,6 +107,7 @@ function Mod.callbacks:evaluate_cache(player, flag)
 end
 
 local _room_id = -1
+local _enemies = {}
 function Mod.callbacks:update()
 	local game = Game()
 	if Mod._cache_firedelay_need_update then
@@ -125,6 +126,7 @@ function Mod.callbacks:update()
 		Mod.args.damage_taken = 0
 		Mod.args.damage_dealt = 0
 		Mod:call_callbacks_all("room_change")
+		_enemies = {}
 	end
 
 	-- remove items that the player does not have
@@ -176,6 +178,21 @@ function Mod.callbacks:update()
 					Isaac.DebugString(("Removed potential item %d!"):format(item_id))
 				end
 			end
+		end
+	end
+
+	-- add enemies to list
+	for _, entity in pairs(Isaac.GetRoomEntities()) do
+		if entity:IsActiveEnemy(false) and not _enemies[entity.Index] then
+			_enemies[entity.Index] = entity:ToNPC()
+		end
+	end
+
+	-- check for dead enemies
+	for id, enemy in pairs(_enemies) do
+		if not enemy:Exists() then
+			_enemies[id] = nil
+			Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy)
 		end
 	end
 end
