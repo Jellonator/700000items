@@ -1,3 +1,4 @@
+python[[gen.inc_var("value", 1)]]
 do
     local id = python[[
 gen.writeln("{}".format(choose_random_effect_rare()))

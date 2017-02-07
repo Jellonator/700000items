@@ -2,6 +2,12 @@ import os
 import random
 import glob
 
+CONST_ACTIVE_ITEM_IDS = [
+    # Only relevant items which wouldn't suck as an effect (e.g. no kamikaze)
+    507, 486, 484, 421, 383, 394, 288, 287, 192, 175, 171,
+    160, 145, 137, 123, 111, 107, 56, 45, 41, 39, 36, 35, 34
+]
+
 CONST_BASE_FILE = "generators/script/base.lua"
 
 CONST_EFFECT_TYPES_COMMON = [
@@ -55,6 +61,9 @@ CONST_PICKUP_SUBTYPES = {
     "trinket": ["0"],
 }
 
+def choose_random_active():
+    return random.choice(CONST_ACTIVE_ITEM_IDS)
+
 def choose_random_effect_common():
     return random.choice(CONST_EFFECT_TYPES_COMMON)
 
@@ -103,11 +112,20 @@ class ScriptBuilder:
         self.data = {}
         self.item = item
         self.genstate = item.genstate
-    def set_var(name, value):
+    def inc_var(self, name, acc):
+        if not name in self.data:
+            self.data[name] = 0
+        self.data[name] += acc
+    def set_var(self, name, value):
         self.data[name] = value
-    def get_var(name):
+    def get_var(self, name):
         if name in self.data:
             return self.data[name]
+    def get_var_default(self, name, other):
+        if name in self.data:
+            return self.data[name]
+        else:
+            return other
     def parse(self, string, fname):
         while len(string) > 0:
             if CONST_PYTHON_BEGIN in string and CONST_PYTHON_END in string:
@@ -126,7 +144,7 @@ class ScriptBuilder:
                     })
                 except Exception as err:
                     print(err)
-                    print("Occurred in file {}!".format())
+                    print("Occurred in file {}!".format(fname))
             else:
                 self.write(string)
                 string = ""

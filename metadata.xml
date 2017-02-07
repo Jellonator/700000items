@@ -3,15 +3,18 @@
     <name>700000Items</name>
     <directory>700000items</directory>
     <id>854046198</id>
-    <description>Do you like The Binding of Isaac? Are you bored of the currently existing items
-and wish there were more of them? Like, a lot more? Maybe even 700,000* more?
+    <description>Do you like The Binding of Isaac? Are you bored of the
+currently existing items and wish there were more of them? Like, a lot more?
+Maybe even 700,000* more?
 
 Well, then this mod is for you!
 
 Featuring at least 1000 randomly generated bootleg items with random stats,
 effects, names, and sprites!
 
-*there is not actually 700,000 items. Not that it would be impossible, but it makes the game horribly slow to start and would take a lot of time to actually generate this many items. For reference, the base game has 504 items.
+*there is not actually 700,000 items. Not that it would be impossible, but it
+makes the game horribly slow to start and would take a lot of time to actually
+generate this many items. For reference, the base game has 504 items.
 
 Find me on Github: https://github.com/jellonator/700000items</description>
     <version>1.1</version>

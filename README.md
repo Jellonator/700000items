@@ -48,7 +48,7 @@ requested.
 
 ## Todo
 
-* Random item effects
-* Random active items
 * Hint system for stats
+* Hint system for images
+* Hint system for effects
 * Random trinkets? cards? pills?

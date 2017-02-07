@@ -1,3 +1,4 @@
+python[[gen.inc_var("value", 1)]]
 python[[
 POSSIBLE_SHOOTS = [
     "player:FireTear({0}, {1}, true, false, false)",

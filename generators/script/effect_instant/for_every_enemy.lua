@@ -1,3 +1,4 @@
+python[[gen.inc_var("value", 1)]]
 for _, entity in pairs(Isaac.GetRoomEntities()) do
     if entity:IsVulnerableEnemy() then
         local enemy = entity:ToNPC()

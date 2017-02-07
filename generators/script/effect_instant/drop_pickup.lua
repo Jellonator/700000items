@@ -1,3 +1,4 @@
+python[[gen.inc_var("value", 1)]]
 do
 	local pickup, subtype = python[[
 pickup = choose_random_pickup()

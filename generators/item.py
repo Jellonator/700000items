@@ -129,6 +129,8 @@ STAT_SPECIAL_VALUE = 2
 # Value of an item effect
 EFFECT_VALUE = 3
 
+FLYING_VALUE = 3
+
 def generate_random_stat_special(statname):
     """
     Generate a random value for a given special stat upgrade
@@ -170,6 +172,7 @@ class IsaacItem:
     seed = 0x42069420
     type = "passive"
     effect = ""
+    chargeval = 2
     def __init__(self, name, seed):
         """
         Create a new item
@@ -204,10 +207,16 @@ class IsaacItem:
                 negative_value += 1
                 value += 1
         # Apply effect to item maybe?
-        if value >= EFFECT_VALUE:
-            if random.random() < 0.70:
-                value -= EFFECT_VALUE
-                self.add_effect()
+        if random.random() < 0.65:
+            value -= self.add_effect()
+        # Maybe add flying
+        if value >= FLYING_VALUE and random.random() < 0.01:
+            self.stats.flying = True
+            value -= FLYING_VALUE
+        # If is an active item, remove stats usually
+        if self.type == "active" and random.random() < 0.9:
+            value = 0
+            negative_value = 0
         # Apply up to two health upgrades
         for i in range(0, 2):
             if value >= STAT_SPECIAL_VALUE:
@@ -243,8 +252,25 @@ class IsaacItem:
         name = self.name.replace(" ", "_").lower()
         return "collectibles_{}.png".format(name)
     def add_effect(self):
+        """
+        Add a random effect to this item
+        Returns the value of the item
+        """
+        script = scriptgen.generate_effect(self)
         self.effect += ','
-        self.effect += scriptgen.generate_effect(self).get_output()
+        self.effect += script.get_output()
+        value = script.get_var_default("value", 0) + 1
+
+        expected_id = max(min(value, len(CHARGE_VALUES)), 1)-1
+        possible_values = [x for x in CHARGE_VALUES]
+        possible_values += [CHARGE_VALUES[expected_id]]*3
+        if expected_id-1 >= 0:
+            possible_values += [CHARGE_VALUES[expected_id-1]]
+        if expected_id+1 < len(CHARGE_VALUES):
+            possible_values += [CHARGE_VALUES[expected_id+1]]
+        self.chargeval = random.choice(possible_values)
+
+        return value
     def add_random_stat_special(self):
         """
         Add a random special stat to this item
@@ -283,7 +309,7 @@ class IsaacItem:
         ret = ret + " gfx=\"{}\" ".format(self.get_image_name())
         ret = ret + self.stats.gen_xml()
         if self.type == "active":
-            ret = ret + " maxcharges=\"{}\" cooldown=\"180\" ".format(random.choice(CHARGE_VALUES))
+            ret = ret + " maxcharges=\"{}\" cooldown=\"180\" ".format(self.chargeval)
         return ret + " />"
     def gen_image(self):
         """

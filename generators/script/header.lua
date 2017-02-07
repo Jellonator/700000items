@@ -49,11 +49,16 @@ Mod.args = {}
 Utility functions
 --]]
 function add_function_to_def(item_name, func_name, func)
-	--TODO
-end
-
-function add_tears_to_formula(player, tears)
-	--TODO
+	local item_def = Mod.items[item_name]
+	if item_def[func_name] then
+		local p_func = item_def[func_name]
+		item_def[func_name] = function(...)
+			p_func(...)
+			func(...)
+		end
+	else
+		item_def[func_name] = func
+	end
 end
 
 function inf_norm(x, n)
@@ -107,7 +112,9 @@ Callback functions
 Mod.callbacks = {}
 Mod._cache_firedelay_need_update = false
 function Mod.callbacks:evaluate_cache(player, flag)
+	minimum_tears = math.min(player.MaxFireDelay, 5)
 	Mod:call_callbacks(player, "evaluate_cache", flag)
+	player.MaxFireDelay = math.max(minimum_tears, player.MaxFireDelay)
 end
 
 local _room_id = -1
