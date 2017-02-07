@@ -119,7 +119,7 @@ def choice_weights(choices, weights):
 # Stats and their weights
 STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
 STAT_WEIGHTS     = [    4.0,    0.5,     4.0,          1.0,      4.4,     4.6]
-STAT_WEIGHTS_BAD = [    3.2,    0.3,     4.0,          2.8,      2.0,     4.0]
+STAT_WEIGHTS_BAD = [    3.2,    0.3,     4.0,          2.8,      2.0,     3.8]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
 STAT_WEIGHTS_SPECIAL = [      9,      3,       1]
 
@@ -200,7 +200,7 @@ class IsaacItem:
         negative_value = random.randint(0, hint_bad)
         # Randomly add bad things to item heh heh heh
         for i in range(0, 3):
-            if random.random() < 0.12:
+            if random.random() < 0.11:
                 negative_value += 1
                 value += 1
         # Apply effect to item maybe?

@@ -9,10 +9,10 @@ CONST_EFFECT_TYPES_COMMON = [
     "EffectVariant.PLAYER_CREEP_BLACK",
     "EffectVariant.PLAYER_CREEP_RED",
     "EffectVariant.PLAYER_CREEP_GREEN",
-    "EffectVariant.HOT_BOMB_FIRE",
 ]
 
 CONST_EFFECT_TYPES_RARE = [
+    "EffectVariant.HOT_BOMB_FIRE",
     "EffectVariant.MONSTROS_TOOTH",
     "EffectVariant.MOM_FOOT_STOMP",
     "EffectVariant.PLAYER_CREEP_LEMON_MISHAP",

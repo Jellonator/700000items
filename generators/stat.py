@@ -130,8 +130,8 @@ class IsaacStats:
         if self.shot_range != 0:
             ret +=\
             "\t\tif flag == CacheFlag.CACHE_RANGE then\n"+\
-            "\t\t\tplayer.TearHeight = player.TearHeight + {:.2f}\n".format(self.shot_range)+\
-            "\t\t\tplayer.TearFallingSpeed = player.TearFallingSpeed + 0.5\n"+\
+            "\t\t\tplayer.TearHeight = player.TearHeight - {:.2f}\n".format(self.shot_range)+\
+            "\t\t\tplayer.TearFallingSpeed = player.TearFallingSpeed - {:.2f}\n".format(self.shot_range/8)+\
             "\t\tend\n"
         if self.flying != None:
             ret += genStatStr("CACHE_FLYING", "CanFly", "=", self.flying)
