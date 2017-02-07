@@ -1,5 +1,6 @@
 from .stat import IsaacStats
 from .state import IsaacGenState
+from .stat import STAT_SPECIAL_VALUE
 from . import image
 from . import scriptgen
 from . import util
@@ -71,88 +72,12 @@ def add_hints_to_poolchances(poolchances, state):
         inc = state.get_hint("pool-"+key)
         poolchances[key] += inc
 
-# Common stats
-STAT_RANGES = {
-    'speed': 0.09,
-    'luck': 1,
-    'tears': 1,
-    'shot_speed': 0.07,
-    'damage': 0.7,
-    'range': 3.0,
-}
-
-# Special, rarer stats (health) for items
-STAT_RANGES_SPECIAL = {
-    'health': (1, 1),
-    'soul': (3, 5),
-    'black': (2, 4)
-}
-
-# Stats and their weights
-STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
-STAT_WEIGHTS     = [    3.0,    1.0,     4.0,          1.8,      4.4,     4.6]
-STAT_WEIGHTS_BAD = [    3.2,    0.6,     4.0,          2.8,      2.0,     3.8]
-STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
-STAT_WEIGHTS_SPECIAL = [      9,      3,       1]
-
-# Value of a special stat
-STAT_SPECIAL_VALUE = 2
-
 # Value of an item effect
 EFFECT_VALUE = 3
 
 FLYING_VALUE = 3
 
-def generate_random_stat_special(statname):
-    """
-    Generate a random value for a given special stat upgrade
-    -- statname: Name of the stat to generate a value for
-    """
-    values = STAT_RANGES_SPECIAL[statname]
-    a = values[0]
-    b = values[1]
-    if statname == "health":
-        return 2
-    return random.randint(a, b)
 
-def pick_random_stat_special(state):
-    weights = [x for x in STAT_WEIGHTS_SPECIAL]
-    weights[0] += state.get_hint("stat-health") # HP
-    weights[1] += state.get_hint("stat-spirit") # Spirit hearts
-    weights[2] += state.get_hint("stat-black") # Black hearts
-    return util.choice_weights(STAT_NAMES_SPECIAL, weights)
-
-def pick_random_stat(is_good, state):
-    weights = None
-    if is_good:
-        weights = [x for x in STAT_WEIGHTS]
-        weights[0] += state.get_hint("stat-speed") # Speed
-        weights[1] += state.get_hint("stat-luck") # Luck
-        weights[2] += state.get_hint("stat-tears") # Tears
-        weights[3] += state.get_hint("stat-shotspeed") # ShotSpeed
-        weights[4] += state.get_hint("stat-damage") # Damage
-        weights[5] += state.get_hint("stat-range") # Range
-    else:
-        weights = STAT_WEIGHTS_BAD
-    return util.choice_weights(STAT_NAMES, weights)
-
-def generate_random_stat(statname, value):
-    """
-    Generate a random value for a given stat upgrade
-    -- statname: Name of the stat to generate a value for
-    -- value: How highly valued the stat being generated is
-    Higher value = higher returned stats
-    """
-    a_value = STAT_RANGES[statname] * value
-    b_value = STAT_RANGES[statname] * (value+1)
-    if a_value > b_value:
-        a_value, b_value = b_value, a_value
-    if statname == "luck":
-        return a_value
-    elif isinstance(a_value, int):
-        return random.randint(a_value, b_value)
-    else:
-        return round(random.uniform(a_value, b_value), 2)
 
 class IsaacItem:
     """
@@ -212,13 +137,13 @@ class IsaacItem:
         for i in range(0, 2):
             if value >= STAT_SPECIAL_VALUE:
                 if random.random() < 0.13:
-                    value -= self.add_random_stat_special()
+                    value -= self.stats.add_random_stat_special(self.genstate)
         # Add benefits from value
         while value > 0:
-            value -= self.add_random_stat(value, 1)
+            value -= self.stats.add_random_stat(value, 1, self.genstate)
         # Add bad stuff
         while negative_value > 0:
-            negative_value -= self.add_random_stat(negative_value, -1)
+            negative_value -= self.stats.add_random_stat(negative_value, -1, self.genstate)
         # Create image
         self.gen_image()
         random.setstate(rand_state)
@@ -259,29 +184,6 @@ class IsaacItem:
         self.chargeval = random.choice(possible_values)
 
         return value
-    def add_random_stat_special(self):
-        """
-        Add a random special stat to this item
-        Returns how much of the maxvalue was taken
-        """
-        stat_name = pick_random_stat_special(self.genstate)
-        stat_inc = generate_random_stat_special(stat_name)
-        self.stats.increment_stat(stat_name, stat_inc)
-        return STAT_SPECIAL_VALUE
-    def add_random_stat(self, maxvalue, multiplier):
-        """
-        Add a random stat to this item
-        -- maxvalue: The maximum value this random stat can have
-        -- multiplier: What the generated stat will be multiplied
-        Returns how much of the maxvalue was taken
-        """
-        stat_name = pick_random_stat(multiplier > 0, self.genstate)
-        if stat_name == "luck":
-            maxvalue = min(2, maxvalue)
-        take_value = random.randint(1, maxvalue)
-        stat_inc = generate_random_stat(stat_name, take_value)*multiplier
-        self.stats.increment_stat(stat_name, stat_inc)
-        return take_value
     def get_cacheflags(self):
         """
         Get a list of cacheflags for this item
