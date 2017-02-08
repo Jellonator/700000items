@@ -1,1 +1,1 @@
-there is none yet top kek
+{folder}_{name of item}:{weight(optional)},{tags}.png

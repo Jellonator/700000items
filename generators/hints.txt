@@ -1,6 +1,8 @@
 #These are weights, not actual values!
 :super
 	good+2
+:curse|sacred|evil|holy
+	outline+6
 :heart
 	stat-health+2
 	stat-special+2

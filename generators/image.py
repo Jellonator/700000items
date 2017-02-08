@@ -24,19 +24,27 @@ OUTPUT_PATH = "700000items/resources/gfx/items/collectibles"
 
 # Palette colors to replace blue-keyed areas in sprites
 PALETTE = [
-    [100,  80, 200, 255], #RED
-    [255, 255, 255, 255], #WHITE
-    [240, 240,  80, 255], #YELLOW
-    [255, 255,  20, 255], #BRIGHT YELLOW
-    [255, 160,  30, 255], #ORANGE
-    [ 90,  90,  90, 255], #DARK GRAY/BLACK
-    [175, 170, 185, 255], #LIGHT GRAY
-    [195, 155, 155, 255], #BROWN
-    [115, 165, 220, 255], #LIGHT BLUE
-    [210, 190, 165, 255], #SKIN
-    [255, 190, 190, 255], #SKIN PEACH
-    [155, 150, 180, 255], #PURPLE
-    [160, 205, 140, 255], #GREEN
+    (100,  80, 200, 255), #RED
+    (255, 255, 255, 255), #WHITE
+    (240, 240,  80, 255), #YELLOW
+    (255, 255,  20, 255), #BRIGHT YELLOW
+    (255, 160,  30, 255), #ORANGE
+    ( 90,  90,  90, 255), #DARK GRAY/BLACK
+    (175, 170, 185, 255), #LIGHT GRAY
+    (195, 155, 155, 255), #BROWN
+    (115, 165, 220, 255), #LIGHT BLUE
+    (210, 190, 165, 255), #SKIN
+    (255, 190, 190, 255), #SKIN PEACH
+    (155, 150, 180, 255), #PURPLE
+    (160, 205, 140, 255), #GREEN
+]
+
+PALETTE_BRIGHT = [
+    ( 67, 119, 231, 255), #Blue (libra/cancer/etc)
+    (231,   0,   0, 255), #Red (brimstone)
+    (255,  99,   0, 255), #Orange (Hot bombs)
+    ( 35, 215,  31, 255), #Green (Toxic Shock)
+    (255, 255, 255, 255), #White (not based on any items, but its kind of a holy color?)
 ]
 
 # Pixel colors that will be replaced
@@ -102,13 +110,13 @@ def sample_nearby(image, pos):
         for iy in range(max(0, y-1), min(y+2, image.height)):
             if ix != x or iy != y:
                 color = image.getpixel((ix, iy))
-                if color[3] > 0:
-                    rgba = color[0]*0x01000000 + color[1]*0x00010000\
-                         + color[2]*0x00000100 + color[3]*0x00000001
-                    if not rgba in colors:
-                        colors[rgba] = 0
-                        color_values[rgba] = color
-                    colors[rgba] += 1
+                # if color[3] > 0:
+                rgba = color[0]*0x01000000 + color[1]*0x00010000\
+                     + color[2]*0x00000100 + color[3]*0x00000001
+                if not rgba in colors:
+                    colors[rgba] = 0
+                    color_values[rgba] = color
+                colors[rgba] += 1
     highest_count = 0
     highest_rgba = 0
     for rgba, count in colors.items():
@@ -179,6 +187,34 @@ def create_image(width, height):
     ret = Image.new('RGBA', (width, height), (0,0,0,0))
     return ret
 
+CONST_NEAR_TEST = [
+    ( 2,  0), (-2,  0), ( 0,  2), ( 0, -2),
+    ( 1,  0), (-1,  0), ( 0,  1), ( 0, -1),
+    ( 1,  1), ( 1, -1), (-1, -1), (-1,  1),
+]
+
+def is_pixel_near_pos(image, pos):
+    for val in CONST_NEAR_TEST:
+        x,y = pos[0]+val[0], pos[1]+val[1]
+        if x < 0 or y < 0 or x >= image.width or y >= image.height:
+            continue
+        tpos = (x,y)
+        color = image.getpixel(tpos)
+        if color[3] > 0:
+            return True
+    return False
+
+def outline_image(image):
+    palette = random.choice(PALETTE_BRIGHT)
+    new_image = create_image(image.width, image.height)
+    draw = ImageDraw.Draw(new_image)
+    for y in range(0, image.height):
+        for x in range(0, image.width):
+            pos = (x, y)
+            if is_pixel_near_pos(image, pos):
+                draw.point(pos, palette)
+    return Image.alpha_composite(new_image, image)
+
 def generate_image(name, item_name, hints):
     """
     Generate a random image
@@ -186,10 +222,9 @@ def generate_image(name, item_name, hints):
     """
     output = os.path.join(OUTPUT_PATH, name)
     image = request_part("body", item_name, hints)
+    outline_chance = 3
+    if "outline" in hints:
+        outline_chance += hints["outline"]
+    if random.random() < 0.01*outline_chance:
+        image = outline_image(image)
     image.save(output)
-
-# image = request_part("body", name, hints)
-# image.save(OUTPUT_FILE)
-
-# print(face_files)
-# print(body_files)
