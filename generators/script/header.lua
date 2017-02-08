@@ -119,7 +119,16 @@ end
 
 local _room_id = -1
 local _enemies = {}
+local _timer = 0
+local _timerf = 0
 function Mod.callbacks:update()
+	_timer = _timer + 1
+	_timerf = _timerf + 1/30
+	if _timer >= 30 * 60 * 60 then
+		-- reset after a whole hour because why not?
+		_timer = 0
+		_timerf = 0
+	end
 	local game = Game()
 
 	-- refresh for room change
@@ -201,7 +210,7 @@ function Mod.callbacks:update()
 		end
 	end
 
-	Mod:call_callbacks_all("update")
+	Mod:call_callbacks_all("update", _timer, _timerf)
 end
 
 function Mod.callbacks:render()
