@@ -200,6 +200,8 @@ function Mod.callbacks:update()
 			Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy)
 		end
 	end
+
+	Mod:call_callbacks_all("update")
 end
 
 function Mod.callbacks:render()
