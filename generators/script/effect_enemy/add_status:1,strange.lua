@@ -1,4 +1,5 @@
 python[[
+gen.chance(3, 0.5, 1)
 duration = random.randint(20, 60)
 damage = random.uniform(0.5, 2.0)
 VALID_STATUS = [

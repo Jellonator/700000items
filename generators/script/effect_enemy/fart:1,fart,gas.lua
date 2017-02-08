@@ -1,5 +1,5 @@
 do
-    if math.random()*math.max(1, 8-0.7*player.Luck) > 1 then return end
+python[[gen.chance(8, 0.7, 1)]]
     local game = Game()
     python[[
 FART_TYPES = [1, 1, 1, 2, 2, 3]

@@ -8,5 +8,5 @@ POSSIBLE_SHOOTS = [
     "player:FireTechXLaser({0}, {1}, 32)",
 ]
 shooty = random.choice(POSSIBLE_SHOOTS)
-gen.writeln(shooty.format("pos", "player:GetAimDirection() * 6 * player.ShotSpeed"))
+gen.writeln(shooty.format("pos", "player:GetAimDirection():Normalized() * 8 * player.ShotSpeed"))
 ]]

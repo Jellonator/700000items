@@ -18,6 +18,18 @@ STAT_RANGES_SPECIAL = {
     'black': (2, 4)
 }
 
+CONST_WEAPONS = [
+    "WeaponType.WEAPON_TEARS",
+    "WeaponType.WEAPON_BRIMSTONE",
+    "WeaponType.WEAPON_LASER",
+    "WeaponType.WEAPON_KNIFE",
+    "WeaponType.WEAPON_BOMBS",
+    "WeaponType.WEAPON_ROCKETS",
+    "WeaponType.WEAPON_MONSTROS_LUNGS",
+    "WeaponType.WEAPON_LUDOVICO_TECHNIQUE",
+    "WeaponType.WEAPON_TECH_X",
+]
+
 # Stats and their weights
 STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
 STAT_WEIGHTS     = [    3.0,    1.8,     4.0,          1.8,      4.4,     4.6]
@@ -118,6 +130,7 @@ class IsaacStats:
     hearts_spirit = 0
     heal = 0
     flying = None
+    weapon = None
     def add_random_stat_special(self, genstate):
         """
         Add a random special stat to this item
@@ -237,5 +250,11 @@ class IsaacStats:
             "\t\tend\n"
         if self.flying != None:
             ret += genStatStr("CACHE_FLYING", "CanFly", "=", self.flying)
+        if self.weapon != None:
+            ret += genStatStr("CACHE_WEAPON", "")
         ret += "\tend"
         return ret
+    def add_random_weapon(self):
+        # Weapons are not implemented yet, this will come in the future
+        # There is not currently a way to do this
+        self.weapon = random.choice(CONST_WEAPONS)

@@ -1,4 +1,5 @@
 python[[gen.inc_var("value", 1)]]
+python[[gen.chance(8, 1, 2)]]
 do
 	local pickup, subtype = python[[
 pickup = choose_random_pickup()

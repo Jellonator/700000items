@@ -177,5 +177,7 @@ class ScriptBuilder:
                 self.include(os.path.join(CONST_GEN_PATH, fname))
             else:
                 raise Exception("Not a file or directory!" + fname)
+    def chance(self, base_chance, luck_scale, min_chance):
+        self.writeln("if math.random()*math.max({}, {}-{}*player.Luck) > 1 then return end".format(min_chance, base_chance, luck_scale));
     def get_output(self):
         return self.output
