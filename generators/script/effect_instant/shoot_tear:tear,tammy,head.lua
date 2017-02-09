@@ -1,3 +1,4 @@
+python[[gen.genstate.add_descriptors(["Circle", "Shoot", "Tear"])]]
 for ix = -1, 1 do
 	for iy = -1, 1 do
 		if ix ~= 0 or iy ~= 0 then

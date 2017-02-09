@@ -1,3 +1,4 @@
+python[[gen.genstate.add_descriptors(["Gross", "Trail", "Creep", "Slime", "Liquid"])]]
 -- spawn a creep every 4-5 frames
 self.creep_time = self.creep_time and self.creep_time - 1 or 0
 if self.creep_time <= 0 then

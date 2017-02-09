@@ -87,6 +87,7 @@ class IsaacItem:
     type = "passive"
     effect = ""
     chargeval = 2
+    description = "It's a mystery!"
     def __init__(self, name, seed):
         """
         Create a new item
@@ -154,6 +155,9 @@ class IsaacItem:
             self.pools[pname] = True
             if gname != None:
                 self.pools[gname] = True
+        # Generate description
+        self.genstate.descriptors += self.stats.get_descriptors()
+        self.description = self.genstate.gen_description()
         # Reset random state
         if self.seed:
             random.setstate(rand_state)
@@ -195,7 +199,7 @@ class IsaacItem:
         """
         Generate the XML definition for this item
         """
-        ret = "<{} description=\"It's an Item!\" ".format(self.type)
+        ret = "<{} description=\"{}\" ".format(self.type, self.description)
         ret = ret + " name=\"{}\" ".format(self.name)
         ret = ret + " gfx=\"{}\" ".format(self.get_image_name())
         ret = ret + self.stats.gen_xml()

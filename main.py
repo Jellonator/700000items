@@ -10,7 +10,7 @@ import random
 
 # Generate X number of items
 # Used to be 700,000 but its really not good to have that many items
-MAGIC_NUMBER = 1000
+MAGIC_NUMBER = 500
 TARGET_FOLDER = "700000items"
 
 # Utility functions
@@ -27,9 +27,20 @@ def check_folder(dir):
     if not os.path.isdir(dir):
         os.makedirs(dir)
 
+
+def generate_pocket_effect(name):
+    tempitem = IsaacItem(name, None)
+    effect = scriptgen.load_file("generators/script/make_card.lua", tempitem)
+    return """function()
+{}
+end""".format(effect.get_output())
+
 # Parse arguments
 if len(sys.argv) > 1:
-    MAGIC_NUMBER = int(sys.argv[1])
+    arg = sys.argv[1]
+    if arg == "release":
+        arg = "2500"
+    MAGIC_NUMBER = int(arg)
 
 # Remove previous mod folder
 if os.path.exists(TARGET_FOLDER):
@@ -56,38 +67,48 @@ check_folder(get_output_path('resources/gfx/items/collectibles'))
 # XML definition of item pool entry
 ITEMPOOL_DEF = "\t\t<Item Name=\"{}\" Weight=\"1\" DecreaseBy=\"1\" RemoveOn=\"0.1\"/>\n"
 
-# Generate a metric crap-tonne of items
-items = {}
-max_failed_tries = MAGIC_NUMBER
-item_number = 1
-while len(items) < MAGIC_NUMBER and max_failed_tries > 0:
-    name = namegen.generate_name()
-    if name in items:
-        max_failed_tries -= 1
-        continue
-    seed = hash(name)
-    full_name = str(item_number) + " " + name
-    item = IsaacItem(full_name, seed)
-    items[name] = item
-    item_number += 1
-
 # Write out items to xml files
+items = {}
+item_number = 1
 xml_items_name = get_output_path('content/items.xml')
 xml_pools_name = get_output_path('content/itempools.xml')
 xml_pocketitems_name = get_output_path('content/pocketitems.xml')
 with open(xml_items_name, 'w') as xml_items,\
-open(xml_pools_name, 'w') as xml_pools:
+open(xml_pools_name, 'w') as xml_pools,\
+open(get_output_path("main.lua"), 'w') as script:
+    # header
+    with open("generators/script/header.lua", 'r') as header:
+        script.write(header.read())
+
     pools = {}
     for name in POOL_NAMES:
         pools[name] = []
 
-    # Add items to definition
+    # Actual item generation here
     xml_items.write("<items gfxroot=\"gfx/items/\" version=\"1\">\n");
-    for name, item in items.items():
+    max_failed_tries = MAGIC_NUMBER
+    while len(items) < MAGIC_NUMBER and max_failed_tries > 0:
+        name = namegen.generate_name()
+        if name in items:
+            max_failed_tries -= 1
+            continue
+        seed = hash(name)
+        full_name = str(item_number) + " " + name
+        item = IsaacItem(full_name, seed)
+        items[name] = item.name
+        item_number += 1
         xml_items.write("\t{}\n".format(item.gen_xml()))
         for pool in item.get_pools():
             pools[pool].append(item.name)
+        script.write("Mod.items[\"{}\"] = {}\n".format(\
+            item.name, item.get_definition()))
     xml_items.write("</items>\n");
+
+    # write out item names
+    script.write("Mod.item_names = {\n")
+    for name, item_name in items.items():
+        script.write("\t\"{}\",\n".format(item_name))
+    script.write("}\n")
 
     # Add items to pools
     xml_pools.write("<ItemPools>\n")
@@ -98,36 +119,13 @@ open(xml_pools_name, 'w') as xml_pools:
         xml_pools.write("\t</Pool>\n")
     xml_pools.write("</ItemPools>\n")
 
-def generate_pocket_effect(name):
-    tempitem = IsaacItem(name, None)
-    effect = scriptgen.load_file("generators/script/make_card.lua", tempitem)
-    return """function()
-{}
-end""".format(effect.get_output())
-
-# Generate Lua script
-with open(get_output_path("main.lua"), 'w') as script:
-    # header
-    with open("generators/script/header.lua", 'r') as header:
-        script.write(header.read())
-
-    # export item names
-    script.write("Mod.item_names = {\n")
-    for name, item in items.items():
-        script.write("\t\"{}\",\n".format(item.name))
-    script.write("}\n")
-
-    # export item definitions
-    for name, item in items.items():
-        script.write("Mod.items[\"{}\"] = {}\n".format(item.name, item.get_definition()))
-
     # generate pills and cards
     with open(xml_pocketitems_name, 'w') as xml_pocketitems:
         xml_pocketitems.write("<pocketitems>\n");
 
         # generate pill names
         pill_names = {}
-        for i in range(0, 10):
+        for i in range(0, 25):
             name = namegen.generate_name()
             pill_names[name] = name
         # generate pills

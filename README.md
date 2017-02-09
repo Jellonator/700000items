@@ -29,11 +29,15 @@ Please note that this is NOT THE MOD FOLDER! Do not place this folder in with
 your AB+ mods!
 
 ## Generating more items
-This mod will generate 1,000 items by default. To generate a custom number of
+This mod will generate 500 items by default. To generate a custom number of
 items, simply run `./main.py number_of_items`. The more items you generate, the
 longer the generation process will take, and the longer Isaac will take to boot
 up. I would not recommend generating a full 700,000 items unless you have
 patience and a fairly beefy computer.
+
+Using 'release' instead of an integer for the number of items will generate the
+release version of the mod, which has 2,500 items. There are no further 
+differences.
 
 ## Notes
 All items generated with this mod are seeded. Items with the same name will have

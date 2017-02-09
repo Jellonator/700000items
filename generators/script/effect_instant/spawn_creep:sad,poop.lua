@@ -1,3 +1,4 @@
+python[[gen.genstate.add_descriptors(["Gross", "Trail", "Creep", "Slime", "Liquid"])]]
 do
     local id = python[[
 gen.writeln("{}".format(choose_random_effect_common()))

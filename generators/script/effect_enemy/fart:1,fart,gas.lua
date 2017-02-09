@@ -1,3 +1,4 @@
+python[[gen.genstate.add_descriptors(["Gas", "Gassy", "Fart", "Smell"])]]
 do
 python[[gen.chance(8, 0.7, 1)]]
     local game = Game()
