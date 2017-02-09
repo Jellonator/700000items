@@ -71,6 +71,11 @@ def debug_hints():
         for hint_name, hint_value in hints.items():
             print("\t{}+{}".format(hint_name, hint_value))
 
+CONST_BASE_DESCRIPTORS = [
+    "up", "down", "\'till", "and", "is", "near", "the end",
+    "gross", "bootleg", "seen", "I\'ve",
+]
+
 class IsaacGenState:
     """
     Represents the state of an item generator
@@ -83,6 +88,7 @@ class IsaacGenState:
         if hints == None:
             hints = {}
         self.hints = hints
+        self.descriptors = CONST_BASE_DESCRIPTORS.copy()
     def _check_hint(self, name):
         """
         make sure a hint exists
