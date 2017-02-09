@@ -8,3 +8,21 @@ for i, name in pairs(Mod.item_names) do
 	Mod.item_id_to_name[id] = name
 	Mod.item_name_to_id[name] = id
 end
+
+Mod.card_names = {}
+for name, func in pairs(Mod.cards) do
+	table.insert(Mod.card_names, name)
+end
+for _, name in ipairs(Mod.card_names) do
+	local id = Isaac.GetCardIdByName(name)
+	Mod.cards[id] = Mod.cards[name]
+end
+
+Mod.pill_names = {}
+for name, func in pairs(Mod.pills) do
+	table.insert(Mod.pill_names, name)
+end
+for _, name in ipairs(Mod.pill_names) do
+	local id = Isaac.GetPillEffectByName(name)
+	Mod.pills[id] = Mod.pills[name]
+end

@@ -236,7 +236,7 @@ end
 
 function Mod.callbacks:use_item(item, rng)
 	local item_def = Mod.items[item]
-	if item_def.on_usage then
+	if item_def and item_def.on_usage then
 		item_def.on_usage(item_def, Isaac.GetPlayer(0), rng)
 	end
 end
@@ -257,10 +257,22 @@ end
 
 function Mod.callbacks:use_pill(pill_effect)
 	Mod:call_callbacks(Isaac.GetPlayer(0), "take_pill", pill_effect)
+	local func = Mod.pills[pill_effect]
+	if func then
+		func()
+	else
+		print("Error! Pill effect " .. tostring(pill_effect) .. " has no definition!")
+	end
 end
 
 function Mod.callbacks:use_card(card)
 	Mod:call_callbacks(Isaac.GetPlayer(0), "use_card", card)
+	local func = Mod.cards[card]
+	if func then
+		func()
+	else
+		print("Error! Card " .. tostring(card) .. " has no definition!")
+	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, Mod.callbacks.update)

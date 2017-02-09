@@ -44,8 +44,3 @@ likely have huge performance repercussions(as noted above).
 
 Due to name collisions, this mod may not generate all of the items that are
 requested.
-
-## Todo
-
-* Hint system for stats
-* Random trinkets? cards? pills?

@@ -104,7 +104,8 @@ class IsaacItem:
 
         # Seeding
         rand_state = random.getstate()
-        random.seed(self.seed)
+        if self.seed:
+            random.seed(self.seed)
 
         # Hints
         self.genstate.parse_hints_from_name(self.name)
@@ -154,7 +155,8 @@ class IsaacItem:
             if gname != None:
                 self.pools[gname] = True
         # Reset random state
-        random.setstate(rand_state)
+        if self.seed:
+            random.setstate(rand_state)
     def get_image_name(self):
         """
         Get the name of the image for this item

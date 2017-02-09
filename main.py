@@ -2,9 +2,11 @@
 from generators import namegen
 from generators.item import IsaacItem
 from generators.item import POOL_NAMES
+from generators import scriptgen
 import os
 import sys
 import shutil
+import random
 
 # Generate X number of items
 # Used to be 700,000 but its really not good to have that many items
@@ -72,6 +74,7 @@ while len(items) < MAGIC_NUMBER and max_failed_tries > 0:
 # Write out items to xml files
 xml_items_name = get_output_path('content/items.xml')
 xml_pools_name = get_output_path('content/itempools.xml')
+xml_pocketitems_name = get_output_path('content/pocketitems.xml')
 with open(xml_items_name, 'w') as xml_items,\
 open(xml_pools_name, 'w') as xml_pools:
     pools = {}
@@ -95,6 +98,13 @@ open(xml_pools_name, 'w') as xml_pools:
         xml_pools.write("\t</Pool>\n")
     xml_pools.write("</ItemPools>\n")
 
+def generate_pocket_effect(name):
+    tempitem = IsaacItem(name, None)
+    effect = scriptgen.load_file("generators/script/make_card.lua", tempitem)
+    return """function()
+{}
+end""".format(effect.get_output())
+
 # Generate Lua script
 with open(get_output_path("main.lua"), 'w') as script:
     # header
@@ -110,6 +120,40 @@ with open(get_output_path("main.lua"), 'w') as script:
     # export item definitions
     for name, item in items.items():
         script.write("Mod.items[\"{}\"] = {}\n".format(item.name, item.get_definition()))
+
+    # generate pills and cards
+    with open(xml_pocketitems_name, 'w') as xml_pocketitems:
+        xml_pocketitems.write("<pocketitems>\n");
+
+        # generate pill names
+        pill_names = {}
+        for i in range(0, 10):
+            name = namegen.generate_name()
+            pill_names[name] = name
+        # generate pills
+        for pill_name in pill_names.keys():
+            xml_pocketitems.write("\t<pilleffect name=\"{}\" />\n".format(pill_name))
+            pill_script = generate_pocket_effect(pill_name)
+            script.write("Mod.pills[\"{}\"] = {}\n".format(pill_name, pill_script))
+
+        # generate card names
+        # There is currently something wrong with card generation, so it is
+        # disabled. Seems to be an issue with the API though.
+        card_names = {}
+        # for i in range(0, 25):
+        #     name = namegen.generate_name()
+        #     card_names[name] = name
+        # generate cards
+        for card_name in card_names.keys():
+            card_type = random.choice(['card', 'card', 'rune'])
+            description = "It's a {}!".format(card_type)
+            hud = "".join(card_name.split()).replace(".", "").replace("\'", "")
+            xml_pocketitems.write("\t<{} name=\"{}\" hud=\"{}\" description=\"{}\"/>\n".format(\
+                card_type, card_name, hud, description))
+            card_script = generate_pocket_effect(card_name)
+            script.write("Mod.cards[\"{}\"] = {}\n".format(card_name, card_script))
+
+        xml_pocketitems.write("</pocketitems>\n");
 
     # footer
     with open("generators/script/footer.lua", 'r') as footer:
