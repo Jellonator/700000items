@@ -1,7 +1,7 @@
--- spawn a creep every 5-8 frames
+-- spawn a creep every 4-5 frames
 self.creep_time = self.creep_time and self.creep_time - 1 or 0
 if self.creep_time <= 0 then
-    self.creep_time = math.random(5,8)
+    self.creep_time = math.random(4,5)
     local id = python[[
 gen.writeln("{}".format(choose_random_effect_common()))
     ]]

@@ -131,6 +131,15 @@ class IsaacStats:
     heal = 0
     flying = None
     weapon = None
+    def add_random_stats(self, value, multiplier, genstate):
+        """
+        Add multiple stats to this item
+        -- value: Total value of stats to add. Higher value = more stats
+        -- multiplier: What the generated stat will be multiplied by
+        -- genstate: Generator state for this item. Used for hints.
+        """
+        while value > 0:
+            value -= self.add_random_stat(value, multiplier, genstate)
     def add_random_stat_special(self, genstate):
         """
         Add a random special stat to this item
@@ -142,9 +151,10 @@ class IsaacStats:
         return STAT_SPECIAL_VALUE
     def add_random_stat(self, maxvalue, multiplier, genstate):
         """
-        Add a random stat to this item
+        Add a random stat
         -- maxvalue: The maximum value this random stat can have
-        -- multiplier: What the generated stat will be multiplied
+        -- multiplier: What the generated stat will be multiplied by
+        -- genstate: Generator state for this item. Used for hints.
         Returns how much of the maxvalue was taken
         """
         stat_name = pick_random_stat(multiplier > 0, genstate)

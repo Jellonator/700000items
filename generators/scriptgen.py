@@ -1,4 +1,5 @@
 from . import filepicker
+from .stat import IsaacStats
 import os
 import random
 import glob
@@ -113,6 +114,9 @@ class ScriptBuilder:
         self.data = {}
         self.item = item
         self.genstate = item.genstate
+        self.allow_random = True
+    def set_allow_random(self, value):
+        self.allow_random = value
     def inc_var(self, name, acc):
         if not name in self.data:
             self.data[name] = 0
@@ -157,6 +161,8 @@ class ScriptBuilder:
         self.item.genstate.add_hint(name, value)
     def writeln(self, string):
         self.output += str(string) + "\n"
+    def write_effect(self, string):
+        self.item.write_effect(string)
     def include(self, fname):
         if os.path.isfile(fname):
             result = load_file(fname, self.item)
@@ -164,9 +170,6 @@ class ScriptBuilder:
             for key, value in result.data.items():
                 self.set_var(key, value)
         elif os.path.isdir(fname):
-            # path = os.path.join(fname, "**/*.*")
-            # file_list = glob.glob(path, recursive=True)
-            # file_random = random.choice(file_list)
             picker = filepicker.get_path(fname)
             filedef = picker.choose_random_with_name(self.item.name, self.item.genstate.hints)
             path = filedef.get_path()
@@ -178,6 +181,8 @@ class ScriptBuilder:
             else:
                 raise Exception("Not a file or directory!" + fname)
     def chance(self, base_chance, luck_scale, min_chance):
-        self.writeln("if math.random()*math.max({}, {}-{}*player.Luck) > 1 then return end".format(min_chance, base_chance, luck_scale));
+        if self.allow_random:
+            self.writeln("if math.random()*math.max({}, {}-{}*player.Luck) > 1 then return end".format(\
+                min_chance, base_chance, luck_scale));
     def get_output(self):
         return self.output

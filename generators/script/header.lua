@@ -7,6 +7,8 @@ Mod.item_names = {} -- List of item names
 Mod.item_ids = {} -- List of item ids (unordered)
 Mod.item_id_to_name = {} -- key = id, value = name
 Mod.item_name_to_id = {} -- key = name, value = id
+Mod.cards = {}
+Mod.pills = {}
 
 function Mod:get_player_id(player)
 	local game = Game()
@@ -82,7 +84,7 @@ function _get_player_items(id)
 end
 
 function _signal_refresh_cache(id)
-	local player = Isaac.GetPlayer(id)
+	local player = type(id) == "number" and Isaac.GetPlayer(id) or id
 	player:AddCacheFlags(CacheFlag.CACHE_ALL)
 	player:EvaluateItems()
 end
@@ -114,6 +116,8 @@ Mod._cache_firedelay_need_update = false
 function Mod.callbacks:evaluate_cache(player, flag)
 	minimum_tears = math.min(player.MaxFireDelay, 5)
 	Mod:call_callbacks(player, "evaluate_cache", flag)
+	-- Special call is for effects with temporary stat upgrades.
+	Mod:call_callbacks(player, "evaluate_cache_special", flag)
 	player.MaxFireDelay = math.max(minimum_tears, player.MaxFireDelay)
 end
 
@@ -185,6 +189,11 @@ function Mod.callbacks:update()
 				player_items.potential[item_id] = nil
 				Isaac.DebugString(("Added item %d!"):format(item_id))
 				_signal_refresh_cache(i-1)
+				local item_def = Mod.items[item_id]
+				local item_func = item_def["on_pickup"]
+				if item_func then
+					item_func(item_def, player)
+				end
 			else
 				player_items.potential[item_id] = player_items.potential[item_id] - 1
 				if player_items.potential[item_id] <= 0 then

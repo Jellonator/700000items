@@ -77,8 +77,6 @@ EFFECT_VALUE = 3
 
 FLYING_VALUE = 3
 
-
-
 class IsaacItem:
     """
     A class which represents an item.
@@ -123,7 +121,7 @@ class IsaacItem:
                 negative_value += 1
                 value += 1
         # Apply effect to item maybe?
-        if random.random() < 0.65:
+        if random.random() < 0.70:
             value -= self.add_effect()
         # Maybe add flying
         if value >= FLYING_VALUE and random.random() < 0.01:
@@ -139,14 +137,11 @@ class IsaacItem:
                 if random.random() < 0.13:
                     value -= self.stats.add_random_stat_special(self.genstate)
         # Add benefits from value
-        while value > 0:
-            value -= self.stats.add_random_stat(value, 1, self.genstate)
+        self.stats.add_random_stats(value, 1, self.genstate)
         # Add bad stuff
-        while negative_value > 0:
-            negative_value -= self.stats.add_random_stat(negative_value, -1, self.genstate)
+        self.stats.add_random_stats(negative_value, -1, self.genstate)
         # Create image
         self.gen_image()
-        random.setstate(rand_state)
         # Add to pools
         pool_chances = get_base_pool_chances()
         add_hints_to_poolchances(pool_chances, self.genstate)
@@ -158,6 +153,8 @@ class IsaacItem:
             self.pools[pname] = True
             if gname != None:
                 self.pools[gname] = True
+        # Reset random state
+        random.setstate(rand_state)
     def get_image_name(self):
         """
         Get the name of the image for this item
@@ -184,6 +181,9 @@ class IsaacItem:
         self.chargeval = random.choice(possible_values)
 
         return value
+    def write_effect(self, string):
+        self.effect += ','
+        self.effect += string
     def get_cacheflags(self):
         """
         Get a list of cacheflags for this item
