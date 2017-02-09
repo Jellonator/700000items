@@ -3,3 +3,5 @@ resources/
 **/*.pyc
 main.lua
 700000items
+create_grid.py
+out_grid.png
