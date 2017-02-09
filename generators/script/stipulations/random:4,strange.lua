@@ -1,3 +1,4 @@
+python[[gen.genstate.add_descriptors(["???", "Random"])]]
 -- if math.random()*math.max(1.1, 12 - player.Luck) > 1 then return end
 python[[
 rng = random.uniform(0.4, 0.8)#Between 40% and 80% chance of success

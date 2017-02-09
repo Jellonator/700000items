@@ -1,3 +1,4 @@
+python[[gen.genstate.add_descriptors(["Temporary", "Stats"])]]
 python[[
 if gen.get_var("room_change"):
     # Since this effect makes no sense in the context of being a new room,

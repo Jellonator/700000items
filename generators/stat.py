@@ -110,6 +110,13 @@ def generate_random_stat(statname, value):
     else:
         return round(random.uniform(a_value, b_value), 2)
 
+def updown(value):
+    return "Up" if value > 0 else "Down"
+
+def maybe_append(ls, value, name):
+    if value != 0:
+        ls.append("{} {}".format(name, updown(value)))
+
 # Value of a special stat
 STAT_SPECIAL_VALUE = 2
 
@@ -263,6 +270,17 @@ class IsaacStats:
         if self.weapon != None:
             ret += genStatStr("CACHE_WEAPON", "")
         ret += "\tend"
+        return ret
+    def get_descriptors(self):
+        ret = []
+        maybe_append(ret, self.luck, "Luck")
+        maybe_append(ret, self.hearts, "Health")
+        maybe_append(ret, self.hearts_black, "Evil")
+        maybe_append(ret, self.tears, "Tears")
+        maybe_append(ret, self.damage, "Damage")
+        maybe_append(ret, self.shot_speed, "Shot Speed")
+        maybe_append(ret, self.shot_range, "Range")
+        maybe_append(ret, self.speed, "Speed")
         return ret
     def add_random_weapon(self):
         # Weapons are not implemented yet, this will come in the future

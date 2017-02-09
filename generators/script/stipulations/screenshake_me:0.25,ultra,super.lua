@@ -1,3 +1,4 @@
+python[[gen.genstate.add_descriptors(["Shakey", "Rumbling"])]]
 --a stipulation WITH a screenshake! woo!
 python[[
 gen.include("stipulations")

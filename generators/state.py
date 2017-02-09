@@ -1,3 +1,5 @@
+import random
+
 hint_def = {}
 _current_hint_names = []
 
@@ -72,9 +74,12 @@ def debug_hints():
             print("\t{}+{}".format(hint_name, hint_value))
 
 CONST_BASE_DESCRIPTORS = [
-    "up", "down", "\'till", "and", "is", "near", "the end",
-    "gross", "bootleg", "seen", "I\'ve",
+    "Up", "Down", "\'Till", "Is", "Near", "The End",
+    "Gross", "Bootleg", "Seen", "I\'ve",
 ]
+
+CONST_WEIRD_COMBINERS = [" + ", " / ", " = ", " and ", " or "]
+CONST_ENDINGS = ["!", "?"]
 
 class IsaacGenState:
     """
@@ -120,3 +125,18 @@ class IsaacGenState:
             if match_name in name.lower():
                 for hint_name, hint_value in hint_list.items():
                     self.add_hint(hint_name, hint_value)
+    def add_descriptor(self, desc, value=1):
+        self.descriptors += [desc] * value
+    def add_descriptors(self, ls, value=1):
+        self.descriptors += ls * value
+    def gen_description(self):
+        ls = random.sample(self.descriptors, random.randint(2, 6))
+        ret = ls[0]
+        for s in ls[1:]:
+            space = " "
+            if random.random() < 0.08:
+                space = random.choice(CONST_WEIRD_COMBINERS)
+            ret += "{}{}".format(space, s)
+        if random.random() < 0.12:
+            ret += random.choice(CONST_ENDINGS)
+        return ret
