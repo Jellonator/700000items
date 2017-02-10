@@ -9,6 +9,6 @@ POSSIBLE_SHOOTS = [
     ("Tech X", "player:FireTechXLaser({0}, {1}, 32)"),
 ]
 shooty = random.choice(POSSIBLE_SHOOTS)
-gen.writeln(shooty[1].format("pos", "player:GetHeadDirection():Normalized() * 8 * player.ShotSpeed"))
+gen.writeln(shooty[1].format("pos", "player:GetLastDirection() * 8 * player.ShotSpeed"))
 gen.genstate.add_descriptor(shooty[0].title())
 ]]

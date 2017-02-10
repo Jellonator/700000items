@@ -9,7 +9,6 @@ VALID_STATUS = [
     ("Slowing", "AddSlowing(EntityRef(player), {0}, 0.5, Color(0.5, 0.5, 0.5, 1.0, 0, 0, 0))--{1}"),
     ("Charmed", "AddCharmed ({0})--{1}"),
     ("Confusion", "AddConfusion(EntityRef(player), {0}, false)--{1}"),
-    ("MidasFreeze", "AddMidasFreeze(EntityRef(player), {0})--{1}"),
     ("Fear", "AddFear(EntityRef(player), {0})--{1}"),
     ("Burn", "AddBurn(EntityRef(player), {0}, {1:.2f})"),
     ("Shrink", "AddShrink(EntityRef(player), {0})--{1}"),

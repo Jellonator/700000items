@@ -1,13 +1,14 @@
 Mod = RegisterMod("700000Items", 1)
---[[
-Per-Item data, such as: stats, item variants, functionality, etc.
---]]
+
 VALID_DAMAGE_SOURCES = {
 	[EntityType.ENTITY_TEAR] = true,
 	[EntityType.ENTITY_LASER] = true,
 	[EntityType.ENTITY_KNIFE] = true,
 }
 
+--[[
+Per-Item data, such as: stats, item variants, functionality, etc.
+--]]
 Mod.items = {} -- Item Data (indexable by name and id)
 Mod.item_names = {} -- List of item names
 Mod.item_ids = {} -- List of item ids (unordered)

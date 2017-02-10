@@ -17,14 +17,14 @@ Well, then this mod is for you!
  - random item names
  - random item descriptions
 
-The name "700,000 Items" is a reference to Jerma's video on the game [url=store.steampowered.com]700,000 Games[/url].
+The name &quot;700,000 Items&quot; is a reference to Jerma's video on the game [url=store.steampowered.com]700,000 Games[/url].
 
 *there is not actually 700,000 items. Not that it would be impossible, but it makes the game horribly slow to start and would take a lot of time to actually generate this many items. The game is already pretty strained at 2500 items. For reference, the base game has 504 items.
 
 If you want to generate more items, or you just want a fresh set of items, you can generate your own set of items! Just check out the git repository below, and follow the instructions in the README.
 
 Find me on Github: https://github.com/jellonator/700000items</description>
-    <version>1.2</version>
+    <version>1.3</version>
     <visibility>Public</visibility>
     <tag id="Items"/>
     <tag id="Active Items"/>
