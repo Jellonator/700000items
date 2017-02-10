@@ -156,7 +156,8 @@ class IsaacItem:
             if gname != None:
                 self.pools[gname] = True
         # Generate description
-        self.genstate.descriptors += self.stats.get_descriptors()
+        self.genstate.add_descriptors(self.stats.get_descriptors())
+        self.genstate.add_descriptors(self.name.split()[1:])
         self.description = self.genstate.gen_description()
         # Reset random state
         if self.seed:

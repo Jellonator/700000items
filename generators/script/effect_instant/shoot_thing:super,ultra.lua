@@ -10,5 +10,5 @@ POSSIBLE_SHOOTS = [
 ]
 shooty = random.choice(POSSIBLE_SHOOTS)
 gen.writeln(shooty[1].format("pos", "player:GetHeadDirection():Normalized() * 8 * player.ShotSpeed"))
-gen.genstate.add_descriptor(shooty[1].title())
+gen.genstate.add_descriptor(shooty[0].title())
 ]]
