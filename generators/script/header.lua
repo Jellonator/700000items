@@ -232,6 +232,7 @@ function Mod.callbacks:render()
 			Isaac.RenderText(tostring(item_i), (i-1)*128, (pos-1)*16, 255, 255, 255, 255);
 		end
 	end
+	Isaac.RenderText("Range: " .. tostring(Isaac.GetPlayer(0).TearHeight), 400, 0, 255, 255, 255, 255)
 end
 
 function Mod.callbacks:use_item(item, rng)
@@ -277,9 +278,11 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, Mod.callbacks.update)
 Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Mod.callbacks.evaluate_cache)
-Mod:AddCallback(ModCallbacks.MC_POST_RENDER, Mod.callbacks.render)
 Mod:AddCallback(ModCallbacks.MC_USE_ITEM, Mod.callbacks.use_item)
 Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.player_take_damage, EntityType.ENTITY_PLAYER)
 Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.enemy_take_damage)
 Mod:AddCallback(ModCallbacks.MC_USE_CARD, Mod.callbacks.use_card)
 Mod:AddCallback(ModCallbacks.MC_USE_PILL, Mod.callbacks.use_pill)
+
+--Uncomment for debug render
+-- Mod:AddCallback(ModCallbacks.MC_POST_RENDER, Mod.callbacks.render)

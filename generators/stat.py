@@ -8,7 +8,7 @@ STAT_RANGES = {
     'tears': 1,
     'shot_speed': 0.07,
     'damage': 0.7,
-    'range': 3.0,
+    'range': 2.0,
 }
 
 # Special, rarer stats (health) for items
@@ -33,7 +33,7 @@ CONST_WEAPONS = [
 # Stats and their weights
 STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
 STAT_WEIGHTS     = [    3.0,    1.8,     4.0,          1.8,      4.4,     4.6]
-STAT_WEIGHTS_BAD = [    3.2,    1.0,     4.0,          3.0,      2.4,     3.8]
+STAT_WEIGHTS_BAD = [    3.2,    0.8,     4.0,          3.0,      2.4,     3.8]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
 STAT_WEIGHTS_SPECIAL = [      8,      4,       2]
 
@@ -260,11 +260,12 @@ class IsaacStats:
         if self.luck != 0:
             ret += genStatStr("CACHE_LUCK", "Luck", "+", self.luck)
         if self.shot_range != 0:
-            ret +=\
-            "\t\tif flag == CacheFlag.CACHE_RANGE then\n"+\
-            "\t\t\tplayer.TearHeight = player.TearHeight - {:.2f}\n".format(self.shot_range)+\
-            "\t\t\tplayer.TearFallingSpeed = player.TearFallingSpeed - {:.2f}\n".format(self.shot_range/8)+\
-            "\t\tend\n"
+            ret += genStatStr("CACHE_RANGE", "TearHeight", "-", self.shot_range)
+            # ret +=\
+            # "\t\tif flag == CacheFlag.CACHE_RANGE then\n"+\
+            # "\t\t\tplayer.TearHeight = player.TearHeight - {:.2f}\n".format(self.shot_range)+\
+            # "\t\t\tplayer.TearFallingSpeed = player.TearFallingSpeed - {:.2f}\n".format(self.shot_range/8)+\
+            # "\t\tend\n"
         if self.flying != None:
             ret += genStatStr("CACHE_FLYING", "CanFly", "=", self.flying)
         if self.weapon != None:

@@ -159,6 +159,7 @@ open(get_output_path("main.lua"), 'w') as script:
 
 # Output metadata
 shutil.copy("metadata.xml", TARGET_FOLDER)
+shutil.copy("preview.jpg", TARGET_FOLDER)
 
 # Final prints
 print("Done!")
