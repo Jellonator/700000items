@@ -129,6 +129,7 @@ end
 
 local _room_id = -1
 local _enemies = {}
+local _killers = {}
 local _timer = 0
 local _timerf = 0
 function Mod.callbacks:update()
@@ -221,7 +222,8 @@ function Mod.callbacks:update()
 	for id, enemy in pairs(_enemies) do
 		if not enemy:Exists() then
 			_enemies[id] = nil
-			Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy)
+			Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy, _killers[id])
+			_killers[id] = nil
 		end
 	end
 
@@ -256,10 +258,17 @@ function Mod.callbacks:player_take_damage(player, amount, ...)
 	print("NOW AT " .. tostring(Mod.args.damage_taken) .. " DAMAGE")
 end
 
-function Mod.callbacks:enemy_take_damage(enemy, amount, ...)
+function Mod.callbacks:enemy_take_damage(enemy, amount, flag, source, ...)
 	if not enemy:IsVulnerableEnemy() then return end
+	_killers[enemy.Index] = _killers[enemy.Index] or {}
+	if source then
+		_killers[enemy.Index].Variant = source.Variant
+		_killers[enemy.Index].Type = source.Type
+		_killers[enemy.Index].SubType = source.SubType
+	end
 	Mod.args.damage_dealt = Mod.args.damage_dealt + amount
-	Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_take_damage", enemy, amount, ...)
+	Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_take_damage", 
+		enemy, amount, flag, source, ...)
 end
 
 function Mod.callbacks:use_pill(pill_effect)
