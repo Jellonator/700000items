@@ -5,6 +5,6 @@ room_change = function(self, player)
 	local pos = player.Position
 	if Game():GetRoom():IsFirstVisit() then
 		python[[gen.include("stipulations")]]
-		python[[gen.include("effect_instant")]]
+		python[[gen.include("effect_instant", exclude=["temporary_item", "temporary_stat_up"])]]
 	end
 end

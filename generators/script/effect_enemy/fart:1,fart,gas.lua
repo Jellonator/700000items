@@ -1,6 +1,6 @@
 python[[gen.genstate.add_descriptors(["Gas", "Gassy", "Fart", "Smell"])]]
 do
-python[[gen.chance(8, 0.7, 1)]]
+python[[gen.chance(8, 0.5, 1)]]
     local game = Game()
     python[[
 FART_TYPES = [1, 1, 1, 2, 2, 3]

@@ -4,6 +4,8 @@ for i, name in pairs(Mod.item_names) do
 	Mod.items[id] = def
 	Mod.items[name] = def
 
+	if def.init then def:init() end
+
 	table.insert(Mod.item_ids, id)
 end
 

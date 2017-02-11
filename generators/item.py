@@ -129,8 +129,10 @@ class IsaacItem:
                 negative_value += 1
                 value += 1
         # Apply effect to item maybe?
-        if random.random() < 0.90 if trinket else 0.70:
-            value -= self.add_effect()
+        if random.random() < 0.85 if trinket else 0.65:
+            effect_value = self.add_effect()
+            value -= effect_value
+            negative_value //= 2
             if trinket:#trinkets are one or the other!
                 value = 0
                 negative_value = 0

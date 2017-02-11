@@ -112,11 +112,15 @@ function _refresh_item_cache()
 	for i = 1, game:GetNumPlayers() do
 		local player_items = _get_player_items(i);
 		local player = game:GetPlayer(i-1);
-		player_items.list = {}
+		-- player_items.list = {}
 		player_items.potential = {}
 		for _, item_id in pairs(Mod.item_ids) do
-			if player:HasCollectible(item_id) then
+			if player:HasCollectible(item_id) and not player_items.list[item_id] then
 				player_items.list[item_id] = true
+				local item_def = Mod.items[item_id]
+				if item_def.on_add then
+					item_def:on_add(player)
+				end
 			end
 		end
 		_signal_refresh_cache(i-1)
@@ -171,6 +175,10 @@ function Mod.callbacks:update()
 		local item_i = 1
 		for item_id in pairs(list) do
 			if not player:HasCollectible(item_id) then
+				local item_def = Mod.items[item_id]
+				if item_def.on_remove then
+					item_def:on_remove(player)
+				end
 				list[item_id] = nil
 				Isaac.DebugString(("Removed item %d!"):format(item_id))
 				_signal_refresh_cache(i-1)
@@ -207,9 +215,11 @@ function Mod.callbacks:update()
 				Isaac.DebugString(("Added item %d!"):format(item_id))
 				_signal_refresh_cache(i-1)
 				local item_def = Mod.items[item_id]
-				local item_func = item_def["on_pickup"]
-				if item_func then
-					item_func(item_def, player)
+				if item_def.on_pickup then
+					item_def:on_pickup(player)
+				end
+				if item_def.on_add then
+					item_def:on_add(player)
 				end
 			else
 				player_items.potential[item_id] = player_items.potential[item_id] - 1

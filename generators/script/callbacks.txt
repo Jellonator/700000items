@@ -1,11 +1,20 @@
 List of callbacks:
-evaluate_cache
-room_change
-on_usage
-player_take_damage
-enemy_take_damage
+evaluate_cache: Called when cache is refreshed (stat upgrades)
+room_change: Called when room is changed
+player_take_damage: Player takes damage
+enemy_take_damage: Enemy takes damage
+on_add: Called when item is added to a player
+on_pickup: Called when item is picked up by player
+on_remove: Called when player removes an item (D100/D4/etc.)
+
+on_pickup differs from on_add because on_pickup only activates when picking up
+an item from an item pedestal. on_add activates with the giveitem command, the
+D4, and the D100. on_pickup is used to drop items on pickup, while on_add is
+used in conjunction with on_remove to make sure that the player has the right
+stuff
 
 MC_USE_PILL and MC_USE_CARD only work for custom pills and cards
 The following would be cool but don't work because no callbacks:
+on_usage
 take_pill
 use_card

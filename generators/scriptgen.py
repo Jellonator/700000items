@@ -66,6 +66,69 @@ CONST_PICKUP_SUBTYPES = {
     "trinket": ["0"],
 }
 
+CONST_COLLECTIBLES = [
+    # List of items that woudn't be totally broken or weird when
+    # Added to and removed from the player at varying intervals
+    "CollectibleType.COLLECTIBLE_DEAD_TOOTH",
+    "CollectibleType.COLLECTIBLE_EYE_OF_BELIAL",
+    "CollectibleType.COLLECTIBLE_JACOBS_LADDER",
+    "CollectibleType.COLLECTIBLE_LARGE_ZIT",
+    "CollectibleType.COLLECTIBLE_LEAD_PENCIL",
+    "CollectibleType.COLLECTIBLE_LITTLE_HORN",
+    "CollectibleType.COLLECTIBLE_SINUS_INFECTION",
+    "CollectibleType.COLLECTIBLE_TRACTOR_BEAM",
+    "CollectibleType.COLLECTIBLE_THE_WIZ",
+    "CollectibleType.COLLECTIBLE_SCATTER_BOMBS",
+    "CollectibleType.COLLECTIBLE_PUPULA_DUPLEX",
+    "CollectibleType.COLLECTIBLE_NUMBER_TWO",
+    "CollectibleType.COLLECTIBLE_NIGHT_LIGHT",
+    "CollectibleType.COLLECTIBLE_KIDNEY_STONE",
+    "CollectibleType.COLLECTIBLE_GLITTER_BOMBS",
+    "CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER",
+    "CollectibleType.COLLECTIBLE_EXPLOSIVO",
+    "CollectibleType.COLLECTIBLE_EPIPHORA",
+    "CollectibleType.COLLECTIBLE_DEAD_EYE",
+    "CollectibleType.COLLECTIBLE_CONTINUUM",
+    "CollectibleType.COLLECTIBLE_CIRCLE_OF_PROTECTION",
+    "CollectibleType.COLLECTIBLE_BLACK_POWDER",
+    "CollectibleType.COLLECTIBLE_WAFER",
+    "CollectibleType.COLLECTIBLE_TREASURE_MAP",
+    "CollectibleType.COLLECTIBLE_COMPASS",
+    "CollectibleType.COLLECTIBLE_BLUE_MAP",
+    "CollectibleType.COLLECTIBLE_TOUGH_LOVE",
+    "CollectibleType.COLLECTIBLE_TINY_PLANET",
+    "CollectibleType.COLLECTIBLE_TECHNOLOGY",
+    "CollectibleType.COLLECTIBLE_TECHNOLOGY_2",
+    "CollectibleType.COLLECTIBLE_TECH_X",
+    "CollectibleType.COLLECTIBLE_STRANGE_ATTRACTOR",
+    "CollectibleType.COLLECTIBLE_SPOON_BENDER",
+    "CollectibleType.COLLECTIBLE_SOY_MILK",
+    "CollectibleType.COLLECTIBLE_RUBBER_CEMENT",
+    "CollectibleType.COLLECTIBLE_PROPTOSIS",
+    "CollectibleType.COLLECTIBLE_PARASITE",
+    "CollectibleType.COLLECTIBLE_OUIJA_BOARD",
+    "CollectibleType.COLLECTIBLE_MY_REFLECTION",
+    "CollectibleType.COLLECTIBLE_MONSTROS_LUNG",
+    "CollectibleType.COLLECTIBLE_MOMS_KNIFE",
+    "CollectibleType.COLLECTIBLE_MOMS_EYE",
+    "CollectibleType.COLLECTIBLE_MIDAS_TOUCH",
+    "CollectibleType.COLLECTIBLE_MAGNETO",
+    "CollectibleType.COLLECTIBLE_LUMP_OF_COAL",
+    "CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE",
+    "CollectibleType.COLLECTIBLE_LOST_CONTACT",
+    "CollectibleType.COLLECTIBLE_LOKIS_HORNS",
+    "CollectibleType.COLLECTIBLE_LADDER",
+    "CollectibleType.COLLECTIBLE_IPECAC",
+    "CollectibleType.COLLECTIBLE_FIRE_MIND",
+    "CollectibleType.COLLECTIBLE_EPIC_FETUS",
+    "CollectibleType.COLLECTIBLE_DR_FETUS",
+    "CollectibleType.COLLECTIBLE_CUPIDS_ARROW",
+    "CollectibleType.COLLECTIBLE_CHOCOLATE_MILK",
+    "CollectibleType.COLLECTIBLE_BRIMSTONE",
+    "CollectibleType.COLLECTIBLE_ANTI_GRAVITY",
+    "CollectibleType.COLLECTIBLE_20_20",
+]
+
 def choose_random_active():
     return random.choice(CONST_ACTIVE_ITEM_IDS)
 
@@ -74,6 +137,14 @@ def choose_random_effect_common():
 
 def choose_random_effect_rare():
     return random.choice(CONST_EFFECT_TYPES_RARE)
+
+def choose_random_collectible():
+    return random.choice(CONST_COLLECTIBLES)
+
+def id_to_descriptors(item_id):
+    if "." in item_id:
+        item_id = item_id[item_id.rfind(".")+1:]
+    return [x.title() for x in item_id.split("_")[1:]]
 
 def does_effect_need_velocity(name):
     return name == "EffectVariant.SHOCKWAVE_DIRECTIONAL"
