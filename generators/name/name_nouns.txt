@@ -14,3 +14,4 @@ Poop
 Acid
 Liquid
 Shield
+Money

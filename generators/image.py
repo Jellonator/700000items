@@ -11,7 +11,8 @@ data_paths = {
     "face": "generators/graphics/face",
     "body": "generators/graphics/body",
     "accessory": "generators/graphics/accessory",
-    "symbol": "generators/graphics/symbol"
+    "symbol": "generators/graphics/symbol",
+    "back": "generators/graphics/back"
 }
 
 # Load files from part directories into table
@@ -19,8 +20,6 @@ data_files = {}
 for name, path in data_paths.items():
     generator = glob.glob(path+"/**/*.png", recursive=True)
     data_files[name] = [fname for fname in generator]
-
-OUTPUT_PATH = "700000items/resources/gfx/items/collectibles"
 
 # Palette colors to replace blue-keyed areas in sprites
 PALETTE = [
@@ -215,16 +214,26 @@ def outline_image(image):
                 draw.point(pos, palette)
     return Image.alpha_composite(new_image, image)
 
-def generate_image(name, item_name, hints):
+def add_backdrop(image, item_name, hints):
+    part = request_part("back", item_name, hints)
+    return Image.alpha_composite(part, image)
+
+def generate_image(output, item_name, hints, resize=None):
     """
     Generate a random image
     -- name: Name to save image as
     """
-    output = os.path.join(OUTPUT_PATH, name)
+    # output = os.path.join(OUTPUT_PATH, name)
     image = request_part("body", item_name, hints)
-    outline_chance = 3
+    outline_chance = 4
     if "outline" in hints:
         outline_chance += hints["outline"]
     if random.random() < 0.01*outline_chance:
         image = outline_image(image)
+    if random.random() < 0.25:
+        image = add_backdrop(image, item_name, hints)
+    if resize:
+        if isinstance(resize, list):
+            resize = (resize[0], resize[1])
+        image = image.resize(resize)
     image.save(output)

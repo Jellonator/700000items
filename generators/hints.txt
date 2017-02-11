@@ -2,7 +2,7 @@
 :super
 	good+2
 :curse|sacred|evil|holy
-	outline+6
+	outline+13
 :heart
 	stat-health+2
 	stat-special+2

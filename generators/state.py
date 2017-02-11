@@ -74,8 +74,13 @@ def debug_hints():
             print("\t{}+{}".format(hint_name, hint_value))
 
 CONST_BASE_DESCRIPTORS = [
-    "Up", "Down", "\'Till", "Is", "Near", "The End",
-    "Gross", "Bootleg", "Seen", "I\'ve",
+    "Up", "Down", "Is", "My", "More",
+    "Gross", "You", "Feel"
+]
+
+CONST_RARE_DESCRIPTORS = [
+    "Bootleg", "Ultimate", "Grand", "Supreme",
+
 ]
 
 CONST_WEIRD_COMBINERS = [" + ", " / ", " = ", " and ", " or "]
@@ -94,6 +99,9 @@ class IsaacGenState:
             hints = {}
         self.hints = hints
         self.descriptors = CONST_BASE_DESCRIPTORS.copy()
+        for value in CONST_RARE_DESCRIPTORS:
+            if random.random() < 0.3:
+                self.descriptors.append(value)
     def _check_hint(self, name):
         """
         make sure a hint exists

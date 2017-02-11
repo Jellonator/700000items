@@ -282,6 +282,8 @@ class IsaacStats:
         maybe_append(ret, self.shot_speed, "Shot Speed")
         maybe_append(ret, self.shot_range, "Range")
         maybe_append(ret, self.speed, "Speed")
+        if len(ret) >= 3:
+            ret.append("All Stats Up")
         return ret
     def add_random_weapon(self):
         # Weapons are not implemented yet, this will come in the future

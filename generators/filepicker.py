@@ -20,7 +20,9 @@ class PickFile:
     def __init__(self, path):
         self.hints = []
         self.path = path
+        self.name = os.path.splitext(os.path.basename(path))[0]
         if CONST_HINTS_PRE in path:
+            self.name = self.name[:self.name.find(CONST_HINTS_PRE)]
             pos = path.find(CONST_HINTS_PRE)
             ext_pos = path.rfind(".")
             hint_txt = path[pos+1:ext_pos]
@@ -48,7 +50,7 @@ class PickFolder:
         self.files = [PickFile(x) for x in glob.glob(selection, recursive=True)]
     def choose_random(self):
         return random.choice(self.files)
-    def choose_random_with_name(self, name, hint_def, base_weight=4):
+    def choose_random_with_name(self, name, hint_def, base_weight=4, exclude=[]):
         words = [x.lower() for x in name.split()]
         hints = {}
         for key, value in hint_def.items():
@@ -60,7 +62,7 @@ class PickFolder:
         weights = {}
         for filedef in self.files:
             weight = filedef.get_weight(hints)
-            if weight > 0:
+            if weight > 0 and filedef.name not in exclude:
                 weights[filedef] = weight
         (list_items, list_weights) = util.dict_to_lists(weights)
         ret = util.choice_weights(list_items, list_weights)

@@ -10,7 +10,10 @@ CONST_ACTIVE_ITEM_IDS = [
     160, 145, 137, 123, 111, 107, 56, 45, 41, 39, 36, 35, 34
 ]
 
-CONST_BASE_FILE = "generators/script/base.lua"
+CONST_ITEM_PASSIVE_FILE = "generators/script/item_passive.lua"
+CONST_ITEM_ACTIVE_FILE = "generators/script/item_active.lua"
+CONST_TRINKET_FILE = "generators/script/trinket.lua"
+CONST_CARD_FILE = "generators/script/card.lua"
 
 CONST_EFFECT_TYPES_COMMON = [
     "EffectVariant.PLAYER_CREEP_WHITE",
@@ -99,8 +102,17 @@ def load_string(string, item, fname):
     sb.parse(string, fname);
     return sb
 
-def generate_effect(item):
-    return load_file(CONST_BASE_FILE, item)
+def generate_item_active(item):
+    return load_file(CONST_ITEM_ACTIVE_FILE, item)
+
+def generate_item_passive(item):
+    return load_file(CONST_ITEM_PASSIVE_FILE, item)
+
+def generate_card_effect(item):
+    return load_file(CONST_CARD_FILE, item)
+
+def generate_trinket(item):
+    return load_file(CONST_TRINKET_FILE, item)
 
 CONST_PYTHON_BEGIN = "python[["
 CONST_PYTHON_END = "]]"
@@ -163,7 +175,7 @@ class ScriptBuilder:
         self.output += str(string) + "\n"
     def write_effect(self, string):
         self.item.write_effect(string)
-    def include(self, fname):
+    def include(self, fname, exclude=[]):
         if os.path.isfile(fname):
             result = load_file(fname, self.item)
             self.writeln(result.get_output())
@@ -171,7 +183,8 @@ class ScriptBuilder:
                 self.set_var(key, value)
         elif os.path.isdir(fname):
             picker = filepicker.get_path(fname)
-            filedef = picker.choose_random_with_name(self.item.name, self.item.genstate.hints)
+            filedef = picker.choose_random_with_name(self.item.name,\
+                self.item.genstate.hints, exclude=exclude)
             path = filedef.get_path()
             self.include(path)
         else:

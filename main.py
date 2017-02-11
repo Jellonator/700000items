@@ -30,7 +30,7 @@ def check_folder(dir):
 
 def generate_pocket_effect(name):
     tempitem = IsaacItem(name, None)
-    effect = scriptgen.load_file("generators/script/make_card.lua", tempitem)
+    effect = scriptgen.generate_card_effect(tempitem)
     return """function()
 {}
 end""".format(effect.get_output())

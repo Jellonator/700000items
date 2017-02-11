@@ -16,6 +16,7 @@ Mod.item_id_to_name = {} -- key = id, value = name
 Mod.item_name_to_id = {} -- key = name, value = id
 Mod.cards = {}
 Mod.pills = {}
+Mod.trinkets = {}
 
 function Mod:get_player_id(player)
 	local game = Game()
@@ -38,6 +39,16 @@ function Mod:call_callbacks(player_id, func, ...)
 		local item_func = item_def[func]
 		if item_func then
 			item_func(item_def, player, ...)
+		end
+	end
+	for i = 1, player:GetMaxTrinkets() do
+		local trinket_id = player:GetTrinket(i-1)
+		local trinket_def = Mod.trinkets[trinket_id]
+		if trinket_def then
+			local trinket_func = trinket_def[func]
+			if trinket_func then
+				trinket_func(trinket_def, player, ...)
+			end
 		end
 	end
 end
@@ -268,7 +279,7 @@ function Mod.callbacks:enemy_take_damage(enemy, amount, flag, source, ...)
 		_killers[enemy.Index].SubType = source.SubType
 	end
 	Mod.args.damage_dealt = Mod.args.damage_dealt + amount
-	Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_take_damage", 
+	Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_take_damage",
 		enemy, amount, flag, source, ...)
 end
 

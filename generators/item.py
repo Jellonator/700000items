@@ -5,8 +5,10 @@ from . import image
 from . import scriptgen
 from . import util
 import random
+import os
 
 CHARGE_VALUES = [2, 3, 4, 6]
+OUTPUT_IMAGE_PATH = "700000items/resources/gfx/items/collectibles"
 
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
     "challenge", "goldenChest", "redChest", "beggar", "demonBeggar", "curse",\
@@ -173,7 +175,12 @@ class IsaacItem:
         Add a random effect to this item
         Returns the value of the item
         """
-        script = scriptgen.generate_effect(self)
+        script = None
+        if self.type == "passive":
+            script = scriptgen.generate_item_passive(self)
+        else:
+            script = scriptgen.generate_item_active(self)
+
         self.effect += ','
         self.effect += script.get_output()
         value = script.get_var_default("value", 0) + 1
@@ -211,7 +218,8 @@ class IsaacItem:
         """
         Generate and save a random sprite for this item
         """
-        image.generate_image(self.get_image_name(), self.name, self.genstate.hints)
+        image.generate_image(os.path.join(OUTPUT_IMAGE_PATH,self.get_image_name()),\
+            self.name, self.genstate.hints)
     def get_pools(self):
         """
         Get a list of item pools this item belongs to
