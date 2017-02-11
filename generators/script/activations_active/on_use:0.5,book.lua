@@ -1,4 +1,3 @@
-python[[gen.item.type = "active"]]
 python[[gen.genstate.add_descriptors(["Reusable", "Active"])]]
 on_usage = function(self, player, rng)
 	local pos = player.Position

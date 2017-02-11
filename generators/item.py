@@ -9,6 +9,7 @@ import os
 
 CHARGE_VALUES = [2, 3, 4, 6]
 OUTPUT_IMAGE_PATH = "700000items/resources/gfx/items/collectibles"
+TRINKET_IMAGE_PATH = "700000items/resources/gfx/items/trinkets"
 
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
     "challenge", "goldenChest", "redChest", "beggar", "demonBeggar", "curse",\
@@ -90,7 +91,7 @@ class IsaacItem:
     effect = ""
     chargeval = 2
     description = "It's a mystery!"
-    def __init__(self, name, seed):
+    def __init__(self, name, seed, trinket=False):
         """
         Create a new item
         -- name: The name of this item
@@ -101,9 +102,12 @@ class IsaacItem:
         self.name = name
         self.seed = seed
         self.stats = IsaacStats()
-        self.genstate = IsaacGenState()
+        self.genstate = IsaacGenState(self.name)
         self.pools = {}
         self.effect = ""
+
+        if trinket:
+            self.type = "trinket"
 
         # Seeding
         rand_state = random.getstate()
@@ -125,8 +129,11 @@ class IsaacItem:
                 negative_value += 1
                 value += 1
         # Apply effect to item maybe?
-        if random.random() < 0.70:
+        if random.random() < 0.90 if trinket else 0.70:
             value -= self.add_effect()
+            if trinket:#trinkets are one or the other!
+                value = 0
+                negative_value = 0
         # Maybe add flying
         if value >= FLYING_VALUE and random.random() < 0.01:
             self.stats.flying = True
@@ -136,10 +143,11 @@ class IsaacItem:
             value = 0
             negative_value = 0
         # Apply up to two health upgrades
-        for i in range(0, 2):
-            if value >= STAT_SPECIAL_VALUE:
-                if random.random() < 0.13:
-                    value -= self.stats.add_random_stat_special(self.genstate)
+        if self.type != "trinket":
+            for i in range(0, 2):
+                if value >= STAT_SPECIAL_VALUE:
+                    if random.random() < 0.13:
+                        value -= self.stats.add_random_stat_special(self.genstate)
         # Add benefits from value
         self.stats.add_random_stats(value, 1, self.genstate)
         # Add bad stuff
@@ -147,16 +155,17 @@ class IsaacItem:
         # Create image
         self.gen_image()
         # Add to pools
-        pool_chances = get_base_pool_chances()
-        add_hints_to_poolchances(pool_chances, self.genstate)
-        (pool_names, pool_weights) = util.dict_to_lists(pool_chances)
-        num_pools = max(random.randint(0, 4), random.randint(1, 5))
-        for i in range(0, num_pools):
-            pname = util.choice_weights(pool_names, pool_weights)
-            gname = get_greed_name(pname)
-            self.pools[pname] = True
-            if gname != None:
-                self.pools[gname] = True
+        if not trinket:
+            pool_chances = get_base_pool_chances()
+            add_hints_to_poolchances(pool_chances, self.genstate)
+            (pool_names, pool_weights) = util.dict_to_lists(pool_chances)
+            num_pools = max(random.randint(0, 4), random.randint(1, 5))
+            for i in range(0, num_pools):
+                pname = util.choice_weights(pool_names, pool_weights)
+                gname = get_greed_name(pname)
+                self.pools[pname] = True
+                if gname != None:
+                    self.pools[gname] = True
         # Generate description
         self.genstate.add_descriptors(self.stats.get_descriptors())
         self.genstate.add_descriptors(self.name.split()[1:])
@@ -169,22 +178,34 @@ class IsaacItem:
         Get the name of the image for this item
         """
         name = self.name.replace(" ", "_").lower()
-        return "collectibles_{}.png".format(name)
+        base = "trinket" if self.type == "trinket" else "collectible"
+        return "{}_{}.png".format(base, name)
     def add_effect(self):
         """
         Add a random effect to this item
         Returns the value of the item
         """
+        # Determine active or passive
+        # Default 1/10 chance
+        if self.type != "trinket":
+            active_hint = self.genstate.get_hint("active")+0.1
+            active_denom = 1 + active_hint
+            active_chance = active_hint / active_denom
+            if random.random() < active_chance:
+                self.type = "active"
+        # Generate script
         script = None
         if self.type == "passive":
-            script = scriptgen.generate_item_passive(self)
+            script = scriptgen.generate_item_passive(self.genstate)
+        elif self.type == "trinket":
+            script = scriptgen.generate_trinket(self.genstate)
         else:
-            script = scriptgen.generate_item_active(self)
-
+            script = scriptgen.generate_item_active(self.genstate)
         self.effect += ','
         self.effect += script.get_output()
         value = script.get_var_default("value", 0) + 1
 
+        # Determine charge value
         expected_id = max(min(value, len(CHARGE_VALUES)), 1)-1
         possible_values = [x for x in CHARGE_VALUES]
         possible_values += [CHARGE_VALUES[expected_id]]*3
@@ -195,9 +216,6 @@ class IsaacItem:
         self.chargeval = random.choice(possible_values)
 
         return value
-    def write_effect(self, string):
-        self.effect += ','
-        self.effect += string
     def get_cacheflags(self):
         """
         Get a list of cacheflags for this item
@@ -218,7 +236,8 @@ class IsaacItem:
         """
         Generate and save a random sprite for this item
         """
-        image.generate_image(os.path.join(OUTPUT_IMAGE_PATH,self.get_image_name()),\
+        path = TRINKET_IMAGE_PATH if self.type == "trinket" else OUTPUT_IMAGE_PATH
+        image.generate_image(os.path.join(path,self.get_image_name()),\
             self.name, self.genstate.hints)
     def get_pools(self):
         """

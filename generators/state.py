@@ -91,13 +91,15 @@ class IsaacGenState:
     Represents the state of an item generator
     Currently only deals with hints
     """
-    def __init__(self, hints=None):
+    def __init__(self, item_name, hints=None):
         """
         Create a new generator state
         """
         if hints == None:
             hints = {}
         self.hints = hints
+        self.name = item_name
+        self.effect = ""
         self.descriptors = CONST_BASE_DESCRIPTORS.copy()
         for value in CONST_RARE_DESCRIPTORS:
             if random.random() < 0.3:

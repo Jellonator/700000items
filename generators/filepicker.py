@@ -34,6 +34,7 @@ class PickFile:
                     self.hints.append(hint)
             if weight > 0:
                 self.weight = weight
+        # print(self.name)
     def get_weight(self, hints):
         weight = self.weight
         for hint, value in hints.items():

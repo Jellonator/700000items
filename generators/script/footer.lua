@@ -5,8 +5,6 @@ for i, name in pairs(Mod.item_names) do
 	Mod.items[name] = def
 
 	table.insert(Mod.item_ids, id)
-	Mod.item_id_to_name[id] = name
-	Mod.item_name_to_id[name] = id
 end
 
 Mod.card_names = {}
@@ -25,4 +23,13 @@ end
 for _, name in ipairs(Mod.pill_names) do
 	local id = Isaac.GetPillEffectByName(name)
 	Mod.pills[id] = Mod.pills[name]
+end
+
+Mod.trinket_names = {}
+for name, def in pairs(Mod.trinkets) do
+	table.insert(Mod.trinket_names, name)
+end
+for _, name in ipairs(Mod.trinket_names) do
+	local id = Isaac.GetTrinketIdByName(name)
+	Mod.trinkets[id] = Mod.trinkets[name]
 end

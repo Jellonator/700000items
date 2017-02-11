@@ -2,6 +2,7 @@
 from generators import namegen
 from generators.item import IsaacItem
 from generators.item import POOL_NAMES
+from generators.state import IsaacGenState
 from generators import scriptgen
 import os
 import sys
@@ -12,6 +13,8 @@ import random
 # Used to be 700,000 but its really not good to have that many items
 MAGIC_NUMBER = 500
 TARGET_FOLDER = "700000items"
+NUM_PILLS = 25
+NUM_TRINKETS = 100
 
 # Utility functions
 def get_output_path(dir):
@@ -29,8 +32,9 @@ def check_folder(dir):
 
 
 def generate_pocket_effect(name):
-    tempitem = IsaacItem(name, None)
-    effect = scriptgen.generate_card_effect(tempitem)
+    # tempitem = IsaacItem(name, None)
+    state = IsaacGenState(name)
+    effect = scriptgen.generate_card_effect(state)
     return """function()
 {}
 end""".format(effect.get_output())
@@ -63,13 +67,16 @@ while True:
 # Make sure folders exist
 check_folder(get_output_path('content'))
 check_folder(get_output_path('resources/gfx/items/collectibles'))
+check_folder(get_output_path('resources/gfx/items/trinkets'))
 
 # XML definition of item pool entry
 ITEMPOOL_DEF = "\t\t<Item Name=\"{}\" Weight=\"1\" DecreaseBy=\"1\" RemoveOn=\"0.1\"/>\n"
 
 # Write out items to xml files
 items = {}
+trinkets = {}
 item_number = 1
+trinket_number = 1
 xml_items_name = get_output_path('content/items.xml')
 xml_pools_name = get_output_path('content/itempools.xml')
 xml_pocketitems_name = get_output_path('content/pocketitems.xml')
@@ -102,6 +109,19 @@ open(get_output_path("main.lua"), 'w') as script:
             pools[pool].append(item.name)
         script.write("Mod.items[\"{}\"] = {}\n".format(\
             item.name, item.get_definition()))
+    max_failed_tries = NUM_TRINKETS
+    while len(trinkets) < NUM_TRINKETS and max_failed_tries > 0:
+        name = namegen.generate_name()
+        if name in trinkets:
+            max_failed_tries -= 1
+            continue
+        seed = hash(name)
+        trinket = IsaacItem(name, seed, True)
+        trinkets[name] = trinket.name
+        trinket_number += 1
+        xml_items.write("\t{}\n".format(trinket.gen_xml()))
+        script.write("Mod.trinkets[\"{}\"] = {}\n".format(\
+            item.name, item.get_definition()))
     xml_items.write("</items>\n");
 
     # write out item names
@@ -125,7 +145,7 @@ open(get_output_path("main.lua"), 'w') as script:
 
         # generate pill names
         pill_names = {}
-        for i in range(0, 25):
+        for i in range(0, NUM_PILLS):
             name = namegen.generate_name()
             pill_names[name] = name
         # generate pills

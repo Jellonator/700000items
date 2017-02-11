@@ -29,7 +29,7 @@
 	pickup-sack+1
 :bag|sack
 :book
-	active+99999
+	active+15
 	pool-library+10
 :worm
 	trinket+99999
@@ -54,4 +54,5 @@
 :luck
 	stat-luck+4
 :head
+	active+1
 	pool-goldenChest+8

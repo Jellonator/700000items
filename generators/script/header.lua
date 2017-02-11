@@ -12,11 +12,9 @@ Per-Item data, such as: stats, item variants, functionality, etc.
 Mod.items = {} -- Item Data (indexable by name and id)
 Mod.item_names = {} -- List of item names
 Mod.item_ids = {} -- List of item ids (unordered)
-Mod.item_id_to_name = {} -- key = id, value = name
-Mod.item_name_to_id = {} -- key = name, value = id
-Mod.cards = {}
-Mod.pills = {}
-Mod.trinkets = {}
+Mod.cards = {} -- list of cards
+Mod.pills = {} -- list of pills
+Mod.trinkets = {} -- list of trinkets
 
 function Mod:get_player_id(player)
 	local game = Game()
@@ -185,7 +183,7 @@ function Mod.callbacks:update()
 		local item_id = entity.SubType
 		if entity.Type == EntityType.ENTITY_PICKUP
 		and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE
-		and Mod.item_id_to_name[item_id] then
+		and Mod.items[item_id] then
 			for i = 1, game:GetNumPlayers() do
 				local player_items = _get_player_items(i)
 				if player_items.list[item_id] == nil then

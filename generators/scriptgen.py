@@ -93,26 +93,26 @@ def choose_random_pickup():
 def get_pickup_name(name):
     return CONST_PICKUP_VARIANTS[name]
 
-def load_file(fname, item):
+def load_file(fname, genstate):
     with open(fname, 'r') as fh:
-        return load_string(fh.read(), item, fname)
+        return load_string(fh.read(), genstate, fname)
 
-def load_string(string, item, fname):
-    sb = ScriptBuilder(item);
-    sb.parse(string, fname);
+def load_string(string, genstate, fname):
+    sb = ScriptBuilder(genstate);
+    sb.parse_file_to_output(fname);
     return sb
 
-def generate_item_active(item):
-    return load_file(CONST_ITEM_ACTIVE_FILE, item)
+def generate_item_active(genstate):
+    return load_file(CONST_ITEM_ACTIVE_FILE, genstate)
 
-def generate_item_passive(item):
-    return load_file(CONST_ITEM_PASSIVE_FILE, item)
+def generate_item_passive(genstate):
+    return load_file(CONST_ITEM_PASSIVE_FILE, genstate)
 
-def generate_card_effect(item):
-    return load_file(CONST_CARD_FILE, item)
+def generate_card_effect(genstate):
+    return load_file(CONST_CARD_FILE, genstate)
 
-def generate_trinket(item):
-    return load_file(CONST_TRINKET_FILE, item)
+def generate_trinket(genstate):
+    return load_file(CONST_TRINKET_FILE, genstate)
 
 CONST_PYTHON_BEGIN = "python[["
 CONST_PYTHON_END = "]]"
@@ -121,11 +121,11 @@ CONST_PYTHON_END_LEN = len(CONST_PYTHON_END)
 CONST_GEN_PATH = "generators/script/"
 
 class ScriptBuilder:
-    def __init__(self, item):
-        self.output = ""
+    def __init__(self, genstate):
+        self.output = []
+        self.buffer = ""
         self.data = {}
-        self.item = item
-        self.genstate = item.genstate
+        self.genstate = genstate
         self.allow_random = True
     def set_allow_random(self, value):
         self.allow_random = value
@@ -143,7 +143,15 @@ class ScriptBuilder:
             return self.data[name]
         else:
             return other
+    def parse_file(self, fname):
+        with open(fname, 'r') as fh:
+            self.parse(fh.read(), fname)
+    def parse_file_to_output(self, fname):
+        self.parse_file(fname)
+        self.write_effect(self.buffer)
+        self.buffer = ""
     def parse(self, string, fname):
+        self.buffer = ""
         while len(string) > 0:
             if CONST_PYTHON_BEGIN in string and CONST_PYTHON_END in string:
                 # Find positions
@@ -165,32 +173,39 @@ class ScriptBuilder:
             else:
                 self.write(string)
                 string = ""
+    def parse_to_output(self, string, fname):
+        self.parse(string, fname)
+        self.write_effect(self.buffer)
+        self.buffer = ""
     def write(self, string):
-        self.output += str(string)
+        self.buffer += str(string)
     def get_hint(self, name):
-        return self.item.genstate.get_hint(name)
+        return self.genstate.get_hint(name)
     def add_hint(self, name, value):
-        self.item.genstate.add_hint(name, value)
+        self.genstate.add_hint(name, value)
     def writeln(self, string):
-        self.output += str(string) + "\n"
+        self.buffer += str(string) + "\n"
     def write_effect(self, string):
-        self.item.write_effect(string)
+        self.output.append(str(string))
     def include(self, fname, exclude=[]):
         if os.path.isfile(fname):
-            result = load_file(fname, self.item)
-            self.writeln(result.get_output())
-            for key, value in result.data.items():
-                self.set_var(key, value)
+            # result = load_file(fname, self.genstate)
+            # self.writeln(result.get_output())
+            # for key, value in result.data.items():
+            #     self.set_var(key, value)
+            pbuffer = self.buffer
+            self.parse_file(fname)
+            self.buffer = pbuffer + self.buffer
         elif os.path.isdir(fname):
             picker = filepicker.get_path(fname)
-            filedef = picker.choose_random_with_name(self.item.name,\
-                self.item.genstate.hints, exclude=exclude)
+            filedef = picker.choose_random_with_name(self.genstate.name,\
+                self.genstate.hints, exclude=exclude)
             path = filedef.get_path()
             self.include(path)
         else:
             base_dir = os.path.dirname(fname)
             if not base_dir.startswith(CONST_GEN_PATH):
-                self.include(os.path.join(CONST_GEN_PATH, fname))
+                self.include(os.path.join(CONST_GEN_PATH, fname), exclude)
             else:
                 raise Exception("Not a file or directory!" + fname)
     def chance(self, base_chance, luck_scale, min_chance):
@@ -198,4 +213,4 @@ class ScriptBuilder:
             self.writeln("if math.random()*math.max({}, {}-{}*player.Luck) > 1 then return end".format(\
                 min_chance, base_chance, luck_scale));
     def get_output(self):
-        return self.output
+        return ",".join(self.output)
