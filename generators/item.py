@@ -215,7 +215,7 @@ class IsaacItem:
             possible_values += [CHARGE_VALUES[expected_id+1]]
         self.chargeval = random.choice(possible_values)
 
-        return value
+        return value - 1
     def get_cacheflags(self):
         """
         Get a list of cacheflags for this item

@@ -32,7 +32,7 @@ CONST_WEAPONS = [
 
 # Stats and their weights
 STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
-STAT_WEIGHTS     = [    3.2,    1.8,     4.0,          1.8,      4.3,     4.4]
+STAT_WEIGHTS     = [    3.4,    1.8,     4.0,          1.8,      4.3,     4.0]
 STAT_WEIGHTS_BAD = [    3.2,    0.8,     4.0,          3.0,      2.4,     3.8]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
 STAT_WEIGHTS_SPECIAL = [      8,      4,       2]
