@@ -147,11 +147,12 @@ class IsaacItem:
         if self.type == "active" and random.random() < 0.9:
             value = 0
             negative_value = 0
-        # Apply up to two health upgrades
+        # Apply up to two health upgrades (passives only)
         if self.type == "passive":
+            hp_chance = self.genstate.get_hint("stat-special")
             for i in range(0, 2):
                 if value >= STAT_SPECIAL_VALUE:
-                    if random.random() < 0.13:
+                    if random.random() < 0.1 * (1 + hp_chance):
                         value -= self.stats.add_random_stat_special(self.genstate)
         # Add benefits from value
         self.stats.add_random_stats(value, 1, self.genstate)
