@@ -62,10 +62,17 @@ end
 Global data, such as: damage taken, damage dealt, coins collected
 --]]
 Mod.args = {}
+Mod.args.damage_taken = 0
+Mod.args.damage_dealt = 0
+Mod.args.room_changed = false
 
 --[[
 Utility functions
 --]]
+function random_choice(t)
+	return t[math.random(#t)]
+end
+
 function add_function_to_def(item_name, func_name, func)
 	local item_def = Mod.items[item_name]
 	if item_def[func_name] then
@@ -156,6 +163,7 @@ function Mod.callbacks:update()
 	end
 	local game = Game()
 
+	Mod.args.room_changed = false
 	-- refresh for room change
 	local level = game:GetLevel()
 	local room_id = level:GetCurrentRoomIndex()
@@ -164,6 +172,7 @@ function Mod.callbacks:update()
 		_refresh_item_cache()
 		Mod.args.damage_taken = 0
 		Mod.args.damage_dealt = 0
+		Mod.args.room_changed = true
 		Mod:call_callbacks_all("room_change")
 		_enemies = {}
 	end
@@ -233,16 +242,31 @@ function Mod.callbacks:update()
 
 	-- add enemies to list
 	for _, entity in pairs(Isaac.GetRoomEntities()) do
-		if entity:IsActiveEnemy(false) and not _enemies[entity.Index] then
-			_enemies[entity.Index] = entity:ToNPC()
+		if not _enemies[entity.Index] then
+			-- Randomly replace trinkets as they spawn (50% chance)
+			if entity.Type == EntityType.ENTITY_PICKUP
+			and entity.Variant == PickupVariant.PICKUP_TRINKET
+			and not Mod.args.room_changed then
+				local entity = entity:ToPickup()
+				if math.random() < 0.5 then
+					trinket_name = random_choice(Mod.trinket_names)
+					trinket_id = Isaac.GetTrinketIdByName(trinket_name)
+					entity:Morph(EntityType.ENTITY_PICKUP,
+						PickupVariant.PICKUP_TRINKET, trinket_id, true)
+				end
+			end
+			_enemies[entity.Index] = entity
 		end
 	end
 
 	-- check for dead enemies
-	for id, enemy in pairs(_enemies) do
-		if not enemy:Exists() then
+	for id, entity in pairs(_enemies) do
+		if not entity:Exists() then
 			_enemies[id] = nil
-			Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy, _killers[id])
+			if entity:IsActiveEnemy(false) then
+				local enemy = entity:ToNPC()
+				Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy, _killers[id])
+			end
 			_killers[id] = nil
 		end
 	end

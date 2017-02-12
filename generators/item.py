@@ -128,6 +128,9 @@ class IsaacItem:
             if random.random() < 0.12:
                 negative_value += 1
                 value += 1
+        if trinket:
+            value = max(1, value // 2)
+            negative_value //= 2
         # Apply effect to item maybe?
         if random.random() < 0.85 if trinket else 0.65:
             effect_value = self.add_effect()
@@ -220,7 +223,7 @@ class IsaacItem:
             possible_values += [CHARGE_VALUES[expected_id+1]]
         self.chargeval = random.choice(possible_values)
 
-        return value - 1
+        return value
     def get_cacheflags(self):
         """
         Get a list of cacheflags for this item
