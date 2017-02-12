@@ -1,4 +1,19 @@
 import random
+import os
+TARGET_FOLDER = "700000items"
+
+def get_output_path(dir):
+    """
+    Get a path under the output path
+    """
+    return os.path.join(TARGET_FOLDER, dir)
+
+def check_folder(dir):
+    """
+    Ensures that a folder exists
+    """
+    if not os.path.isdir(dir):
+        os.makedirs(dir)
 
 def dict_to_lists(dict):
     """

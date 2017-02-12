@@ -4,6 +4,7 @@ from generators.item import IsaacItem
 from generators.item import POOL_NAMES
 from generators.state import IsaacGenState
 from generators import scriptgen
+from generators import util
 import os
 import sys
 import shutil
@@ -12,32 +13,23 @@ import random
 # Generate X number of items
 # Used to be 700,000 but its really not good to have that many items
 MAGIC_NUMBER = 500
-TARGET_FOLDER = "700000items"
 NUM_PILLS = 25
 NUM_TRINKETS = 100
+HARDCODED_ITEMS = {
+    1101: ("Mr. Box", "Seen Is I've Near Meh"),
+    700000: ("Last Item", "Fold"),
+    91: ("True last item", "Isn't a hidden object clone!"),
+}
+HARDCODED_ITEM_NAMES = [x for (x, _) in HARDCODED_ITEMS.values()]
 
 # Utility functions
-def get_output_path(dir):
-    """
-    Get a path under the output path
-    """
-    return os.path.join(TARGET_FOLDER, dir)
-
-def check_folder(dir):
-    """
-    Ensures that a folder exists
-    """
-    if not os.path.isdir(dir):
-        os.makedirs(dir)
-
-
 def generate_pocket_effect(name):
     # tempitem = IsaacItem(name, None)
     state = IsaacGenState(name)
     effect = scriptgen.generate_card_effect(state)
-    return """function()
+    return ("""function()
 {}
-end""".format(effect.get_output())
+end""".format(effect.get_output()), state.gen_description())
 
 # Parse arguments
 if len(sys.argv) > 1:
@@ -47,9 +39,9 @@ if len(sys.argv) > 1:
     MAGIC_NUMBER = int(arg)
 
 # Remove previous mod folder
-if os.path.exists(TARGET_FOLDER):
+if os.path.exists(util.TARGET_FOLDER):
     print("Removing previous mod folder...")
-    shutil.rmtree(TARGET_FOLDER)
+    shutil.rmtree(util.TARGET_FOLDER)
 
 # Confirm number of items
 print("{} items will be generated.".format(MAGIC_NUMBER))
@@ -65,9 +57,9 @@ while True:
     print("Not a valid yes or no answer")
 
 # Make sure folders exist
-check_folder(get_output_path('content'))
-check_folder(get_output_path('resources/gfx/items/collectibles'))
-check_folder(get_output_path('resources/gfx/items/trinkets'))
+util.check_folder(util.get_output_path('content'))
+util.check_folder(util.get_output_path('resources/gfx/items/collectibles'))
+util.check_folder(util.get_output_path('resources/gfx/items/trinkets'))
 
 # XML definition of item pool entry
 ITEMPOOL_DEF = "\t\t<Item Name=\"{}\" Weight=\"1\" DecreaseBy=\"1\" RemoveOn=\"0.1\"/>\n"
@@ -75,14 +67,13 @@ ITEMPOOL_DEF = "\t\t<Item Name=\"{}\" Weight=\"1\" DecreaseBy=\"1\" RemoveOn=\"0
 # Write out items to xml files
 items = {}
 trinkets = {}
-item_number = 1
 trinket_number = 1
-xml_items_name = get_output_path('content/items.xml')
-xml_pools_name = get_output_path('content/itempools.xml')
-xml_pocketitems_name = get_output_path('content/pocketitems.xml')
+xml_items_name = util.get_output_path('content/items.xml')
+xml_pools_name = util.get_output_path('content/itempools.xml')
+xml_pocketitems_name = util.get_output_path('content/pocketitems.xml')
 with open(xml_items_name, 'w') as xml_items,\
 open(xml_pools_name, 'w') as xml_pools,\
-open(get_output_path("main.lua"), 'w') as script:
+open(util.get_output_path("main.lua"), 'w') as script:
     # header
     with open("generators/script/header.lua", 'r') as header:
         script.write(header.read())
@@ -91,24 +82,36 @@ open(get_output_path("main.lua"), 'w') as script:
     for name in POOL_NAMES:
         pools[name] = []
 
-    # Actual item generation here
+    # Generate items
     xml_items.write("<items gfxroot=\"gfx/items/\" version=\"1\">\n");
     max_failed_tries = MAGIC_NUMBER
+    ITEM_NUMBERS = random.sample([x for x in range(1, 700000+1) if x not in HARDCODED_ITEMS], MAGIC_NUMBER)
     while len(items) < MAGIC_NUMBER and max_failed_tries > 0:
         name = namegen.generate_name()
-        if name in items:
+        if name in items or name in HARDCODED_ITEM_NAMES:
             max_failed_tries -= 1
+            print("Item name already exists, retrying: {}".format(name))
             continue
         seed = hash(name)
-        full_name = str(item_number) + " " + name
+        full_name = str(ITEM_NUMBERS.pop()) + " " + name
         item = IsaacItem(full_name, seed)
         items[name] = item.name
-        item_number += 1
         xml_items.write("\t{}\n".format(item.gen_xml()))
         for pool in item.get_pools():
             pools[pool].append(item.name)
         script.write("Mod.items[\"{}\"] = {}\n".format(\
             item.name, item.get_definition()))
+    for num, (name, desc) in HARDCODED_ITEMS.items():
+        seed = hash(name)
+        full_name = str(num) + " " + name
+        item = IsaacItem(full_name, seed, description=desc)
+        items[name] = item.name
+        xml_items.write("\t{}\n".format(item.gen_xml()))
+        for pool in item.get_pools():
+            pools[pool].append(item.name)
+        script.write("Mod.items[\"{}\"] = {}\n".format(\
+            item.name, item.get_definition()))
+    # Generate trinkets
     max_failed_tries = NUM_TRINKETS
     while len(trinkets) < NUM_TRINKETS and max_failed_tries > 0:
         name = namegen.generate_name()
@@ -121,10 +124,10 @@ open(get_output_path("main.lua"), 'w') as script:
         trinket_number += 1
         xml_items.write("\t{}\n".format(trinket.gen_xml()))
         script.write("Mod.trinkets[\"{}\"] = {}\n".format(\
-            item.name, item.get_definition()))
+            trinket.name, item.get_definition()))
     xml_items.write("</items>\n");
 
-    # write out item names
+    # write out item names to script
     script.write("Mod.item_names = {\n")
     for name, item_name in items.items():
         script.write("\t\"{}\",\n".format(item_name))
@@ -146,31 +149,16 @@ open(get_output_path("main.lua"), 'w') as script:
         # generate pill names
         pill_names = {}
         for i in range(0, NUM_PILLS):
-            name = namegen.generate_name()
-            pill_names[name] = name
-        # generate pills
-        for pill_name in pill_names.keys():
+            rand_name = namegen.generate_name()
+            (pill_script, pill_name) = generate_pocket_effect(rand_name)
+            pill_names[pill_name] = pill_script
+        # write out pills
+        for pill_name, pill_script in pill_names.items():
             xml_pocketitems.write("\t<pilleffect name=\"{}\" />\n".format(pill_name))
-            pill_script = generate_pocket_effect(pill_name)
             script.write("Mod.pills[\"{}\"] = {}\n".format(pill_name, pill_script))
 
-        # generate card names
-        # There is currently something wrong with card generation, so it is
-        # disabled. Seems to be an issue with the API though.
-        card_names = {}
-        # for i in range(0, 25):
-        #     name = namegen.generate_name()
-        #     card_names[name] = name
         # generate cards
-        for card_name in card_names.keys():
-            card_type = random.choice(['card', 'card', 'rune'])
-            description = "It's a {}!".format(card_type)
-            hud = "".join(card_name.split()).replace(".", "").replace("\'", "")
-            xml_pocketitems.write("\t<{} name=\"{}\" hud=\"{}\" description=\"{}\"/>\n".format(\
-                card_type, card_name, hud, description))
-            card_script = generate_pocket_effect(card_name)
-            script.write("Mod.cards[\"{}\"] = {}\n".format(card_name, card_script))
-
+        # Nothing here yet, cards seem to be bugged?
         xml_pocketitems.write("</pocketitems>\n");
 
     # footer
@@ -178,8 +166,8 @@ open(get_output_path("main.lua"), 'w') as script:
         script.write(footer.read())
 
 # Output metadata
-shutil.copy("metadata.xml", TARGET_FOLDER)
-shutil.copy("preview.jpg", TARGET_FOLDER)
+shutil.copy("metadata.xml", util.TARGET_FOLDER)
+shutil.copy("preview.jpg", util.TARGET_FOLDER)
 
 # Final prints
 print("Done!")

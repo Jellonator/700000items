@@ -91,7 +91,7 @@ class IsaacItem:
     effect = ""
     chargeval = 2
     description = "It's a mystery!"
-    def __init__(self, name, seed, trinket=False):
+    def __init__(self, name, seed, trinket=False, description=None):
         """
         Create a new item
         -- name: The name of this item
@@ -169,9 +169,12 @@ class IsaacItem:
                 if gname != None:
                     self.pools[gname] = True
         # Generate description
-        self.genstate.add_descriptors(self.stats.get_descriptors())
-        self.genstate.add_descriptors(self.name.split()[1:])
-        self.description = self.genstate.gen_description()
+        if description:
+            self.description = description
+        else:
+            self.genstate.add_descriptors(self.stats.get_descriptors())
+            self.genstate.add_descriptors(self.name.split()[1:])
+            self.description = self.genstate.gen_description()
         # Reset random state
         if self.seed:
             random.setstate(rand_state)
