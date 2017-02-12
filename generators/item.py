@@ -148,7 +148,7 @@ class IsaacItem:
             value = 0
             negative_value = 0
         # Apply up to two health upgrades
-        if self.type != "trinket":
+        if self.type == "passive":
             for i in range(0, 2):
                 if value >= STAT_SPECIAL_VALUE:
                     if random.random() < 0.13:
