@@ -87,7 +87,7 @@ CONST_COLLECTIBLES = [
     "CollectibleType.COLLECTIBLE_HEAD_OF_THE_KEEPER",
     "CollectibleType.COLLECTIBLE_EXPLOSIVO",
     "CollectibleType.COLLECTIBLE_EPIPHORA",
-    "CollectibleType.COLLECTIBLE_DEAD_EYE",
+    # "CollectibleType.COLLECTIBLE_DEAD_EYE", Removed because it is kinda broken
     "CollectibleType.COLLECTIBLE_CONTINUUM",
     "CollectibleType.COLLECTIBLE_CIRCLE_OF_PROTECTION",
     "CollectibleType.COLLECTIBLE_BLACK_POWDER",

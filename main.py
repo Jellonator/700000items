@@ -90,7 +90,7 @@ open(util.get_output_path("main.lua"), 'w') as script:
         name = namegen.generate_name()
         if name in items or name in HARDCODED_ITEM_NAMES:
             max_failed_tries -= 1
-            print("Item name already exists, retrying: {}".format(name))
+            # print("Item name already exists, retrying: {}".format(name))
             continue
         seed = hash(name)
         full_name = str(ITEM_NUMBERS.pop()) + " " + name

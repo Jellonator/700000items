@@ -121,7 +121,7 @@ class IsaacItem:
         name_lower = self.name.lower()
 
         # Start to add stats and effects
-        value = random.randint(3, 5) + random.randint(0, hint_good)
+        value = random.randint(2, 5) + random.randint(0, hint_good)
         negative_value = random.randint(0, hint_bad)
         # Randomly add bad things to item heh heh heh
         for i in range(0, 3):

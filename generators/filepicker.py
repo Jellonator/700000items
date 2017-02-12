@@ -37,10 +37,11 @@ class PickFile:
         # print(self.name)
     def get_weight(self, hints):
         weight = self.weight
+        mult = 1
         for hint, value in hints.items():
             if hint in self.hints:
-                weight += value
-        return weight
+                mult += value
+        return weight*mult
     def get_path(self):
         return self.path
 
@@ -51,7 +52,7 @@ class PickFolder:
         self.files = [PickFile(x) for x in glob.glob(selection, recursive=True)]
     def choose_random(self):
         return random.choice(self.files)
-    def choose_random_with_name(self, name, hint_def, base_weight=4, exclude=[]):
+    def choose_random_with_name(self, name, hint_def, base_weight=3, exclude=[]):
         words = [x.lower() for x in name.split()]
         hints = {}
         for key, value in hint_def.items():

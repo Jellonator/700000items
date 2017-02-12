@@ -10,6 +10,6 @@ if #enemies > 0 then
 	local enemy = enemies[math.random(1, #enemies)]
 	local pos = enemy.Position
 	python[[
-gen.include("effect_enemy")
+gen.include("effect_enemy", exclude=["occasional_super"])
 	]]
 end
