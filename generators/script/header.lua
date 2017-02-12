@@ -73,6 +73,38 @@ function random_choice(t)
 	return t[math.random(#t)]
 end
 
+function get_size(entity)
+	local as_npc = entity:ToNPC()
+	local as_effect = entity:ToEffect()
+	local as_knife = entity:ToKnife()
+	local as_tear = entity:ToTear()
+	local whatever = as_npc or as_effect or as_knife or as_tear
+	local scale = whatever and whatever.Scale or 1
+	return entity.SizeMulti * scale
+end
+
+function get_entity_distance_2(a, b)
+	local a_size = get_size(a)
+	local b_size = get_size(b)
+	local a_pos = a.Position
+	local b_pos = b.Position
+	local x_diff = a_pos.X - b_pos.X
+	local y_diff = a_pos.Y - b_pos.Y
+	local sub_x = math.abs(a_size.X) + math.abs(b_size.X)
+	local sub_y = math.abs(a_size.Y) + math.abs(b_size.Y)
+	local x_diff_2 = math.max(0, x_diff^2 - sub_x^2)
+	local y_diff_2 = math.max(0, y_diff^2 - sub_y^2)
+	return x_diff_2 + y_diff_2
+end
+
+function get_entity_distance(a, b)
+	return math.sqrt(get_entity_distance_2(a, b))
+end
+
+function are_entities_near(a, b, dis)
+	return get_entity_distance_2(a, b) <= dis^2
+end
+
 function add_function_to_def(item_name, func_name, func)
 	local item_def = Mod.items[item_name]
 	if item_def[func_name] then
@@ -285,6 +317,15 @@ function Mod.callbacks:render()
 		end
 	end
 	Isaac.RenderText("Range: " .. tostring(Isaac.GetPlayer(0).TearHeight), 400, 0, 255, 255, 255, 255)
+	for i, entity in pairs(Isaac.GetRoomEntities()) do
+		if entity:ToPlayer() or entity:ToTear() or entity:ToNPC() then
+			local size = get_size(entity)
+			local pos = game:GetRoom():WorldToScreenPosition(entity.Position)
+			Isaac.RenderText(("%.2f"):format(size.X), pos.X, pos.Y+ 0, 255, 255, 255, 255)
+			Isaac.RenderText(("%.2f"):format(size.Y), pos.X, pos.Y+12, 255, 255, 255, 255)
+			Isaac.RenderText(("%.2f"):format(entity.Mass), pos.X, pos.Y+24, 255, 255, 255, 255)
+		end
+	end
 end
 
 function Mod.callbacks:use_item(item, rng)

@@ -19,6 +19,7 @@ HARDCODED_ITEMS = {
     1101: ("Mr. Box", "Seen Is I've Near Meh"),
     700000: ("Last Item", "Fold"),
     91: ("True last item", "Isn't a hidden object clone!"),
+    0: ("This mod is absolutely garbage", "Can i have a opinion about something? Don't copy and paste my comment.")
 }
 HARDCODED_ITEM_NAMES = [x for (x, _) in HARDCODED_ITEMS.values()]
 
