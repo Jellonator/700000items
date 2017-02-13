@@ -246,8 +246,7 @@ class IsaacItem:
         Generate and save a random sprite for this item
         """
         path = TRINKET_IMAGE_PATH if self.type == "trinket" else OUTPUT_IMAGE_PATH
-        image.generate_image(os.path.join(path,self.get_image_name()),\
-            self.name, self.genstate.hints)
+        image.generate_image(os.path.join(path,self.get_image_name()), self.genstate)
     def get_pools(self):
         """
         Get a list of item pools this item belongs to

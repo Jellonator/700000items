@@ -274,8 +274,8 @@ class ScriptBuilder:
             return filepicker.path_to_name(fname)
         elif os.path.isdir(fname):
             picker = filepicker.get_path(fname)
-            filedef = picker.choose_random_with_name(self.genstate.name,\
-                self.genstate.hints, exclude=exclude)
+            filedef = picker.choose_random_with_hint(\
+                self.genstate, exclude=exclude)
             path = filedef.get_path()
             return self.include(path)
         else:

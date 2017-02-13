@@ -39,13 +39,12 @@ class PickFile:
                     self.hints.append(hint)
             if weight > 0:
                 self.weight = weight
-        # print(self.name)
-    def get_weight(self, hints):
+        print(self.name + ": " + ", ".join(self.hints))
+    def get_weight(self, genstate):
         weight = self.weight
         mult = 1
-        for hint, value in hints.items():
-            if hint in self.hints:
-                mult += value
+        for hint_name in self.hints:
+            mult += genstate.get_hint(hint_name)
         return weight*mult
     def get_path(self):
         return self.path
@@ -57,18 +56,10 @@ class PickFolder:
         self.files = [PickFile(x) for x in glob.glob(selection, recursive=True)]
     def choose_random(self):
         return random.choice(self.files)
-    def choose_random_with_name(self, name, hint_def, base_weight=3, exclude=[]):
-        words = [x.lower() for x in name.split()]
-        hints = {}
-        for key, value in hint_def.items():
-            hints[key] = value
-        for name in words:
-            if not name in hints:
-                hints[name] = 0
-            hints[name] += base_weight
+    def choose_random_with_hint(self, genstate, base_weight=3, exclude=[]):
         weights = {}
         for filedef in self.files:
-            weight = filedef.get_weight(hints)
+            weight = filedef.get_weight(genstate)
             if weight > 0 and filedef.name not in exclude:
                 weights[filedef] = weight
         (list_items, list_weights) = util.dict_to_lists(weights)

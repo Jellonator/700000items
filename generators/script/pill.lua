@@ -7,22 +7,22 @@ gen.set_allow_random(False)
 if num <= 0.125:
 	#12% chance really good
 	gen.include("permanent_good", exclude=["spawn_many_helpers"])
-	player:AnimateHappy()
+	gen.writeln("player:AnimateHappy()")
 elif num <= 0.25:
 	#12% chance really bad
 	gen.include("permanent_bad")
-	player:AnimateSad()
+	gen.writeln("player:AnimateSad()")
 elif num <= 0.50:
 	#25% chance good
 	gen.include("effect_good", exclude=["spawn_some_helpers", "effect_instant"])
-	player:AnimateHappy()
+	gen.writeln("player:AnimateHappy()")
 elif num <= 0.75:
 	#25% chance bad
 	gen.include("effect_bad")
-	player:AnimateSad()
+	gen.writeln("player:AnimateSad()")
 else:
 	#25% chance instant
 	gen.include("effect_instant")
-	player:AnimateHappy()
+	gen.writeln("player:AnimateHappy()")
 gen.set_allow_random(True)
 ]]

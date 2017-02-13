@@ -135,6 +135,8 @@ class IsaacGenState:
             if match_name in name.lower():
                 for hint_name, hint_value in hint_list.items():
                     self.add_hint(hint_name, hint_value)
+        for word in [x.lower() for x in name.split()]:
+            self.add_hint("name-{}".format(word), 1)
     def add_descriptor(self, desc, value=1):
         self.descriptors += [desc] * value
     def add_descriptors(self, ls, value=1):

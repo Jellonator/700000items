@@ -124,7 +124,7 @@ def sample_nearby(image, pos):
             highest_rgba = rgba
     return color_values[highest_rgba]
 
-def load_part(path, can_face, name, hints):
+def load_part(path, can_face, genstate):
     """
     Load a part from a path
     path: image path to load from
@@ -157,24 +157,24 @@ def load_part(path, can_face, name, hints):
         part_key = data[1]
         part_x = part_pos[0]
         part_y = part_pos[1]
-        part = request_part(part_key, name, hints)
+        part = request_part(part_key, genstate)
         pos = (part_x - part.width//2, part_y - part.height//2)
         temp = create_image(image.width, image.height)
         temp.paste(part, pos, part)
         image = Image.alpha_composite(image, temp)
     return image
 
-def request_part(key, name, hints):
+def request_part(key, genstate):
     """
     Request for a part to be loaded, return image of part
     key: Name of part list to load from
     """
     picker = filepicker.get_path(data_paths[key])
-    filedef = picker.choose_random_with_name(name, hints, 20)
+    filedef = picker.choose_random_with_hint(genstate, 20)
     path = filedef.get_path()
 
     # path = random.choice(data_files[key])
-    return load_part(path, True, name, hints)
+    return load_part(path, True, genstate)
 
 def create_image(width, height):
     """
@@ -214,24 +214,23 @@ def outline_image(image):
                 draw.point(pos, palette)
     return Image.alpha_composite(new_image, image)
 
-def add_backdrop(image, item_name, hints):
-    part = request_part("back", item_name, hints)
+def add_backdrop(image, genstate):
+    part = request_part("back", genstate)
     return Image.alpha_composite(part, image)
 
-def generate_image(output, item_name, hints, resize=None):
+def generate_image(output, genstate, resize=None):
     """
     Generate a random image
     -- name: Name to save image as
     """
     # output = os.path.join(OUTPUT_PATH, name)
-    image = request_part("body", item_name, hints)
+    image = request_part("body", genstate)
     outline_chance = 4
-    if "outline" in hints:
-        outline_chance += hints["outline"]
+    outline_chance += genstate.get_hint("outline")
     if random.random() < 0.01*outline_chance:
         image = outline_image(image)
     if random.random() < 0.25:
-        image = add_backdrop(image, item_name, hints)
+        image = add_backdrop(image, genstate)
     if resize:
         if isinstance(resize, list):
             resize = (resize[0], resize[1])
