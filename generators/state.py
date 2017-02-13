@@ -118,7 +118,7 @@ class IsaacGenState:
         -- name: name of the hint
         """
         if name.startswith("name-"):
-            return 1 if self.check_name_hint(name) else 0
+            return 1 if self.check_name_hint(name[5:]) else 0
         self._check_hint(name)
         return self.hints[name]
     def add_hint(self, name, value):
@@ -130,6 +130,10 @@ class IsaacGenState:
         self._check_hint(name)
         self.hints[name] += value
     def check_name_hint(self, word):
+        # if word in self.name_lower:
+        #     # print("Match {} in {}".format(word, self.name))
+        #     return True
+        # return False
         return word in self.name_lower
     def parse_hints_from_name(self, name):
         """
