@@ -1,6 +1,10 @@
 if player:GetNumCoins() >= 1 then
 	player:AddCoins(-1)
-	python[[gen.chance(5, 0.1, 2)]]
+	if math.random()*math.max(2, 4-0.1*player.Luck) > 1 then
+		player:AnimateSad()
+		return
+	end
 else
-	return
+	return false
 end
+player:AnimateHappy()

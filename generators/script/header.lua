@@ -365,7 +365,9 @@ end
 function Mod.callbacks:use_item(item, rng)
 	local item_def = Mod.items[item]
 	if item_def and item_def.on_usage then
-		item_def.on_usage(item_def, Isaac.GetPlayer(0), rng)
+		local ret = item_def:on_usage(Isaac.GetPlayer(0), rng)
+		if ret == nil then ret = true end
+		return ret
 	end
 end
 

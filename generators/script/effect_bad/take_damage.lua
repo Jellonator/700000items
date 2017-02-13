@@ -1,1 +1,1 @@
-player:TakeDamage(1, DamageFlag.DAMAGE_RED_HEARTS, nil, 0)
+player:TakeDamage(1, DamageFlag.DAMAGE_RED_HEARTS, EntityRef(player), 0)
