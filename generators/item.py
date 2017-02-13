@@ -197,7 +197,7 @@ class IsaacItem:
         # Determine active or passive
         # Default 1/10 chance
         if self.type != "trinket":
-            active_hint = self.genstate.get_hint("active")+0.1
+            active_hint = self.genstate.get_hint("active")+0.2
             active_denom = 1 + active_hint
             active_chance = active_hint / active_denom
             if random.random() < active_chance:

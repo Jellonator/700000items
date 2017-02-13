@@ -16,3 +16,5 @@ Liquid
 Shield
 Money
 Friend
+Aura
+Battery

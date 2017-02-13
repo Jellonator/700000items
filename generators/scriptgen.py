@@ -1,5 +1,6 @@
 from . import filepicker
 from .stat import IsaacStats
+from . import util
 import os
 import random
 import glob
@@ -144,7 +145,7 @@ def choose_random_collectible():
 
 def id_to_descriptors(item_id):
     if "." in item_id:
-        item_id = item_id[item_id.rfind(".")+1:]
+        item_id = item_id.rsplit(".")[1]
     return [x.title() for x in item_id.split("_")[1:]]
 
 def does_effect_need_velocity(name):
@@ -159,8 +160,12 @@ def choose_random_pickup_subtype(name):
     else:
         return "0"
 
-def choose_random_pickup():
-    return random.choice(CONST_PICKUP_VARIANTS_LIST)
+def choose_random_pickup(genstate):
+    choices, weights = [], []
+    for name in CONST_PICKUP_VARIANTS_LIST:
+        choices.append(name)
+        weights.append(1+genstate.get_hint("pickup-{}".format(name)))
+    return util.choice_weights(choices, weights)
 
 def get_pickup_name(name):
     return CONST_PICKUP_VARIANTS[name]

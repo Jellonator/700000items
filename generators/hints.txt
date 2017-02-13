@@ -1,59 +1,119 @@
 #These are weights, not actual values!
-:super
-	good+2
+# OUTLINE
 :curse|sacred|evil|holy
 	outline+13
-:heart
-	stat-health+2
-	stat-special+2
-	pickup-heart+2
-:satan|demon|evil
-	stat-damage+2
-	pool-devil+2
-	stat-spirit+2
-	stat-black+2
-	heart-spirit+2
-	heart-black+2
-	good+3
-	bad+1
-:ultra
-	good+3
-:bob|bomb|explos
-	pickup-bomb+2
-	bomb-troll+1
-:key
-	pickup-key+2
-:coin|penny|cent|greed
-	pickup-coin+2
-:sack
-	pickup-sack+1
-:bag|sack
-:book
-	active+15
-	pool-library+10
-:worm
-	trinket+99999
-:tear
-	stat-tear+3
-:curse|myster
-	bad+2
-:sacred|myster
-	good+2
-:eye
-	stat-tear+2
-:fly|guppy
+
+# VALUE
 :sacred|holy|god
-	pool-angel+4
+	good+1
+:curse|myster
+	bad+1
+:sacred|myster
+	good+1
+:ultra
 	good+2
-:shop|bank|greed
-	pool-shop+3
+:super
+	good+1
+:satan|demon|evil
+	good+2
+	bad+1
+
+# STATS
 :mom
 	stat-range+3
 	stat-health+3
 	stat-special+1
-	pool-boss+2
 :luck
 	stat-luck+4
+:heart
+	stat-health+2
+	stat-special+2
+:satan|demon|evil
+	stat-damage+2
+	stat-spirit+2
+	stat-black+2
+:tear
+	stat-tear+3
+:eye
+	stat-tear+2
+
+# ACTIVE
+:book
+	active+15
 :head
-	active+1
+	active+3
+
+# TRINKETS (unused)
+:worm
+	trinket+99999
+
+# POOLS
+:shop|bank|greed
+	pool-shop+3
+:mom
+	pool-boss+1
+:head
 	pool-goldenChest+8
+:sacred|holy|god
+	pool-angel+4
+:book
+	pool-library+10
+:satan|demon|evil
+	pool-devil+2
+
+# PICKUPS
+:charge|electric|battery
+	pickup-battery+4
+:satan|demon|evil
+	heart-spirit+2
+	heart-black+2
+:heart
+	pickup-heart+2
+:bob|bomb|explos
+	pickup-bomb+2
+	bomb-troll+1
+:key
+	pickup-key+4
+:coin|penny|cent|greed
+	pickup-coin+4
+:sac|bag
+	pickup-sack+2
+:card
+	pickup-card+4
+:pill
+	pickup-pill+4
+
+# EFFECTS
+:fly|guppy
+	effect-fly+5
+:aura|holy
+	effect-aura+4
+:charge|electric|battery
+	effect-battery+4
+:bob|bomb|explos
+	effect-bomb+4
+	effect-explode+4
+:creep|liquid|sticky
+	effect-creep+3
+:bomb|key|coin|card|pill
+	effect-pickup+3
+	effect-drop+3
+:bag|sac
+	effect-pickup+6
+	effect-drop+6
+:curse|evil|revenge|blood
+	effect-enemy+2
+	effect-kill+2
+	effect-hurt+2
+:smell|fart
+	effect-fart+4
+:shak|rumbl
+	effect-shake+4
+:stat|health|damage|tear
+	effect-stat+2
+:charm|poison|flesh|slow|confus|fear
+	effect-status+3
+:super|ultra
+	effect-super+4
+:tear|sad
+	effect-tear+4

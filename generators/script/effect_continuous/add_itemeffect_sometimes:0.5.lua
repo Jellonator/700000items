@@ -5,7 +5,7 @@ gen.genstate.add_descriptors(id_to_descriptors(item_id))
 gen.writeln("""
 self.timer = self.timer - 1
 if self.timer <= 0 then
-    self.timer = math.random(15, 80)
+    self.timer = math.random(90, 150)
     if self.active then
         self.active = false
         player:RemoveCollectible({0})

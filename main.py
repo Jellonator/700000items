@@ -5,6 +5,7 @@ from generators.item import POOL_NAMES
 from generators.state import IsaacGenState
 from generators import scriptgen
 from generators import util
+from generators import filepicker
 import os
 import sys
 import shutil
@@ -181,3 +182,8 @@ shutil.copy("preview.jpg", util.TARGET_FOLDER)
 # Final prints
 print("Done!")
 print("Generated {} items.".format(len(items)))
+
+print("\nHints:")
+filepicker.list_of_hints.sort()
+for hint in filepicker.list_of_hints:
+    print(hint)

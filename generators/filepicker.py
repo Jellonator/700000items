@@ -9,6 +9,8 @@ CONST_HINTS_PRE = ":"
 
 cached_filepickers = {}
 
+list_of_hints = []
+
 def path_to_name(path):
     name = os.path.splitext(os.path.basename(path))[0]
     if CONST_HINTS_PRE in path:
@@ -41,6 +43,8 @@ class PickFile:
                         (hint_txt, value_txt) = hint.split("=", 1)
                         hint = hint_txt
                         value = float(value_txt)
+                    if not hint in list_of_hints:
+                        list_of_hints.append(hint)
                     self.hints.append((hint, value))
             if weight > 0:
                 self.weight = weight

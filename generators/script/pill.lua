@@ -22,7 +22,7 @@ elif num <= 0.75:
 	gen.writeln("player:AnimateSad()")
 else:
 	#25% chance instant
-	gen.include("effect_instant")
+	gen.include("effect_instant", exclude=["temporary_stat_up", "temporary_item"])
 	gen.writeln("player:AnimateHappy()")
 gen.set_allow_random(True)
 ]]

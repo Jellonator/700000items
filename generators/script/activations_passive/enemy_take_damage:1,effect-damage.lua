@@ -6,8 +6,8 @@ enemy_take_damage = function(self, player, enemy, damage, flag, source, frames)
 	self.timer = self.timer or 0
 	if _timer < self.timer or _timer > self.timer + 5 then
 		self.timer = _timer + 10
-		local pos = enemy.Position
-		python[[gen.include("stipulations")]]
+		local pos = source.Position
+		python[[gen.include("stipulations", exclude=["screenshake_me"])]]
 		python[[gen.include("effect_enemy")]]
 	end
 end

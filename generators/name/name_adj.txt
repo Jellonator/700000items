@@ -23,3 +23,11 @@ Sulfuric
 Epic
 Explosive
 Powerful
+Charged
+Electric
+Bloody
+Charmed
+Burning
+Charred
+Poison
+Rainbow

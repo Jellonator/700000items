@@ -1,6 +1,6 @@
 python[[gen.genstate.add_descriptors(["Effective", "Powerful"])]]
 python[[gen.inc_var("value", 1)]]
-python[[gen.chance(9, 0.5, 2)]]
+python[[gen.chance(8, 0.5, 2)]]
 do
     local id = python[[
 gen.writeln("{}".format(choose_random_effect_rare()))
