@@ -9,7 +9,7 @@ CONST_HINTS_PRE = ":"
 cached_filepickers = {}
 
 def path_to_name(path):
-    name = self.name = os.path.splitext(os.path.basename(path))[0]
+    name = os.path.splitext(os.path.basename(path))[0]
     if CONST_HINTS_PRE in path:
         name = name[:name.find(CONST_HINTS_PRE)]
     return name

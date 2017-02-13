@@ -1,7 +1,8 @@
+-- Not actually a permanent effect, but its pretty cool
 if source and source.Type == 3 and (source.Variant == 43 or source.Variant == 73) then
 	return
 end
-for i = 1, 20 do
+for i = 1, 12 do
     python[[
 if random.random() < 0.4:
     gen.writeln("player:AddBlueSpider(pos)")

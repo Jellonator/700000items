@@ -37,6 +37,32 @@ STAT_WEIGHTS_BAD = [    3.2,    0.8,     4.4,          3.0,      2.6,     3.8]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
 STAT_WEIGHTS_SPECIAL = [      8,      4,       2]
 
+STAT_CAPS = {
+    'speed': (0.5, 2.0),
+    'luck': (-5, 5),
+    'tears': (40, 5),
+    'shot_speed': (0.5, 2.0),
+    'damage': (1.0, 25.0),
+    'range': (-8.0, -50.0)
+}
+
+def genIfCap(name, propertystr, value):
+    if not name in STAT_CAPS or value == 0:
+        print("No such statcap {}!".format(name))
+        return ""
+    minimum = STAT_CAPS[name][0]
+    maximum = STAT_CAPS[name][1]
+    if (value < 0) == (minimum < maximum):
+        minimum = min(minimum, maximum)
+        return "if player.{} <= {} then return end\n".format(\
+            propertystr, minimum)
+    elif (value > 0) == (minimum < maximum):
+        maximum = max(minimum, maximum)
+        return "if player.{} >= {} then return end\n".format(\
+            propertystr, maximum)
+    print("How did you get here? {} {} {}".format(value > 0, value < 0, minimum < maximum))
+    return ""
+
 def genStatStr(flagstr, propertystr, op, value):
     """
     Generate Lua code for modifying stats
@@ -55,7 +81,7 @@ def genStatStr(flagstr, propertystr, op, value):
     else:
         operation = "player.{1} = player.{1} {2} {3}"
 
-    return "\t\tif flag == CacheFlag.{0} then\n".format(flagstr)+\
+    return "\t\tif flag & CacheFlag.{0} ~= 0 then\n".format(flagstr)+\
     "\t\t\t" + operation.format(flagstr, propertystr, op, value) + "\n" +\
     "\t\tend\n"
 
@@ -290,3 +316,18 @@ class IsaacStats:
         # Weapons are not implemented yet, this will come in the future
         # There is not currently a way to do this
         self.weapon = random.choice(CONST_WEAPONS)
+    def gen_is_stat_capped(self):
+        ret = ""
+        if self.tears != 0:
+            ret += genIfCap("tears", "MaxFireDelay", self.tears)
+        if self.damage != 0:
+            ret += genIfCap("damage", "Damage", self.damage)
+        if self.speed != 0:
+            ret += genIfCap("speed", "MoveSpeed", self.speed)
+        if self.shot_speed != 0:
+            ret += genIfCap("shot_speed", "ShotSpeed", self.shot_speed)
+        if self.luck != 0:
+            ret += genIfCap("luck", "Luck", self.luck)
+        if self.shot_range != 0:
+            ret += genIfCap("range", "TearHeight", self.shot_range)
+        return ret

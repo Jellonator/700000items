@@ -185,6 +185,27 @@ function Mod.callbacks:evaluate_cache(player, flag)
 	Mod:call_callbacks(player, "evaluate_cache", flag)
 	-- Special call is for effects with temporary stat upgrades.
 	Mod:call_callbacks(player, "evaluate_cache_special", flag)
+
+	-- calculate permanant stat upgrades
+	if flag == CacheFlag.CACHE_DAMAGE then
+		player.Damage = player.Damage + Mod.stats_permanant.Damage
+	end
+	if flag == CacheFlag.CACHE_SPEED then
+		player.MoveSpeed = player.MoveSpeed + Mod.stats_permanant.MoveSpeed
+	end
+	if flag == CacheFlag.CACHE_LUCK then
+		player.Luck = player.Luck + Mod.stats_permanant.Luck
+	end
+	if flag == CacheFlag.CACHE_RANGE then
+		player.TearHeight = player.TearHeight + Mod.stats_permanant.TearHeight
+	end
+	if flag == CacheFlag.CACHE_SHOTSPEED then
+		player.ShotSpeed = player.ShotSpeed + Mod.stats_permanant.ShotSpeed
+	end
+	if flag == CacheFlag.CACHE_FIREDELAY then
+		player.MaxFireDelay = player.MaxFireDelay + Mod.stats_permanant.MaxFireDelay
+	end
+
 	player.MaxFireDelay = math.max(minimum_tears, player.MaxFireDelay)
 end
 
@@ -194,14 +215,19 @@ local _killers = {}
 local _timer = 0
 local _timerf = 0
 function Mod.callbacks:update()
-	_timer = _timer + 1
-	_timerf = _timerf + 1/30
-	if _timer >= 30 * 60 * 60 then
-		-- reset after a whole hour because why not?
-		_timer = 0
-		_timerf = 0
-	end
 	local game = Game()
+	_timer = game:GetFrameCount()
+	_timerf = _timer / 30
+
+	if _timer == 1 then
+		Mod:call_callbacks_all("reset")
+		Mod.stats_permanant.MaxFireDelay = 0
+		Mod.stats_permanant.Damage = 0
+		Mod.stats_permanant.MoveSpeed = 0
+		Mod.stats_permanant.ShotSpeed = 0
+		Mod.stats_permanant.Luck = 0
+		Mod.stats_permanant.TearHeight = 0
+	end
 
 	Mod.args.room_changed = false
 	-- refresh for room change
