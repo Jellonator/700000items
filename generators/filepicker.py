@@ -8,6 +8,12 @@ CONST_HINTS_PRE = ":"
 
 cached_filepickers = {}
 
+def path_to_name(path):
+    name = self.name = os.path.splitext(os.path.basename(path))[0]
+    if CONST_HINTS_PRE in path:
+        name = name[:name.find(CONST_HINTS_PRE)]
+    return name
+
 def get_path(path):
     if path in cached_filepickers:
         return cached_filepickers[path]
@@ -20,9 +26,8 @@ class PickFile:
     def __init__(self, path):
         self.hints = []
         self.path = path
-        self.name = os.path.splitext(os.path.basename(path))[0]
+        self.name = path_to_name(path)
         if CONST_HINTS_PRE in path:
-            self.name = self.name[:self.name.find(CONST_HINTS_PRE)]
             pos = path.find(CONST_HINTS_PRE)
             ext_pos = path.rfind(".")
             hint_txt = path[pos+1:ext_pos]

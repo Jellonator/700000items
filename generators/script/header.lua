@@ -65,6 +65,14 @@ Mod.args = {}
 Mod.args.damage_taken = 0
 Mod.args.damage_dealt = 0
 Mod.args.room_changed = false
+Mod.stats_permanant = {
+	MaxFireDelay = 0,
+	Damage = 0,
+	MoveSpeed = 0,
+	ShotSpeed = 0,
+	Luck = 0,
+	TearHeight = 0,
+}
 
 --[[
 Utility functions

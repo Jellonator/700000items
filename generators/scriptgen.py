@@ -267,16 +267,17 @@ class ScriptBuilder:
             pbuffer = self.buffer
             self.parse_file(fname)
             self.buffer = pbuffer + self.buffer
+            return filepicker.path_to_name(fname)
         elif os.path.isdir(fname):
             picker = filepicker.get_path(fname)
             filedef = picker.choose_random_with_name(self.genstate.name,\
                 self.genstate.hints, exclude=exclude)
             path = filedef.get_path()
-            self.include(path)
+            return self.include(path)
         else:
             base_dir = os.path.dirname(fname)
             if not base_dir.startswith(CONST_GEN_PATH):
-                self.include(os.path.join(CONST_GEN_PATH, fname), exclude)
+                return self.include(os.path.join(CONST_GEN_PATH, fname), exclude)
             else:
                 raise Exception("Not a file or directory!" + fname)
     def chance(self, base_chance, luck_scale, min_chance):

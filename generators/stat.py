@@ -269,7 +269,8 @@ class IsaacStats:
         if self.flying != None:
             ret += genStatStr("CACHE_FLYING", "CanFly", "=", self.flying)
         if self.weapon != None:
-            ret += genStatStr("CACHE_WEAPON", "")
+            pass
+            # ret += genStatStr("CACHE_WEAPON", "What", "+", self.weapon)
         ret += "\tend"
         return ret
     def get_descriptors(self):
