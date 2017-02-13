@@ -99,6 +99,7 @@ class IsaacGenState:
             hints = {}
         self.hints = hints
         self.name = item_name
+        self.name_lower = self.name.lower()
         self.effect = ""
         self.descriptors = CONST_BASE_DESCRIPTORS.copy()
         for value in CONST_RARE_DESCRIPTORS:
@@ -116,6 +117,8 @@ class IsaacGenState:
         Get the value of a given hint
         -- name: name of the hint
         """
+        if name.startswith("name-"):
+            return 1 if self.check_name_hint(name) else 0
         self._check_hint(name)
         return self.hints[name]
     def add_hint(self, name, value):
@@ -126,6 +129,8 @@ class IsaacGenState:
         """
         self._check_hint(name)
         self.hints[name] += value
+    def check_name_hint(self, word):
+        return word in self.name_lower
     def parse_hints_from_name(self, name):
         """
         Parse hints out of a name using hint matches
@@ -135,8 +140,8 @@ class IsaacGenState:
             if match_name in name.lower():
                 for hint_name, hint_value in hint_list.items():
                     self.add_hint(hint_name, hint_value)
-        for word in [x.lower() for x in name.split()]:
-            self.add_hint("name-{}".format(word), 1)
+        # for word in [x.lower() for x in name.split()]:
+        #     self.add_hint("name-{}".format(word), 1)
     def add_descriptor(self, desc, value=1):
         self.descriptors += [desc] * value
     def add_descriptors(self, ls, value=1):

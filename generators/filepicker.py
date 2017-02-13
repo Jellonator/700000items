@@ -28,23 +28,27 @@ class PickFile:
         self.path = path
         self.name = path_to_name(path)
         if CONST_HINTS_PRE in path:
-            pos = path.find(CONST_HINTS_PRE)
-            ext_pos = path.rfind(".")
-            hint_txt = path[pos+1:ext_pos]
+            (name, hint_a) = path.rsplit(CONST_HINTS_PRE)
+            (hint_txt, _ext) = hint_a.rsplit(".", 1)
             weight = 0.0
             for hint in hint_txt.split(','):
                 try:
                     weight += float(hint)
                 except ValueError:
-                    self.hints.append(hint)
+                    value = 1
+                    if "=" in hint:
+                        (hint_txt, value_txt) = hint.split("=", 1)
+                        hint = hint_txt
+                        value = float(value_txt)
+                    self.hints.append((hint, value))
             if weight > 0:
                 self.weight = weight
-        print(self.name + ": " + ", ".join(self.hints))
+        print(self.name + ": " + ", ".join(["{}={}".format(x[0],x[1]) for x in self.hints]))
     def get_weight(self, genstate):
         weight = self.weight
         mult = 1
-        for hint_name in self.hints:
-            mult += genstate.get_hint(hint_name)
+        for (hint_name, hint_value) in self.hints:
+            mult += genstate.get_hint(hint_name)*hint_value
         return weight*mult
     def get_path(self):
         return self.path
