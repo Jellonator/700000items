@@ -3,6 +3,6 @@ local pos = player.Position
 local self = {}
 python[[
 gen.set_allow_random(False)
-gen.include("effect_instant", ["temporary_stat_up", "temporary_item"])
+gen.include("effect_instant")
 gen.set_allow_random(True)
 ]]

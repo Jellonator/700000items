@@ -13,7 +13,7 @@ import random
 # Generate X number of items
 # Used to be 700,000 but its really not good to have that many items
 MAGIC_NUMBER = 500
-NUM_PILLS = 25
+NUM_PILLS = 30
 NUM_TRINKETS = 100
 HARDCODED_ITEMS = {
     1101: ("Mr. Box", "Seen Is I've Near Meh"),
@@ -24,10 +24,18 @@ HARDCODED_ITEMS = {
 HARDCODED_ITEM_NAMES = [x for (x, _) in HARDCODED_ITEMS.values()]
 
 # Utility functions
-def generate_pocket_effect(name):
+def generate_card_effect(name):
     # tempitem = IsaacItem(name, None)
     state = IsaacGenState(name)
     effect = scriptgen.generate_card_effect(state)
+    return ("""function()
+{}
+end""".format(effect.get_output()), state.gen_description())
+
+def generate_pill_effect(name):
+    # tempitem = IsaacItem(name, None)
+    state = IsaacGenState(name)
+    effect = scriptgen.generate_pill_effect(state)
     return ("""function()
 {}
 end""".format(effect.get_output()), state.gen_description())
@@ -151,7 +159,7 @@ open(util.get_output_path("main.lua"), 'w') as script:
         pill_names = {}
         for i in range(0, NUM_PILLS):
             rand_name = namegen.generate_name()
-            (pill_script, pill_name) = generate_pocket_effect(rand_name)
+            (pill_script, pill_name) = generate_pill_effect(rand_name)
             pill_names[pill_name] = pill_script
         # write out pills
         for pill_name, pill_script in pill_names.items():

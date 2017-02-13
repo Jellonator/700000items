@@ -54,11 +54,11 @@ def genIfCap(name, propertystr, value):
     maximum = STAT_CAPS[name][1]
     if (value < 0) == (minimum < maximum):
         minimum = min(minimum, maximum)
-        return "if player.{} <= {} then return end\n".format(\
+        return "if player.{} <= {} then return false end\n".format(\
             propertystr, minimum)
     elif (value > 0) == (minimum < maximum):
         maximum = max(minimum, maximum)
-        return "if player.{} >= {} then return end\n".format(\
+        return "if player.{} >= {} then return false end\n".format(\
             propertystr, maximum)
     print("How did you get here? {} {} {}".format(value > 0, value < 0, minimum < maximum))
     return ""
@@ -273,8 +273,8 @@ class IsaacStats:
         generate Lua code for the evaluate_cache callback
         """
         if not self.does_mod_stats():
-            return "nil"
-        ret = "function (self, player, flag)\n"
+            return ""
+        ret = ""
         if self.tears != 0:
             ret += genStatStr("CACHE_FIREDELAY", "MaxFireDelay", "-", self.tears)
         if self.damage != 0:
@@ -297,7 +297,6 @@ class IsaacStats:
         if self.weapon != None:
             pass
             # ret += genStatStr("CACHE_WEAPON", "What", "+", self.weapon)
-        ret += "\tend"
         return ret
     def get_descriptors(self):
         ret = []

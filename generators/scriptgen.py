@@ -14,6 +14,7 @@ CONST_ITEM_PASSIVE_FILE = "generators/script/item_passive.lua"
 CONST_ITEM_ACTIVE_FILE = "generators/script/item_active.lua"
 CONST_TRINKET_FILE = "generators/script/trinket.lua"
 CONST_CARD_FILE = "generators/script/card.lua"
+CONST_PILL_FILE = "generators/script/pill.lua"
 
 CONST_EFFECT_TYPES_COMMON = [
     "EffectVariant.PLAYER_CREEP_WHITE",
@@ -181,6 +182,9 @@ def generate_item_passive(genstate):
 
 def generate_card_effect(genstate):
     return load_file(CONST_CARD_FILE, genstate)
+
+def generate_pill_effect(genstate):
+    return load_file(CONST_PILL_FILE, genstate)
 
 def generate_trinket(genstate):
     return load_file(CONST_TRINKET_FILE, genstate)

@@ -258,6 +258,6 @@ class IsaacItem:
         Get the definition for the item
         """
         return "{\n" +\
-        "\tevaluate_cache = {}\n".format(self.stats.gen_eval_cache()) +\
-        self.effect +\
+        "\tevaluate_cache = function(self, player, flag)\n{}\nend\n".format(\
+            self.stats.gen_eval_cache()) + self.effect +\
         "}\n"
