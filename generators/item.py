@@ -121,7 +121,12 @@ class IsaacItem:
         name_lower = self.name.lower()
 
         # Start to add stats and effects
-        value = random.randint(2, 5) + random.randint(0, hint_good)
+        minimum_value = 2
+        maximum_value = 5
+        if trinket:
+            maximum_value = 3
+            minimum_value = 1
+        value = random.randint(minimum_value, maximum_value) + random.randint(0, hint_good)
         negative_value = random.randint(0, hint_bad)
         # Randomly add bad things to item heh heh heh
         for i in range(0, 3):
@@ -132,7 +137,7 @@ class IsaacItem:
             value = max(1, value // 2)
             negative_value //= 2
         # Apply effect to item maybe?
-        if random.random() < 0.85 if trinket else 0.65:
+        if random.random() < 0.9 if trinket else 0.75:
             effect_value = self.add_effect()
             value -= effect_value
             negative_value //= 2
@@ -197,7 +202,7 @@ class IsaacItem:
         # Determine active or passive
         # Default 1/10 chance
         if self.type != "trinket":
-            active_hint = self.genstate.get_hint("active")+0.2
+            active_hint = self.genstate.get_hint("active")+0.15
             active_denom = 1 + active_hint
             active_chance = active_hint / active_denom
             if random.random() < active_chance:

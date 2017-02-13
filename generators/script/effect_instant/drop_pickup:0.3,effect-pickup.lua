@@ -1,5 +1,5 @@
 python[[gen.inc_var("value", 1)]]
-python[[gen.chance(8, 1, 2)]]
+python[[gen.chance(5, 0.25, 2)]]
 python[[gen.genstate.add_descriptors(["Drops", "Gives"])]]
 do
 	local pickup, subtype = python[[
