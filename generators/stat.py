@@ -3,11 +3,11 @@ from . import util
 
 # Common stats
 STAT_RANGES = {
-    'speed': 0.08,
+    'speed': 0.09,
     'luck': 1,
     'tears': 1,
     'shot_speed': 0.06,
-    'damage': 0.5,
+    'damage': 0.65,
     'range': 1.0,
 }
 

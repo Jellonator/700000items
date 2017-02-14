@@ -183,7 +183,7 @@ shutil.copy("preview.jpg", util.TARGET_FOLDER)
 print("Done!")
 print("Generated {} items.".format(len(items)))
 
-print("\nHints:")
-filepicker.list_of_hints.sort()
-for hint in filepicker.list_of_hints:
-    print(hint)
+# print("\nHints:")
+# filepicker.list_of_hints.sort()
+# for hint in filepicker.list_of_hints:
+#     print(hint)
