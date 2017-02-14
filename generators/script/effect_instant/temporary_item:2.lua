@@ -1,7 +1,7 @@
 python[[gen.genstate.add_descriptors(["Temporary"])]]
 python[[gen.inc_var("value", 1)]]
 python[[
-item_id = choose_random_collectible()
+item_id = choose_random_collectible(False)
 gen.genstate.add_descriptors(id_to_descriptors(item_id))
 
 # Init

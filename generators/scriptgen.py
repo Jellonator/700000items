@@ -100,7 +100,7 @@ CONST_COLLECTIBLES = [
     "CollectibleType.COLLECTIBLE_TOUGH_LOVE",
     "CollectibleType.COLLECTIBLE_TINY_PLANET",
     "CollectibleType.COLLECTIBLE_TECHNOLOGY",
-    "CollectibleType.COLLECTIBLE_TECHNOLOGY_2",
+    # "CollectibleType.COLLECTIBLE_TECHNOLOGY_2", Also kinda broken
     "CollectibleType.COLLECTIBLE_TECH_X",
     "CollectibleType.COLLECTIBLE_STRANGE_ATTRACTOR",
     "CollectibleType.COLLECTIBLE_SPOON_BENDER",
@@ -131,6 +131,25 @@ CONST_COLLECTIBLES = [
     "CollectibleType.COLLECTIBLE_20_20",
 ]
 
+CONST_COLLECTIBLES_DISABLE_TIMER = [
+    # Collectibles which just don't work when on a timer
+    "CollectibleType.COLLECTIBLE_BRIMSTONE",
+    "CollectibleType.COLLECTIBLE_CHOCOLATE_MILK",
+    "CollectibleType.COLLECTIBLE_EPIC_FETUS",
+    "CollectibleType.COLLECTIBLE_DR_FETUS",
+    "CollectibleType.COLLECTIBLE_LADDER",
+    "CollectibleType.COLLECTIBLE_LUDOVICO_TECHNIQUE",
+    "CollectibleType.COLLECTIBLE_MONSTROS_LUNG",
+    "CollectibleType.COLLECTIBLE_MOMS_KNIFE",
+    "CollectibleType.COLLECTIBLE_TECH_X",
+    "CollectibleType.COLLECTIBLE_TECHNOLOGY",
+    "CollectibleType.COLLECTIBLE_TREASURE_MAP",
+    "CollectibleType.COLLECTIBLE_COMPASS",
+]
+
+CONST_COLLECTIBLES_TIMER = [x for x in CONST_COLLECTIBLES
+    if x not in CONST_COLLECTIBLES_DISABLE_TIMER]
+
 def choose_random_active():
     return random.choice(CONST_ACTIVE_ITEM_IDS)
 
@@ -140,8 +159,11 @@ def choose_random_effect_common():
 def choose_random_effect_rare():
     return random.choice(CONST_EFFECT_TYPES_RARE)
 
-def choose_random_collectible():
-    return random.choice(CONST_COLLECTIBLES)
+def choose_random_collectible(is_timer):
+    if is_timer:
+        return random.choice(CONST_COLLECTIBLES_TIMER)
+    else:
+        return random.choice(CONST_COLLECTIBLES)
 
 def id_to_descriptors(item_id):
     if "." in item_id:

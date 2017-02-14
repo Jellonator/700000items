@@ -1,6 +1,6 @@
 python[[gen.inc_var("value", 1)]]
 python[[
-item_id = choose_random_collectible()
+item_id = choose_random_collectible(True)
 gen.genstate.add_descriptors(id_to_descriptors(item_id))
 gen.writeln("""
 self.timer = self.timer - 1
