@@ -77,6 +77,57 @@ Mod.stats_permanant = {
 --[[
 Utility functions
 --]]
+
+function _table_to_string(t)
+	t_type = type(t)
+	if t_type ~= "table" then
+		if t_type == "string" then
+			return ("%q"):format(t)
+		end
+		return tostring(t)
+	end
+	local ret = "{"
+	for k,v in pairs(t) do
+		ret = ret .. ("[%s] = %s,"):format(
+			_table_to_string(k), _table_to_string(v))
+	end
+	ret = ret .. "}"
+	return ret
+end
+
+function table_to_string(t)
+	return _table_to_string(t)
+end
+
+function save_output()
+	t = {
+		stats = Mod.stats_permanant,
+	}
+	out = table_to_string(t)
+	Mod:SaveData(out)
+end
+
+function load_data()
+	data = Mod:LoadData()
+	t = load("return " .. data)()
+	if t then
+		if t.stats then
+			Mod.stats_permanant = t.stats
+		end
+	end
+end
+
+function mod_reset()
+	Mod:call_callbacks_all("reset")
+	Mod.stats_permanant.MaxFireDelay = 0
+	Mod.stats_permanant.Damage = 0
+	Mod.stats_permanant.MoveSpeed = 0
+	Mod.stats_permanant.ShotSpeed = 0
+	Mod.stats_permanant.Luck = 0
+	Mod.stats_permanant.TearHeight = 0
+	save_output()
+end
+
 function random_choice(t)
 	return t[math.random(#t)]
 end
@@ -220,13 +271,7 @@ function Mod.callbacks:update()
 	_timerf = _timer / 30
 
 	if _timer == 1 then
-		Mod:call_callbacks_all("reset")
-		Mod.stats_permanant.MaxFireDelay = 0
-		Mod.stats_permanant.Damage = 0
-		Mod.stats_permanant.MoveSpeed = 0
-		Mod.stats_permanant.ShotSpeed = 0
-		Mod.stats_permanant.Luck = 0
-		Mod.stats_permanant.TearHeight = 0
+		mod_reset()
 	end
 
 	Mod.args.room_changed = false

@@ -35,3 +35,5 @@ for _, name in ipairs(Mod.trinket_names) do
 	local id = Isaac.GetTrinketIdByName(name)
 	Mod.trinkets[id] = Mod.trinkets[name]
 end
+
+load_data()

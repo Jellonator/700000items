@@ -105,53 +105,55 @@ class IsaacItem:
         self.genstate = IsaacGenState(self.name)
         self.pools = {}
         self.effect = ""
-
         if trinket:
             self.type = "trinket"
-
+        else:
+            self.type = "passive"
         # Seeding
         rand_state = random.getstate()
         if self.seed:
             random.seed(self.seed)
-
         # Hints
         self.genstate.parse_hints_from_name(self.name)
         hint_good = self.genstate.get_hint("good")
         hint_bad = self.genstate.get_hint("bad")
         name_lower = self.name.lower()
-
+        # Init pools
+        self._init_pools()
+        # Create image
+        self._init_image()
         # Start to add stats and effects
         minimum_value = 2
-        maximum_value = 5
+        maximum_value = 4
         if trinket:
             maximum_value = 3
             minimum_value = 1
-        value = random.randint(minimum_value, maximum_value) + random.randint(0, hint_good)
-        negative_value = random.randint(0, hint_bad)
+        self.good_value = random.randint(minimum_value, maximum_value) + random.randint(0, hint_good)
+        self.bad_value = random.randint(0, hint_bad)
         # Randomly add bad things to item heh heh heh
-        for i in range(0, 3):
+        for i in range(0, self.good_value - 2):
             if random.random() < 0.12:
-                negative_value += 1
-                value += 1
-        if trinket:
-            value = max(1, value // 2)
-            negative_value //= 2
-        # Apply effect to item maybe?
-        if random.random() < 0.9 if trinket else 0.75:
-            effect_value = self.add_effect()
-            value -= effect_value
-            negative_value //= 2
-            if trinket:#trinkets are one or the other!
-                value = 0
-                negative_value = 0
+                self.bad_value += 1
+        # Potentially add effect to item
+        self._init_effect()
+        # If is an active item, remove stats usually
+        if self.type == "active" and random.random() < 0.9:
+            self.good_value = 0
+            self.bad_value = 0
+        # Create stats
+        self._init_stats()
+        # Generate description
+        self._init_description(description)
+        # Reset random state
+        if self.seed:
+            random.setstate(rand_state)
+    def _init_stats(self):
+        value = self.good_value
+        negative_value = self.bad_value
         # Maybe add flying
         if value >= FLYING_VALUE and random.random() < 0.01:
             self.stats.flying = True
             value -= FLYING_VALUE
-        # If is an active item, remove stats usually
-        if self.type == "active" and random.random() < 0.9:
-            value = 0
-            negative_value = 0
         # Apply up to two health upgrades (passives only)
         if self.type == "passive":
             hp_chance = self.genstate.get_hint("stat-special")
@@ -163,10 +165,22 @@ class IsaacItem:
         self.stats.add_random_stats(value, 1, self.genstate)
         # Add bad stuff
         self.stats.add_random_stats(negative_value, -1, self.genstate)
-        # Create image
-        self.gen_image()
+    def _init_effect(self):
+        # Apply effect to item maybe?
+        is_trinket = self.type == "trinket"
+        chance = 0.75
+        if is_trinket:
+            chance = 0.85
+        if random.random() < chance:
+            effect_value = self.add_effect()
+            self.good_value -= effect_value
+            self.bad_value //= 2
+            if is_trinket:#trinkets are one or the other!
+                self.good_value = 0
+                self.bad_value = 0
+    def _init_pools(self):
         # Add to pools
-        if not trinket:
+        if self.type != "trinket":
             pool_chances = get_base_pool_chances()
             add_hints_to_poolchances(pool_chances, self.genstate)
             (pool_names, pool_weights) = util.dict_to_lists(pool_chances)
@@ -177,16 +191,21 @@ class IsaacItem:
                 self.pools[pname] = True
                 if gname != None:
                     self.pools[gname] = True
-        # Generate description
+        for pool_name in self.pools:
+            self.genstate.parse_hints_from_name("pool-{}".format(pool_name))
+    def _init_image(self):
+        """
+        Generate and save a random sprite for this item
+        """
+        path = TRINKET_IMAGE_PATH if self.type == "trinket" else OUTPUT_IMAGE_PATH
+        image.generate_image(os.path.join(path,self.get_image_name()), self.genstate)
+    def _init_description(self, description=None):
         if description:
             self.description = description
         else:
             self.genstate.add_descriptors(self.stats.get_descriptors())
             self.genstate.add_descriptors(self.name.split()[1:])
             self.description = self.genstate.gen_description()
-        # Reset random state
-        if self.seed:
-            random.setstate(rand_state)
     def get_image_name(self):
         """
         Get the name of the image for this item
@@ -246,12 +265,6 @@ class IsaacItem:
         if self.type == "active":
             ret = ret + " maxcharges=\"{}\" cooldown=\"180\" ".format(self.chargeval)
         return ret + " />"
-    def gen_image(self):
-        """
-        Generate and save a random sprite for this item
-        """
-        path = TRINKET_IMAGE_PATH if self.type == "trinket" else OUTPUT_IMAGE_PATH
-        image.generate_image(os.path.join(path,self.get_image_name()), self.genstate)
     def get_pools(self):
         """
         Get a list of item pools this item belongs to

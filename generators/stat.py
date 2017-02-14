@@ -2,12 +2,16 @@ import random
 from . import util
 
 # Common stats
+# Average stat bonus will be 3, balance around this number!
+# Also note that stats will be increased by a random number in
+# the range (value, value + 1)
+# So actual average will be 3.5
 STAT_RANGES = {
-    'speed': 0.09,
+    'speed': 0.1, #
     'luck': 1,
     'tears': 1,
-    'shot_speed': 0.06,
-    'damage': 0.65,
+    'shot_speed': 0.07,
+    'damage': 0.8,
     'range': 1.0,
 }
 
@@ -32,7 +36,7 @@ CONST_WEAPONS = [
 
 # Stats and their weights
 STAT_NAMES       = ['speed', 'luck', 'tears', 'shot_speed', 'damage', 'range']
-STAT_WEIGHTS     = [    3.4,    1.2,     3.2,          2.0,      4.0,     4.0]
+STAT_WEIGHTS     = [    3.4,    1.2,     3.0,          2.0,      4.2,     4.0]
 STAT_WEIGHTS_BAD = [    3.2,    0.8,     4.2,          3.0,      2.6,     3.8]
 STAT_NAMES_SPECIAL =   ['health', 'soul', 'black']
 STAT_WEIGHTS_SPECIAL = [      8,      4,       2]

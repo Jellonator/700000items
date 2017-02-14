@@ -12,3 +12,4 @@ gen.writeln("{}\n".format(stats.gen_eval_cache()))
 end
 
 _signal_refresh_cache(player)
+save_output()

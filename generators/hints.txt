@@ -4,8 +4,6 @@
 	outline+13
 
 # VALUE
-:sacred|holy|god
-	good+1
 :curse|myster
 	bad+1
 :sacred|myster
@@ -14,20 +12,27 @@
 	good+2
 :super
 	good+1
-:satan|demon|evil
+:pool-angel
+	good+1
+:pool-devil
 	good+2
 	bad+1
+:pool-secret
+	good+1
 
 # STATS
+:pool-boss
+	stat-special+6
+:super
+	:stat-special+2
 :mom
 	stat-range+3
 	stat-health+3
-	stat-special+1
 :luck
 	stat-luck+4
 :heart
 	stat-health+2
-	stat-special+2
+	stat-special+3
 :satan|demon|evil
 	stat-damage+2
 	stat-spirit+2
