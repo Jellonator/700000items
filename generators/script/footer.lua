@@ -4,13 +4,18 @@ for i, name in pairs(Mod.item_names) do
 	Mod.items[id] = def
 	Mod.items[name] = def
 
+	def.item_name = name
+	def.item_id = id
+
 	if def.init then def:init() end
 
 	table.insert(Mod.item_ids, id)
 
 	local familiar_variant = Isaac.GetEntityVariantByName(name)
 	if familiar_variant and familiar_variant >= 0 then
+		Isaac.DebugString(("Item \"%s\" has familiar variant %d"):format(name, familiar_variant))
 		Mod.familiars[familiar_variant] = def
+		def.familiar_variant = familiar_variant
 	end
 end
 
