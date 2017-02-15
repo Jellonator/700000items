@@ -7,6 +7,11 @@ for i, name in pairs(Mod.item_names) do
 	if def.init then def:init() end
 
 	table.insert(Mod.item_ids, id)
+
+	local familiar_variant = Isaac.GetEntityVariantByName(name)
+	if familiar_variant and familiar_variant >= 0 then
+		Mod.familiars[familiar_variant] = def
+	end
 end
 
 Mod.card_names = {}

@@ -11,6 +11,15 @@ CHARGE_VALUES = [2, 3, 4, 6]
 OUTPUT_IMAGE_PATH = "700000items/resources/gfx/items/collectibles"
 TRINKET_IMAGE_PATH = "700000items/resources/gfx/items/trinkets"
 
+CONST_FAMILIAR_XML_STRING = """
+    <entity anm2path="003.044_Cube of Meat L1.anm2" baseHP="0" boss="0"
+    champion="0" collisionDamage="{}" collisionMass="3" collisionRadius="13"
+    friction="1" id="3" name="{}" numGridCollisionPoints="12"
+    shadowSize="14" stageHP="0">
+        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+    </entity>
+"""
+
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
     "challenge", "goldenChest", "redChest", "beggar", "demonBeggar", "curse",\
     "keyMaster", "bossrush", "dungeon", "bombBum", "greedTreasure", "greedBoss",\
@@ -91,6 +100,7 @@ class IsaacItem:
     effect = ""
     chargeval = 2
     description = "It's a mystery!"
+    collision_damage = 0
     def __init__(self, name, seed, trinket=False, description=None):
         """
         Create a new item
@@ -278,3 +288,9 @@ class IsaacItem:
         "\tevaluate_cache = function(self, player, flag)\n{}\nend\n".format(\
             self.stats.gen_eval_cache()) + self.effect +\
         "}\n"
+    def gen_familiar_xml(self):
+        if self.type == "familiar":
+            return CONST_FAMILIAR_XML_STRING.format(\
+                self.collision_damage, self.name)
+        else:
+            return ""

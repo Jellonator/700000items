@@ -15,6 +15,8 @@ Mod.item_ids = {} -- List of item ids (unordered)
 Mod.cards = {} -- list of cards
 Mod.pills = {} -- list of pills
 Mod.trinkets = {} -- list of trinkets
+Mod.familiars = {} -- list of familiars.
+-- Keys are integers referring to Variant, and values are item def
 
 function Mod:get_player_id(player)
 	local game = Game()
@@ -457,6 +459,22 @@ function Mod.callbacks:use_card(card)
 	end
 end
 
+function Mod.callbacks:familiar_init(familiar)
+	local player = familiar.Player
+	local def = Mod.familiars[familiar.Variant]
+	if def and def.familiar_init then
+		def:familiar_init(player, familiar)
+	end
+end
+
+function Mod.callbacks:familiar_update(familiar)
+	local player = familiar.Player
+	local def = Mod.familiars[familiar.Variant]
+	if def and def.familiar_update then
+		def:familiar_update(player, familiar)
+	end
+end
+
 Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, Mod.callbacks.update)
 Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Mod.callbacks.evaluate_cache)
 Mod:AddCallback(ModCallbacks.MC_USE_ITEM, Mod.callbacks.use_item)
@@ -464,6 +482,8 @@ Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.player_take_damag
 Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.enemy_take_damage)
 Mod:AddCallback(ModCallbacks.MC_USE_CARD, Mod.callbacks.use_card)
 Mod:AddCallback(ModCallbacks.MC_USE_PILL, Mod.callbacks.use_pill)
+Mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Mod.callbacks.familiar_init)
+Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Mod.callbacks.familiar_update)
 
 --Uncomment for debug render
 -- Mod:AddCallback(ModCallbacks.MC_POST_RENDER, Mod.callbacks.render)

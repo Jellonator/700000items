@@ -6,6 +6,9 @@ enemy_take_damage: Enemy takes damage
 on_add: Called when item is added to a player
 on_pickup: Called when item is picked up by player
 on_remove: Called when player removes an item (D100/D4/etc.)
+init: Called when mod is initiated
+familiar_init: Called when a familiar is created
+familiar_update: Called every frame for a familiar
 
 on_pickup differs from on_add because on_pickup only activates when picking up
 an item from an item pedestal. on_add activates with the giveitem command, the
