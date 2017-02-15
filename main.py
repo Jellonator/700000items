@@ -81,8 +81,10 @@ trinket_number = 1
 xml_items_name = util.get_output_path('content/items.xml')
 xml_pools_name = util.get_output_path('content/itempools.xml')
 xml_pocketitems_name = util.get_output_path('content/pocketitems.xml')
+xml_entities_name = util.get_output_path('content/entities2.xml')
 with open(xml_items_name, 'w') as xml_items,\
 open(xml_pools_name, 'w') as xml_pools,\
+open(xml_entities_name, 'w') as xml_entities,\
 open(util.get_output_path("main.lua"), 'w') as script:
     # header
     with open("generators/script/header.lua", 'r') as header:
@@ -93,6 +95,7 @@ open(util.get_output_path("main.lua"), 'w') as script:
         pools[name] = []
 
     # Generate items
+    xml_entities.write("<entities anm2root=\"gfx/\" version=\"5\">\n");
     xml_items.write("<items gfxroot=\"gfx/items/\" version=\"1\">\n");
     max_failed_tries = MAGIC_NUMBER
     ITEM_NUMBERS = random.sample([x for x in range(1, 700000+1) if x not in HARDCODED_ITEMS], MAGIC_NUMBER)
@@ -111,6 +114,7 @@ open(util.get_output_path("main.lua"), 'w') as script:
             pools[pool].append(item.name)
         script.write("Mod.items[\"{}\"] = {}\n".format(\
             item.name, item.get_definition()))
+        xml_entities.write(item.gen_familiar_xml())
     for num, (name, desc) in HARDCODED_ITEMS.items():
         seed = hash(name)
         full_name = str(num) + " " + name
@@ -121,6 +125,7 @@ open(util.get_output_path("main.lua"), 'w') as script:
             pools[pool].append(item.name)
         script.write("Mod.items[\"{}\"] = {}\n".format(\
             item.name, item.get_definition()))
+        xml_entities.write(item.gen_familiar_xml())
     # Generate trinkets
     max_failed_tries = NUM_TRINKETS
     while len(trinkets) < NUM_TRINKETS and max_failed_tries > 0:
@@ -136,6 +141,7 @@ open(util.get_output_path("main.lua"), 'w') as script:
         script.write("Mod.trinkets[\"{}\"] = {}\n".format(\
             trinket.name, item.get_definition()))
     xml_items.write("</items>\n");
+    xml_entities.write("</entities>\n");
 
     # write out item names to script
     script.write("Mod.item_names = {\n")

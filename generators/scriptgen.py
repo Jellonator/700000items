@@ -13,6 +13,7 @@ CONST_ACTIVE_ITEM_IDS = [
 
 CONST_ITEM_PASSIVE_FILE = "generators/script/item_passive.lua"
 CONST_ITEM_ACTIVE_FILE = "generators/script/item_active.lua"
+CONST_ITEM_FAMILIAR_FILE = "generators/script/item_familiar.lua"
 CONST_TRINKET_FILE = "generators/script/trinket.lua"
 CONST_CARD_FILE = "generators/script/card.lua"
 CONST_PILL_FILE = "generators/script/pill.lua"
@@ -206,6 +207,9 @@ def generate_item_active(genstate):
 
 def generate_item_passive(genstate):
     return load_file(CONST_ITEM_PASSIVE_FILE, genstate)
+
+def generate_item_familiar(genstate):
+    return load_file(CONST_ITEM_FAMILIAR_FILE, genstate)
 
 def generate_card_effect(genstate):
     return load_file(CONST_CARD_FILE, genstate)
