@@ -46,11 +46,15 @@
 :book
 	active+15
 :head
-	active+3
+	active+1
+
+# FAMILIAR
+:buddy|friend|cube
+	familiar+2
 
 # TRINKETS (unused)
 :worm
-	trinket+99999
+	trinket+9
 
 # POOLS
 :shop|bank|greed

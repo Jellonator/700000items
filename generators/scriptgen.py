@@ -11,12 +11,89 @@ CONST_ACTIVE_ITEM_IDS = [
     160, 145, 137, 123, 111, 107, 56, 45, 41, 39, 36, 35, 34
 ]
 
+
 CONST_ITEM_PASSIVE_FILE = "generators/script/item_passive.lua"
 CONST_ITEM_ACTIVE_FILE = "generators/script/item_active.lua"
 CONST_ITEM_FAMILIAR_FILE = "generators/script/item_familiar.lua"
 CONST_TRINKET_FILE = "generators/script/trinket.lua"
 CONST_CARD_FILE = "generators/script/card.lua"
 CONST_PILL_FILE = "generators/script/pill.lua"
+
+CONST_TEARFLAGS = [
+    # List of tear effects which may be cool on a familiar or something
+    # "TearFlag.FLAG_NO_EFFECT",
+    "TearFlag.FLAG_SPECTRAL",
+    "TearFlag.FLAG_PIERCING",
+    "TearFlag.FLAG_HOMING",
+    "TearFlag.FLAG_SLOWING",
+    "TearFlag.FLAG_POISONING",
+    "TearFlag.FLAG_FREEZING",
+    "TearFlag.FLAG_COAL",
+    "TearFlag.FLAG_PARASITE",
+    "TearFlag.FLAG_MAGIC_MIRROR",
+    "TearFlag.FLAG_POLYPHEMUS",
+    "TearFlag.FLAG_WIGGLE_WORM",
+    # "TearFlag.FLAG_UNK1",
+    "TearFlag.FLAG_IPECAC",
+    "TearFlag.FLAG_CHARMING",
+    "TearFlag.FLAG_CONFUSING",
+    # "TearFlag.FLAG_ENEMIES_DROP_HEARTS",
+    "TearFlag.FLAG_TINY_PLANET",
+    # "TearFlag.FLAG_ANTI_GRAVITY",
+    "TearFlag.FLAG_CRICKETS_BODY",
+    "TearFlag.FLAG_RUBBER_CEMENT",
+    "TearFlag.FLAG_FEAR",
+    "TearFlag.FLAG_PROPTOSIS",
+    # "TearFlag.FLAG_FIRE",
+    "TearFlag.FLAG_STRANGE_ATTRACTOR",
+    # "TearFlag.FLAG_UNK2",
+    "TearFlag.FLAG_PULSE_WORM",
+    "TearFlag.FLAG_RING_WORM",
+    "TearFlag.FLAG_FLAT_WORM",
+    # "TearFlag.FLAG_UNK3",
+    # "TearFlag.FLAG_UNK4",
+    # "TearFlag.FLAG_UNK5",
+    "TearFlag.FLAG_HOOK_WORM",
+    "TearFlag.FLAG_GODHEAD",
+    # "TearFlag.FLAG_UNK6",
+    # "TearFlag.FLAG_UNK7",
+    "TearFlag.FLAG_EXPLOSIVO",
+    "TearFlag.FLAG_CONTINUUM",
+    "TearFlag.FLAG_HOLY_LIGHT",
+    # "TearFlag.FLAG_KEEPER_HEAD",
+    # "TearFlag.FLAG_ENEMIES_DROP_BLACK_HEARTS",
+    # "TearFlag.FLAG_ENEMIES_DROP_BLACK_HEARTS2",
+    "TearFlag.FLAG_GODS_FLESH",
+    # "TearFlag.FLAG_UNK8",
+    "TearFlag.FLAG_TOXIC_LIQUID",
+    "TearFlag.FLAG_OUROBOROS_WORM",
+    "TearFlag.FLAG_GLAUCOMA",
+    "TearFlag.FLAG_BOOGERS",
+    "TearFlag.FLAG_PARASITOID",
+    # "TearFlag.FLAG_UNK9",
+    "TearFlag.FLAG_SPLIT",
+    # "TearFlag.FLAG_DEADSHOT",
+    # "TearFlag.FLAG_MIDAS",
+    "TearFlag.FLAG_EUTHANASIA",
+    "TearFlag.FLAG_JACOBS_LADDER",
+    "TearFlag.FLAG_LITTLE_HORN",
+    "TearFlag.FLAG_GHOST_PEPPER"
+]
+
+CONST_TEARFLAG_CHANCES = {
+    "TearFlag.FLAG_GHOST_PEPPER": 0.2,
+    "TearFlag.FLAG_EUTHANASIA": 0.2,
+    "TearFlag.FLAG_LITTLE_HORN": 0.2,
+    "TearFlag.FLAG_GODS_FLESH": 0.35,
+    "TearFlag.FLAG_HOLY_LIGHT": 0.35,
+    "TearFlag.FLAG_EXPLOSIVO": 0.25,
+    "TearFlag.FLAG_FEAR": 0.35,
+    "TearFlag.FLAG_CHARMING": 0.3,
+    "TearFlag.FLAG_CONFUSING": 0.3,
+    "TearFlag.FLAG_SLOWING": 0.3,
+    "TearFlag.FLAG_POISONING": 0.3,
+    "TearFlag.FLAG_FREEZING": 0.3,
+}
 
 CONST_EFFECT_TYPES_COMMON = [
     "EffectVariant.PLAYER_CREEP_WHITE",
@@ -36,6 +113,7 @@ CONST_EFFECT_TYPES_RARE = [
 ]
 
 CONST_ENTITY_PICKUP = "EntityType.ENTITY_PICKUP"
+
 CONST_PICKUP_VARIANTS = {
     "any": "PickupVariant.PICKUP_NULL",
     "heart": "PickupVariant.PICKUP_HEART",
@@ -50,6 +128,7 @@ CONST_PICKUP_VARIANTS = {
     "trinket": "PickupVariant.PICKUP_TRINKET",
 }
 CONST_PICKUP_VARIANTS_LIST = list(CONST_PICKUP_VARIANTS.keys())
+
 CONST_PICKUP_SUBTYPES = {
     # NOT a list of all subtypes!
     # This is only a selection of specific drops
@@ -148,6 +227,7 @@ CONST_COLLECTIBLES_DISABLE_TIMER = [
     "CollectibleType.COLLECTIBLE_COMPASS",
 ]
 
+# Collectibles which may be used on a timer
 CONST_COLLECTIBLES_TIMER = [x for x in CONST_COLLECTIBLES
     if x not in CONST_COLLECTIBLES_DISABLE_TIMER]
 
@@ -165,6 +245,14 @@ def choose_random_collectible(is_timer):
         return random.choice(CONST_COLLECTIBLES_TIMER)
     else:
         return random.choice(CONST_COLLECTIBLES)
+
+def choose_random_tearflag():
+    return random.choice(CONST_TEARFLAGS)
+
+def get_tearflag_chance(flagname):
+    if flagname in CONST_TEARFLAG_CHANCES:
+        return CONST_TEARFLAG_CHANCES[flagname]
+    return 1
 
 def id_to_descriptors(item_id):
     if "." in item_id:

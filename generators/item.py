@@ -236,9 +236,9 @@ class IsaacItem:
             active_denom = 1 + active_hint
             active_chance = active_hint / active_denom
             # Chance for familiar
-            familiar_hint = self.genstate.get_hint("familiar")+0.3
+            familiar_hint = self.genstate.get_hint("familiar")+0.2
             familiar_denom = 1 + familiar_hint
-            familiar_chance = active_hint / familiar_denom
+            familiar_chance = familiar_hint / familiar_denom
             # Set type
             if random.random() < active_chance:
                 self.type = "active"
@@ -252,6 +252,7 @@ class IsaacItem:
             script = scriptgen.generate_trinket(self.genstate)
         elif self.type == "familiar":
             script = scriptgen.generate_item_familiar(self.genstate)
+            self.collision_damage = script.get_var_default("collision_damage", 0)
         else:
             script = scriptgen.generate_item_active(self.genstate)
         self.effect += ','

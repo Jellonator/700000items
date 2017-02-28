@@ -18,3 +18,4 @@ Money
 Friend
 Aura
 Battery
+Milk

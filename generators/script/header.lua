@@ -6,6 +6,68 @@ VALID_DAMAGE_SOURCES = {
 	[EntityType.ENTITY_KNIFE] = true,
 }
 
+-- Tear flag list credit to /u/Snailic
+-- Sweet list dude
+TearFlag = {
+	FLAG_NO_EFFECT = 0,
+	FLAG_SPECTRAL = 1,
+	FLAG_PIERCING = 1<<1,
+	FLAG_HOMING = 1<<2,
+	FLAG_SLOWING = 1<<3,
+	FLAG_POISONING = 1<<4,
+	FLAG_FREEZING = 1<<5,
+	FLAG_COAL = 1<<6,
+	FLAG_PARASITE = 1<<7,
+	FLAG_MAGIC_MIRROR = 1<<8,
+	FLAG_POLYPHEMUS = 1<<9,
+	FLAG_WIGGLE_WORM = 1<<10,
+	FLAG_UNK1 = 1<<11, --No noticeable effect
+	FLAG_IPECAC = 1<<12,
+	FLAG_CHARMING = 1<<13,
+	FLAG_CONFUSING = 1<<14,
+	FLAG_ENEMIES_DROP_HEARTS = 1<<15,
+	FLAG_TINY_PLANET = 1<<16,
+	FLAG_ANTI_GRAVITY = 1<<17,
+	FLAG_CRICKETS_BODY = 1<<18,
+	FLAG_RUBBER_CEMENT = 1<<19,
+	FLAG_FEAR = 1<<20,
+	FLAG_PROPTOSIS = 1<<21,
+	FLAG_FIRE = 1<<22,
+	FLAG_STRANGE_ATTRACTOR = 1<<23,
+	FLAG_UNK2 = 1<<24, --Possible worm?
+	FLAG_PULSE_WORM = 1<<25,
+	FLAG_RING_WORM = 1<<26,
+	FLAG_FLAT_WORM = 1<<27,
+	FLAG_UNK3 = 1<<28, --Possible worm?
+	FLAG_UNK4 = 1<<29, --Possible worm?
+	FLAG_UNK5 = 1<<30, --Possible worm?
+	FLAG_HOOK_WORM = 1<<31,
+	FLAG_GODHEAD = 1<<32,
+	FLAG_UNK6 = 1<<33, --No noticeable effect
+	FLAG_UNK7 = 1<<34, --No noticeable effect
+	FLAG_EXPLOSIVO = 1<<35,
+	FLAG_CONTINUUM = 1<<36,
+	FLAG_HOLY_LIGHT = 1<<37,
+	FLAG_KEEPER_HEAD = 1<<38,
+	FLAG_ENEMIES_DROP_BLACK_HEARTS = 1<<39,
+	FLAG_ENEMIES_DROP_BLACK_HEARTS2 = 1<<40,
+	FLAG_GODS_FLESH = 1<<41,
+	FLAG_UNK8 = 1<<42, --No noticeable effect
+	FLAG_TOXIC_LIQUID = 1<<43,
+	FLAG_OUROBOROS_WORM = 1<<44,
+	FLAG_GLAUCOMA = 1<<45,
+	FLAG_BOOGERS = 1<<46,
+	FLAG_PARASITOID = 1<<47,
+	FLAG_UNK9 = 1<<48, --No noticeable effect
+	FLAG_SPLIT = 1<<49,
+	FLAG_DEADSHOT = 1<<50,
+	FLAG_MIDAS = 1<<51,
+	FLAG_EUTHANASIA = 1<<52,
+	FLAG_JACOBS_LADDER = 1<<53,
+	FLAG_LITTLE_HORN = 1<<54,
+	FLAG_GHOST_PEPPER = 1<<55
+}
+
 --[[
 Per-Item data, such as: stats, item variants, functionality, etc.
 --]]
