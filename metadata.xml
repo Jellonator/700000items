@@ -9,7 +9,7 @@ Maybe even [i]700,000[/i]* more?
 Well, then this mod is for you!
 
 [h1]Features[/h1]
- - 2500 randomly generated items
+ - 2,000 randomly generated items
  - 30 randomly generated pill effects
  - 100 randomly generated trinkets
  - random item sprites
@@ -23,11 +23,11 @@ Don't worry if starting the game or run takes too long, that's normal. Mod too b
 
 The name &quot;700,000 Items&quot; is a reference to Jerma's video on the game [url=store.steampowered.com]700,000 Games[/url]. The mod itself kinda plays on those weird bootleg games that advertise a bunch of games, but end up only having like 192.
 
-*there is not actually 700,000 items. Not that it would be impossible, but it makes the game horribly slow to start and would take a lot of time to actually generate this many items. The game is already pretty strained at 2500 items. For reference, the base game has 504 items.
+*there is not actually 700,000 items. Not that it would be impossible, but it makes the game horribly slow to start and would take a lot of time to actually generate this many items. The game is already pretty strained at 2,000 items. For reference, the base game has 504 items.
 
 Do you want to generate your own fresher, larger set of items, or want to contribute? Check out the [url=https://github.com/jellonator/700000items]Git Repository[/url]! Just follow the instructions in the README.
 </description>
-    <version>1.6</version>
+    <version>1.7</version>
     <visibility>Public</visibility>
     <tag id="Items"/>
     <tag id="Active Items"/>

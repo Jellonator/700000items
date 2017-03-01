@@ -16,6 +16,7 @@ import random
 MAGIC_NUMBER = 500
 NUM_PILLS = 30
 NUM_TRINKETS = 100
+RELEASE_NUM = 2000
 HARDCODED_ITEMS = {
     1101: ("Mr. Box", "Seen Is I've Near Meh"),
     700000: ("Last Item", "Fold"),
@@ -45,7 +46,7 @@ end""".format(effect.get_output()), state.gen_description())
 if len(sys.argv) > 1:
     arg = sys.argv[1]
     if arg == "release":
-        arg = "2500"
+        arg = RELEASE_NUM
     MAGIC_NUMBER = int(arg)
 
 # Remove previous mod folder
