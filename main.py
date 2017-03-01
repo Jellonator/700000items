@@ -140,7 +140,7 @@ open(util.get_output_path("main.lua"), 'w') as script:
         trinket_number += 1
         xml_items.write("\t{}\n".format(trinket.gen_xml()))
         script.write("Mod.trinkets[\"{}\"] = {}\n".format(\
-            trinket.name, item.get_definition()))
+            trinket.name, trinket.get_definition()))
     xml_items.write("</items>\n");
     xml_entities.write("</entities>\n");
 

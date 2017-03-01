@@ -50,7 +50,7 @@
 
 # FAMILIAR
 :buddy|friend|cube
-	familiar+2
+	familiar+4
 
 # TRINKETS (unused)
 :worm

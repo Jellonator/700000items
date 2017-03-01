@@ -11,11 +11,8 @@ damage = random.uniform(0.5, 1.5)
 VALID_STATUS = [
     ("Poison", "AddPoison(EntityRef(player), {0}, {1:.2f})"),
     ("Slow", "AddSlowing(EntityRef(player), {0}, 0.5, Color(0.5, 0.5, 0.5, 1.0, 0, 0, 0))--{1}"),
-    ("Charm", "AddCharmed ({0})--{1}"),
     ("Confusion", "AddConfusion(EntityRef(player), {0}, false)--{1}"),
-    ("Fear", "AddFear(EntityRef(player), {0})--{1}"),
     ("Burn", "AddBurn(EntityRef(player), {0}, {1:.2f})"),
-    ("Shrink", "AddShrink(EntityRef(player), {0})--{1}"),
 ]
 status = random.choice(VALID_STATUS)
 gen.writeln("enemy:" + status[1].format(duration, damage))

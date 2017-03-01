@@ -6,7 +6,9 @@ from . import scriptgen
 from . import util
 import random
 import os
+import string
 
+CONST_VALID_PATH_CHARACTERS = "_" + string.ascii_letters + string.digits
 CHARGE_VALUES = [2, 3, 4, 6]
 OUTPUT_IMAGE_PATH = "700000items/resources/gfx/items/collectibles"
 TRINKET_IMAGE_PATH = "700000items/resources/gfx/items/trinkets"
@@ -225,7 +227,7 @@ class IsaacItem:
         """
         Get the name of the image for this item
         """
-        name = self.name.replace(" ", "_").lower()
+        name = "".join((c if c in CONST_VALID_PATH_CHARACTERS else "_") for c in self.name.lower())
         base = "trinket" if self.type == "trinket" else "collectible"
         return "{}_{}.png".format(base, name)
     def add_effect(self):
@@ -235,13 +237,13 @@ class IsaacItem:
         """
         # Determine active or passive
         # Default 1/10 chance
-        if self.type != "trinket":
+        if self.type == "passive":
             # Chance for active
             active_hint = self.genstate.get_hint("active")+0.15
             active_denom = 1 + active_hint
             active_chance = active_hint / active_denom
             # Chance for familiar
-            familiar_hint = self.genstate.get_hint("familiar")+0.2
+            familiar_hint = self.genstate.get_hint("familiar")+0.25
             familiar_denom = 1 + familiar_hint
             familiar_chance = familiar_hint / familiar_denom
             # Set type
@@ -307,15 +309,11 @@ class IsaacItem:
     def gen_familiar_xml(self):
         if self.type == "familiar":
             path = ANIM_IMAGE_PATH
-            familiar_name = "familiar_" + self.get_image_name()
-            anim_name = "anim_" + self.get_image_name()+".anm2"
-
-            familiar_path = os.path.join(FAMILIAR_IMAGE_PATH, familiar_name)
+            image_name = self.get_image_name()
+            anim_name = "anim_" + image_name +".anm2"
             anim_path = os.path.join(ANIM_IMAGE_PATH, anim_name)
-
-            image.generate_image(familiar_path, self.genstate)
             with open(anim_path, 'w') as anim_write:
-                local_path = os.path.join("familiar", familiar_name)
+                local_path = os.path.join("items/collectibles", image_name)
                 anim_write.write(anim_base_xml.replace("$IMAGEPATH", local_path))
 
             return CONST_FAMILIAR_XML_STRING.format(\
