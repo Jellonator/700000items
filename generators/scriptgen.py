@@ -67,7 +67,6 @@ CONST_TEARFLAGS = [
     # "TearFlag.FLAG_UNK8",
     "TearFlag.FLAG_TOXIC_LIQUID",
     "TearFlag.FLAG_OUROBOROS_WORM",
-    "TearFlag.FLAG_GLAUCOMA",
     "TearFlag.FLAG_BOOGERS",
     "TearFlag.FLAG_PARASITOID",
     # "TearFlag.FLAG_UNK9",
@@ -77,24 +76,54 @@ CONST_TEARFLAGS = [
     "TearFlag.FLAG_EUTHANASIA",
     "TearFlag.FLAG_JACOBS_LADDER",
     "TearFlag.FLAG_LITTLE_HORN",
-    "TearFlag.FLAG_GHOST_PEPPER"
+    "TearFlag.FLAG_GHOST_PEPPER",
 ]
 
 CONST_TEARFLAG_CHANCES = {
-    "TearFlag.FLAG_GHOST_PEPPER": 0.2,
-    "TearFlag.FLAG_EUTHANASIA": 0.2,
     "TearFlag.FLAG_LITTLE_HORN": 0.2,
-    "TearFlag.FLAG_GODS_FLESH": 0.35,
-    "TearFlag.FLAG_HOLY_LIGHT": 0.35,
-    "TearFlag.FLAG_EXPLOSIVO": 0.25,
-    "TearFlag.FLAG_FEAR": 0.35,
+    "TearFlag.FLAG_EUTHANASIA": 0.2,
+    "TearFlag.FLAG_GHOST_PEPPER": 0.2,
+    "TearFlag.FLAG_GODS_FLESH": 0.3,
+    "TearFlag.FLAG_HOLY_LIGHT": 0.3,
+    "TearFlag.FLAG_EXPLOSIVO": 0.3,
+    "TearFlag.FLAG_FEAR": 0.3,
     "TearFlag.FLAG_CHARMING": 0.3,
-    "TearFlag.FLAG_CONFUSING": 0.3,
     "TearFlag.FLAG_SLOWING": 0.3,
-    "TearFlag.FLAG_POISONING": 0.3,
     "TearFlag.FLAG_FREEZING": 0.3,
+    "TearFlag.FLAG_CONFUSING": 0.4,
+    "TearFlag.FLAG_POISONING": 0.4,
+    "TearFlag.FLAG_BOOGERS": 0.4,
 }
 
+CONST_TEARFLAG_COLORS = {
+    "TearFlag.FLAG_SPECTRAL":  (1.0, 1.0, 1.0, 0.7,   0,    0,    0),
+    "TearFlag.FLAG_HOMING":    (0.8, 0.1, 1.0, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_SLOWING":   (1.0, 1.0, 1.0, 1.0,  80,   80,   80),
+    "TearFlag.FLAG_POISONING": (0.5, 1.0, 0.5, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_FREEZING":  (0.5, 0.5, 0.5, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_COAL":      (0.2, 0.2, 0.2, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_IPECAC":    (0.2, 0.5, 0.2, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_CHARMING":  (1.0, 0.5, 0.5, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_CONFUSING": (0.4, 0.4, 0.4, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_RUBBER_CEMENT": (0.9, 0.9, 0.9, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_FEAR":       (0.3, 0.2, 0.3, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_HOLY_LIGHT": (0.9, 0.9, 1.0, 1.0,  10,   10,   20),
+    "TearFlag.FLAG_GODS_FLESH": (1.0, 0.9, 0.9, 1.0,   0,    0,    0),
+    "TearFlag.FLAG_STRANGE_ATTRACTOR": (0.5, 0.5, 0.5, 1.0,  80,   80,   80),
+    "TearFlag.FLAG_BOOGERS":    (0.4, 0.8, 0.4, 1.0,   0,    0,    0),
+}
+CONST_TEARFLAG_VARIANTS = {
+    "TearFlag.FLAG_FEAR": "TearVariant.DARK_MATTER",
+    "TearFlag.FLAG_TOXIC_LIQUID": "TearVariant.MYSTERIOUS",
+    "TearFlag.FLAG_PIERCING": "TearVariant.CUPID_BLUE",
+    "TearFlag.FLAG_GODS_FLESH": "TearVariant.GODS_FLESH",
+    "TearFlag.FLAG_EXPLOSIVO": "TearVariant.EXPLOSIVO",
+    "TearFlag.FLAG_BOOGERS": "TearVariant.BOOGER",
+    "TearFlag.FLAG_PARASITOID": "TearVariant.EGG",
+    "TearFlag.FLAG_SPLIT": "TearVariant.BONE",
+    "TearFlag.FLAG_LITTLE_HORN": "TearVariant.BLACK_TOOTH",
+    "TearFlag.FLAG_EUTHANASIA": "TearVariant.NEEDLE",
+}
 CONST_EFFECT_TYPES_COMMON = [
     "EffectVariant.PLAYER_CREEP_WHITE",
     "EffectVariant.PLAYER_CREEP_BLACK",
@@ -253,6 +282,14 @@ def get_tearflag_chance(flagname):
     if flagname in CONST_TEARFLAG_CHANCES:
         return CONST_TEARFLAG_CHANCES[flagname]
     return 1
+
+def get_tearflag_color(flagname):
+    if flagname in CONST_TEARFLAG_COLORS:
+        return "Color({})".format(",".join([str(x) for x in CONST_TEARFLAG_COLORS[flagname]]))
+
+def get_tearflag_variant(flagname):
+    if flagname in CONST_TEARFLAG_VARIANTS:
+        return CONST_TEARFLAG_VARIANTS[flagname]
 
 def id_to_descriptors(item_id):
     if "." in item_id:

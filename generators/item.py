@@ -10,9 +10,14 @@ import os
 CHARGE_VALUES = [2, 3, 4, 6]
 OUTPUT_IMAGE_PATH = "700000items/resources/gfx/items/collectibles"
 TRINKET_IMAGE_PATH = "700000items/resources/gfx/items/trinkets"
+FAMILIAR_IMAGE_PATH = "700000items/resources/gfx/familiar"
+ANIM_IMAGE_PATH = "700000items/resources/gfx"
+ANIM_BASE_XML_PATH = "generators/script/baseanim.xml"
+
+anim_base_xml = open(ANIM_BASE_XML_PATH, 'r').read()
 
 CONST_FAMILIAR_XML_STRING = """
-    <entity anm2path="003.044_Cube of Meat L1.anm2" baseHP="0" boss="0"
+    <entity anm2path="{}" baseHP="0" boss="0"
     champion="0" collisionDamage="{}" collisionMass="3" collisionRadius="13"
     friction="1" id="3" name="{}" numGridCollisionPoints="12"
     shadowSize="14" stageHP="0">
@@ -301,7 +306,19 @@ class IsaacItem:
         "}\n"
     def gen_familiar_xml(self):
         if self.type == "familiar":
+            path = ANIM_IMAGE_PATH
+            familiar_name = "familiar_" + self.get_image_name()
+            anim_name = "anim_" + self.get_image_name()+".anm2"
+
+            familiar_path = os.path.join(FAMILIAR_IMAGE_PATH, familiar_name)
+            anim_path = os.path.join(ANIM_IMAGE_PATH, anim_name)
+
+            image.generate_image(familiar_path, self.genstate)
+            with open(anim_path, 'w') as anim_write:
+                local_path = os.path.join("familiar", familiar_name)
+                anim_write.write(anim_base_xml.replace("$IMAGEPATH", local_path))
+
             return CONST_FAMILIAR_XML_STRING.format(\
-                self.collision_damage, self.name)
+                anim_name, self.collision_damage, self.name)
         else:
             return ""

@@ -163,6 +163,14 @@ function table_to_string(t)
 	return _table_to_string(t)
 end
 
+function direction_to_vector(dir)
+	if dir == Direction.LEFT then return Vector(-1, 0)
+	elseif dir == Direction.RIGHT then return Vector(1, 0)
+	elseif dir == Direction.UP then return Vector(0, -1)
+	elseif dir == Direction.DOWN then return Vector(0, 1)
+	else return Vector(0, 0) end
+end
+
 function save_output()
 	t = {
 		stats = Mod.stats_permanant,

@@ -70,6 +70,7 @@ while True:
 util.check_folder(util.get_output_path('content'))
 util.check_folder(util.get_output_path('resources/gfx/items/collectibles'))
 util.check_folder(util.get_output_path('resources/gfx/items/trinkets'))
+util.check_folder(util.get_output_path('resources/gfx/familiar'))
 
 # XML definition of item pool entry
 ITEMPOOL_DEF = "\t\t<Item Name=\"{}\" Weight=\"1\" DecreaseBy=\"1\" RemoveOn=\"0.1\"/>\n"

@@ -4,8 +4,8 @@ do
     if data.shoot_timer <= 0 then
         local dir = player:GetAimDirection()
         if dir.X ~= 0 or dir.Y ~= 0 then
-            dir = dir:Normalized()
-            data.shoot_timer = 30
+            dir = direction_to_vector(player:GetFireDirection())
+            data.shoot_timer = 25
             local tear = familiar:FireProjectile(dir)
             python[[gen.include("familiar_tear")]]
         end
