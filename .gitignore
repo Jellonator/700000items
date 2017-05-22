@@ -5,3 +5,7 @@ main.lua
 700000items
 create_grid.py
 out_grid.png
+screenshots/
+screenshots_hq/
+*.zip
+preview_*

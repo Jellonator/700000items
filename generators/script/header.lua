@@ -1,72 +1,170 @@
-Mod = RegisterMod("700000Items", 1)
+local Mod = RegisterMod("700000Items", 1)
 
-VALID_DAMAGE_SOURCES = {
+local VALID_DAMAGE_SOURCES = {
 	[EntityType.ENTITY_TEAR] = true,
 	[EntityType.ENTITY_LASER] = true,
 	[EntityType.ENTITY_KNIFE] = true,
 }
 
--- Tear flag list credit to /u/Snailic
--- Sweet list dude
-TearFlag = {
-	FLAG_NO_EFFECT = 0,
-	FLAG_SPECTRAL = 1,
-	FLAG_PIERCING = 1<<1,
-	FLAG_HOMING = 1<<2,
-	FLAG_SLOWING = 1<<3,
-	FLAG_POISONING = 1<<4,
-	FLAG_FREEZING = 1<<5,
-	FLAG_COAL = 1<<6,
-	FLAG_PARASITE = 1<<7,
-	FLAG_MAGIC_MIRROR = 1<<8,
-	FLAG_POLYPHEMUS = 1<<9,
-	FLAG_WIGGLE_WORM = 1<<10,
-	FLAG_UNK1 = 1<<11, --No noticeable effect
-	FLAG_IPECAC = 1<<12,
-	FLAG_CHARMING = 1<<13,
-	FLAG_CONFUSING = 1<<14,
-	FLAG_ENEMIES_DROP_HEARTS = 1<<15,
-	FLAG_TINY_PLANET = 1<<16,
-	FLAG_ANTI_GRAVITY = 1<<17,
-	FLAG_CRICKETS_BODY = 1<<18,
-	FLAG_RUBBER_CEMENT = 1<<19,
-	FLAG_FEAR = 1<<20,
-	FLAG_PROPTOSIS = 1<<21,
-	FLAG_FIRE = 1<<22,
-	FLAG_STRANGE_ATTRACTOR = 1<<23,
-	FLAG_UNK2 = 1<<24, --Possible worm?
-	FLAG_PULSE_WORM = 1<<25,
-	FLAG_RING_WORM = 1<<26,
-	FLAG_FLAT_WORM = 1<<27,
-	FLAG_UNK3 = 1<<28, --Possible worm?
-	FLAG_UNK4 = 1<<29, --Possible worm?
-	FLAG_UNK5 = 1<<30, --Possible worm?
-	FLAG_HOOK_WORM = 1<<31,
-	FLAG_GODHEAD = 1<<32,
-	FLAG_UNK6 = 1<<33, --No noticeable effect
-	FLAG_UNK7 = 1<<34, --No noticeable effect
-	FLAG_EXPLOSIVO = 1<<35,
-	FLAG_CONTINUUM = 1<<36,
-	FLAG_HOLY_LIGHT = 1<<37,
-	FLAG_KEEPER_HEAD = 1<<38,
-	FLAG_ENEMIES_DROP_BLACK_HEARTS = 1<<39,
-	FLAG_ENEMIES_DROP_BLACK_HEARTS2 = 1<<40,
-	FLAG_GODS_FLESH = 1<<41,
-	FLAG_UNK8 = 1<<42, --No noticeable effect
-	FLAG_TOXIC_LIQUID = 1<<43,
-	FLAG_OUROBOROS_WORM = 1<<44,
-	FLAG_GLAUCOMA = 1<<45,
-	FLAG_BOOGERS = 1<<46,
-	FLAG_PARASITOID = 1<<47,
-	FLAG_UNK9 = 1<<48, --No noticeable effect
-	FLAG_SPLIT = 1<<49,
-	FLAG_DEADSHOT = 1<<50,
-	FLAG_MIDAS = 1<<51,
-	FLAG_EUTHANASIA = 1<<52,
-	FLAG_JACOBS_LADDER = 1<<53,
-	FLAG_LITTLE_HORN = 1<<54,
-	FLAG_GHOST_PEPPER = 1<<55
-}
+--[[
+Utility functions
+--]]
+
+local function _table_to_string(t)
+	t_type = type(t)
+	if t_type ~= "table" then
+		if t_type == "string" then
+			return ("%q"):format(t)
+		end
+		return tostring(t)
+	end
+	local ret = "{"
+	for k,v in pairs(t) do
+		ret = ret .. ("[%s] = %s,"):format(
+			_table_to_string(k), _table_to_string(v))
+	end
+	ret = ret .. "}"
+	return ret
+end
+
+local function table_to_string(t)
+	return _table_to_string(t)
+end
+
+local function direction_to_vector(dir)
+	if dir == Direction.LEFT then return Vector(-1, 0)
+	elseif dir == Direction.RIGHT then return Vector(1, 0)
+	elseif dir == Direction.UP then return Vector(0, -1)
+	elseif dir == Direction.DOWN then return Vector(0, 1)
+	else return Vector(0, 0) end
+end
+
+local function save_output()
+	t = {
+		stats = Mod.stats_permanant,
+	}
+	out = table_to_string(t)
+	Mod:SaveData(out)
+end
+
+local function load_data()
+	data = Mod:LoadData()
+	t = load("return " .. data)()
+	if t then
+		if t.stats then
+			Mod.stats_permanant = t.stats
+		end
+	end
+end
+
+local function mod_reset()
+	Mod:call_callbacks_all("reset")
+	Mod.stats_permanant.MaxFireDelay = 0
+	Mod.stats_permanant.Damage = 0
+	Mod.stats_permanant.MoveSpeed = 0
+	Mod.stats_permanant.ShotSpeed = 0
+	Mod.stats_permanant.Luck = 0
+	Mod.stats_permanant.TearHeight = 0
+	save_output()
+end
+
+local function random_choice(t)
+	return t[math.random(#t)]
+end
+
+local function get_size(entity)
+	local as_npc = entity:ToNPC()
+	local as_effect = entity:ToEffect()
+	local as_knife = entity:ToKnife()
+	local as_tear = entity:ToTear()
+	local whatever = as_npc or as_effect or as_knife or as_tear
+	local scale = whatever and whatever.Scale or 1
+	return entity.SizeMulti * scale
+end
+
+local function get_entity_distance_2(a, b)
+	local a_size = get_size(a)
+	local b_size = get_size(b)
+	local a_pos = a.Position
+	local b_pos = b.Position
+	local x_diff = a_pos.X - b_pos.X
+	local y_diff = a_pos.Y - b_pos.Y
+	local sub_x = math.abs(a_size.X) + math.abs(b_size.X)
+	local sub_y = math.abs(a_size.Y) + math.abs(b_size.Y)
+	local x_diff_2 = math.max(0, x_diff^2 - sub_x^2)
+	local y_diff_2 = math.max(0, y_diff^2 - sub_y^2)
+	return x_diff_2 + y_diff_2
+end
+
+local function get_entity_distance(a, b)
+	return math.sqrt(get_entity_distance_2(a, b))
+end
+
+local function are_entities_near(a, b, dis)
+	return get_entity_distance_2(a, b) <= dis^2
+end
+
+local function add_function_to_def(item_name, func_name, func)
+	local item_def = Mod.items[item_name]
+	if item_def[func_name] then
+		local p_func = item_def[func_name]
+		item_def[func_name] = function(...)
+			p_func(...)
+			func(...)
+		end
+	else
+		item_def[func_name] = func
+	end
+end
+
+local function inf_norm(x, n)
+	n = n or 1
+	return x / (math.abs(x) + n)
+end
+
+local function inf_norm_positive(x, n)
+	return (inf_norm(x, n) + 1) / 2
+end
+
+local _player_items = {}
+local function _get_player_items(id)
+	if not _player_items[id] then
+		_player_items[id] = {
+			potential = {},
+			list = {}
+		}
+	end
+	return _player_items[id]
+end
+
+local function _signal_refresh_cache(id)
+	local player = type(id) == "number" and Isaac.GetPlayer(id) or id
+	player:AddCacheFlags(CacheFlag.CACHE_ALL)
+	player:EvaluateItems()
+end
+
+-- Completely refreshing the cache is a slow operation that may take a second
+-- Use conservatively!
+local function _refresh_item_cache()
+	local game = Game()
+	for i = 1, game:GetNumPlayers() do
+		local player_items = _get_player_items(i);
+		local player = game:GetPlayer(i-1);
+		-- player_items.list = {}
+		player_items.potential = {}
+		for _, item_id in pairs(Mod.item_ids) do
+			if player:HasCollectible(item_id) and not player_items.list[item_id] then
+				player_items.list[item_id] = true
+				local item_def = Mod.items[item_id]
+				if item_def.on_add then
+					item_def:on_add(player)
+				end
+			end
+		end
+		_signal_refresh_cache(i-1)
+	end
+	Isaac.DebugString("Refreshed Item Cache")
+end
 
 --[[
 Per-Item data, such as: stats, item variants, functionality, etc.
@@ -128,7 +226,6 @@ Global data, such as: damage taken, damage dealt, coins collected
 Mod.args = {}
 Mod.args.damage_taken = 0
 Mod.args.damage_dealt = 0
-Mod.args.room_changed = false
 Mod.stats_permanant = {
 	MaxFireDelay = 0,
 	Damage = 0,
@@ -137,166 +234,6 @@ Mod.stats_permanant = {
 	Luck = 0,
 	TearHeight = 0,
 }
-
---[[
-Utility functions
---]]
-
-function _table_to_string(t)
-	t_type = type(t)
-	if t_type ~= "table" then
-		if t_type == "string" then
-			return ("%q"):format(t)
-		end
-		return tostring(t)
-	end
-	local ret = "{"
-	for k,v in pairs(t) do
-		ret = ret .. ("[%s] = %s,"):format(
-			_table_to_string(k), _table_to_string(v))
-	end
-	ret = ret .. "}"
-	return ret
-end
-
-function table_to_string(t)
-	return _table_to_string(t)
-end
-
-function direction_to_vector(dir)
-	if dir == Direction.LEFT then return Vector(-1, 0)
-	elseif dir == Direction.RIGHT then return Vector(1, 0)
-	elseif dir == Direction.UP then return Vector(0, -1)
-	elseif dir == Direction.DOWN then return Vector(0, 1)
-	else return Vector(0, 0) end
-end
-
-function save_output()
-	t = {
-		stats = Mod.stats_permanant,
-	}
-	out = table_to_string(t)
-	Mod:SaveData(out)
-end
-
-function load_data()
-	data = Mod:LoadData()
-	t = load("return " .. data)()
-	if t then
-		if t.stats then
-			Mod.stats_permanant = t.stats
-		end
-	end
-end
-
-function mod_reset()
-	Mod:call_callbacks_all("reset")
-	Mod.stats_permanant.MaxFireDelay = 0
-	Mod.stats_permanant.Damage = 0
-	Mod.stats_permanant.MoveSpeed = 0
-	Mod.stats_permanant.ShotSpeed = 0
-	Mod.stats_permanant.Luck = 0
-	Mod.stats_permanant.TearHeight = 0
-	save_output()
-end
-
-function random_choice(t)
-	return t[math.random(#t)]
-end
-
-function get_size(entity)
-	local as_npc = entity:ToNPC()
-	local as_effect = entity:ToEffect()
-	local as_knife = entity:ToKnife()
-	local as_tear = entity:ToTear()
-	local whatever = as_npc or as_effect or as_knife or as_tear
-	local scale = whatever and whatever.Scale or 1
-	return entity.SizeMulti * scale
-end
-
-function get_entity_distance_2(a, b)
-	local a_size = get_size(a)
-	local b_size = get_size(b)
-	local a_pos = a.Position
-	local b_pos = b.Position
-	local x_diff = a_pos.X - b_pos.X
-	local y_diff = a_pos.Y - b_pos.Y
-	local sub_x = math.abs(a_size.X) + math.abs(b_size.X)
-	local sub_y = math.abs(a_size.Y) + math.abs(b_size.Y)
-	local x_diff_2 = math.max(0, x_diff^2 - sub_x^2)
-	local y_diff_2 = math.max(0, y_diff^2 - sub_y^2)
-	return x_diff_2 + y_diff_2
-end
-
-function get_entity_distance(a, b)
-	return math.sqrt(get_entity_distance_2(a, b))
-end
-
-function are_entities_near(a, b, dis)
-	return get_entity_distance_2(a, b) <= dis^2
-end
-
-function add_function_to_def(item_name, func_name, func)
-	local item_def = Mod.items[item_name]
-	if item_def[func_name] then
-		local p_func = item_def[func_name]
-		item_def[func_name] = function(...)
-			p_func(...)
-			func(...)
-		end
-	else
-		item_def[func_name] = func
-	end
-end
-
-function inf_norm(x, n)
-	n = n or 1
-	return x / (math.abs(x) + n)
-end
-
-function inf_norm_positive(x, n)
-	return (inf_norm(x, n) + 1) / 2
-end
-
-_player_items = {}
-function _get_player_items(id)
-	if not _player_items[id] then
-		_player_items[id] = {
-			potential = {},
-			list = {}
-		}
-	end
-	return _player_items[id]
-end
-
-function _signal_refresh_cache(id)
-	local player = type(id) == "number" and Isaac.GetPlayer(id) or id
-	player:AddCacheFlags(CacheFlag.CACHE_ALL)
-	player:EvaluateItems()
-end
-
--- Completely refreshing the cache is a slow operation that may take a second
--- Use conservatively!
-function _refresh_item_cache()
-	local game = Game()
-	for i = 1, game:GetNumPlayers() do
-		local player_items = _get_player_items(i);
-		local player = game:GetPlayer(i-1);
-		-- player_items.list = {}
-		player_items.potential = {}
-		for _, item_id in pairs(Mod.item_ids) do
-			if player:HasCollectible(item_id) and not player_items.list[item_id] then
-				player_items.list[item_id] = true
-				local item_def = Mod.items[item_id]
-				if item_def.on_add then
-					item_def:on_add(player)
-				end
-			end
-		end
-		_signal_refresh_cache(i-1)
-	end
-	Isaac.DebugString("Refreshed Item Cache")
-end
 
 --[[
 Callback functions
@@ -332,6 +269,14 @@ function Mod.callbacks:evaluate_cache(player, flag)
 	player.MaxFireDelay = math.max(minimum_tears, player.MaxFireDelay)
 end
 
+function Mod.callbacks:room_change()
+	_refresh_item_cache()
+	Mod.args.damage_taken = 0
+	Mod.args.damage_dealt = 0
+	Mod:call_callbacks_all("room_change")
+	_enemies = {}
+end
+
 local _room_id = -1
 local _enemies = {}
 local _killers = {}
@@ -344,20 +289,6 @@ function Mod.callbacks:update()
 
 	if _timer == 1 then
 		mod_reset()
-	end
-
-	Mod.args.room_changed = false
-	-- refresh for room change
-	local level = game:GetLevel()
-	local room_id = level:GetCurrentRoomIndex()
-	if _room_id ~= room_id then
-		_room_id = room_id
-		_refresh_item_cache()
-		Mod.args.damage_taken = 0
-		Mod.args.damage_dealt = 0
-		Mod.args.room_changed = true
-		Mod:call_callbacks_all("room_change")
-		_enemies = {}
 	end
 
 	-- remove items that the player does not have
@@ -423,25 +354,6 @@ function Mod.callbacks:update()
 		end
 	end
 
-	-- add enemies to list
-	for _, entity in pairs(Isaac.GetRoomEntities()) do
-		if not _enemies[entity.Index] then
-			-- Randomly replace trinkets as they spawn (50% chance)
-			if entity.Type == EntityType.ENTITY_PICKUP
-			and entity.Variant == PickupVariant.PICKUP_TRINKET
-			and not Mod.args.room_changed then
-				local entity = entity:ToPickup()
-				if math.random() < 0.5 then
-					trinket_name = random_choice(Mod.trinket_names)
-					trinket_id = Isaac.GetTrinketIdByName(trinket_name)
-					entity:Morph(EntityType.ENTITY_PICKUP,
-						PickupVariant.PICKUP_TRINKET, trinket_id, true)
-				end
-			end
-			_enemies[entity.Index] = entity
-		end
-	end
-
 	-- check for dead enemies
 	for id, entity in pairs(_enemies) do
 		if not entity:Exists() then
@@ -449,6 +361,7 @@ function Mod.callbacks:update()
 			if entity:IsActiveEnemy(false) then
 				local enemy = entity:ToNPC()
 				Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy, _killers[id])
+				Isaac.DebugString("An enemy died!")
 			end
 			_killers[id] = nil
 		end
@@ -554,6 +467,7 @@ Mod:AddCallback(ModCallbacks.MC_USE_CARD, Mod.callbacks.use_card)
 Mod:AddCallback(ModCallbacks.MC_USE_PILL, Mod.callbacks.use_pill)
 Mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Mod.callbacks.familiar_init)
 Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Mod.callbacks.familiar_update)
+Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Mod.callbacks.room_change)
 
 --Uncomment for debug render
 -- Mod:AddCallback(ModCallbacks.MC_POST_RENDER, Mod.callbacks.render)
