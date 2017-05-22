@@ -15,10 +15,10 @@ import xml.etree.ElementTree
 
 # Generate X number of items
 # Used to be 700,000 but its really not good to have that many items
-MAGIC_NUMBER = 400
+NUM_ITEMS = 500
 NUM_PILLS = 30
 NUM_TRINKETS = 100
-RELEASE_NUM = 1500
+NUM_ITEMS_RELEASE = 2000
 HARDCODED_ITEMS = {
     1101: ("Mr. Box", "Seen Is I've Near Meh"),
     700000: ("Last Item", "Fold"),
@@ -87,13 +87,13 @@ def generate_pills(generator, num):
         generator.add_pocket_pill(pill_name, pill_script)
 
 def main(args):
-    global MAGIC_NUMBER
+    numitems = NUM_ITEMS
     # Parse arguments
     if len(args) > 0:
         arg = args[0]
         if arg == "release":
             arg = RELEASE_NUM
-        MAGIC_NUMBER = int(arg)
+        numitems = int(arg)
 
     # Remove previous mod folder
     if os.path.exists(util.TARGET_FOLDER):
@@ -107,8 +107,8 @@ def main(args):
     util.check_folder(util.get_output_path('resources/gfx/familiar'))
 
     # Confirm number of items
-    print("{} items will be generated.".format(MAGIC_NUMBER))
-    if MAGIC_NUMBER > 10000:
+    print("{} items will be generated.".format(numitems))
+    if numitems > 10000:
         print("This is a lot of items, generating these may be a slow process.")
     while True:
         value = input("Do you wish to continue? Y/n: ").lower().strip()
@@ -126,7 +126,7 @@ def main(args):
     generator = Generator(script)
 
     # Generate a bunch of stuff
-    generate_items(generator, MAGIC_NUMBER)
+    generate_items(generator, numitems)
     generate_trinkets(generator, NUM_TRINKETS)
     generator.script_generate_itemnames()
     generate_pills(generator, NUM_PILLS)

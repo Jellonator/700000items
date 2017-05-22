@@ -8,6 +8,9 @@ do
             data.shoot_timer = 25
             local tear = familiar:FireProjectile(dir)
             python[[gen.include("familiar_tear")]]
+            if random.random() < 0.3 then
+                python[[gen.include("familiar_tear")]]
+            end
         end
     else
         data.shoot_timer = data.shoot_timer - 1
