@@ -43,3 +43,11 @@ def choice_weights(choices, weights):
         if rng <= 0:
             return name
         i += 1
+
+def generate_lua_function(arguments, code):
+    if not type(code) is list and not type(code) is tuple:
+        code = [code]
+    return "function({})\n{}\nend\n".format(
+        ",".join(arguments),
+        "\n".join(code)
+    )

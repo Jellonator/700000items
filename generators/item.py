@@ -7,6 +7,7 @@ from . import util
 import random
 import os
 import string
+from xml.etree import ElementTree
 
 CONST_VALID_PATH_CHARACTERS = "_" + string.ascii_letters + string.digits
 CHARGE_VALUES = [2, 3, 4, 6]
@@ -17,15 +18,6 @@ ANIM_IMAGE_PATH = "700000items/resources/gfx"
 ANIM_BASE_XML_PATH = "generators/script/baseanim.xml"
 
 anim_base_xml = open(ANIM_BASE_XML_PATH, 'r').read()
-
-CONST_FAMILIAR_XML_STRING = """
-    <entity anm2path="{}" baseHP="0" boss="0"
-    champion="0" collisionDamage="{}" collisionMass="3" collisionRadius="13"
-    friction="1" id="3" name="{}" numGridCollisionPoints="12"
-    shadowSize="14" stageHP="0">
-        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-    </entity>
-"""
 
 POOL_NAMES = ["treasure", "shop", "boss", "devil", "angel", "secret", "library",\
     "challenge", "goldenChest", "redChest", "beggar", "demonBeggar", "curse",\
@@ -145,7 +137,8 @@ class IsaacItem:
         if trinket:
             maximum_value = 3
             minimum_value = 1
-        self.good_value = random.randint(minimum_value, maximum_value) + random.randint(0, hint_good)
+        self.good_value = random.randint(minimum_value, maximum_value) +\
+                          random.randint(0, hint_good)
         self.bad_value = random.randint(0, hint_bad)
         # Randomly add bad things to item heh heh heh
         for i in range(0, self.good_value - 2):
@@ -264,7 +257,7 @@ class IsaacItem:
             script = scriptgen.generate_item_active(self.genstate)
         self.effect += ','
         self.effect += script.get_output()
-        value = script.get_var_default("value", 0) + 1
+        value = script.get_var_default("value", 0)
 
         # Determine charge value
         expected_id = max(min(value, len(CHARGE_VALUES)), 1)-1
@@ -275,8 +268,8 @@ class IsaacItem:
         if expected_id+1 < len(CHARGE_VALUES):
             possible_values += [CHARGE_VALUES[expected_id+1]]
         self.chargeval = random.choice(possible_values)
-
         return value
+
     def get_cacheflags(self):
         """
         Get a list of cacheflags for this item
@@ -286,13 +279,15 @@ class IsaacItem:
         """
         Generate the XML definition for this item
         """
-        ret = "<{} description=\"{}\" ".format(self.type, self.description)
-        ret = ret + " name=\"{}\" ".format(self.name)
-        ret = ret + " gfx=\"{}\" ".format(self.get_image_name())
-        ret = ret + self.stats.gen_xml()
+        ret = ElementTree.Element(self.type)
+        ret.set("description", self.description)
+        ret.set("name", self.name)
+        ret.set("gfx", self.get_image_name())
+        self.stats.gen_xml(ret)
         if self.type == "active":
-            ret = ret + " maxcharges=\"{}\" cooldown=\"180\" ".format(self.chargeval)
-        return ret + " />"
+            ret.set("maxcharges", str(self.chargeval))
+            ret.set("cooldown", "180")
+        return ret
     def get_pools(self):
         """
         Get a list of item pools this item belongs to
@@ -307,6 +302,14 @@ class IsaacItem:
             self.stats.gen_eval_cache()) + self.effect +\
         "}\n"
     def gen_familiar_xml(self):
+        # CONST_FAMILIAR_XML_STRING = """
+        #     <entity anm2path="{}" baseHP="0" boss="0"
+        #     champion="0" collisionDamage="{}" collisionMass="3" collisionRadius="13"
+        #     friction="1" id="3" name="{}" numGridCollisionPoints="12"
+        #     shadowSize="14" stageHP="0">
+        #         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+        #     </entity>
+        # "
         if self.type == "familiar":
             path = ANIM_IMAGE_PATH
             image_name = self.get_image_name()
@@ -315,8 +318,28 @@ class IsaacItem:
             with open(anim_path, 'w') as anim_write:
                 local_path = os.path.join("items/collectibles", image_name)
                 anim_write.write(anim_base_xml.replace("$IMAGEPATH", local_path))
-
-            return CONST_FAMILIAR_XML_STRING.format(\
-                anim_name, self.collision_damage, self.name)
+            xml = ElementTree.Element("entity")
+            xml.set("anm2path", anim_name)
+            xml.set("baseHP", "0")
+            xml.set("boss", "0")
+            xml.set("champion", "0")
+            xml.set("collisionDamage", str(self.collision_damage))
+            xml.set("collisionMass", "3")
+            xml.set("collisionRadius", "13")
+            xml.set("friction", "1")
+            xml.set("id", "3")
+            xml.set("name", self.name)
+            xml.set("numGridCollisionPoints", "12")
+            xml.set("shadowSize", "14")
+            xml.set("stageHP", "0")
+            gibsxml = ElementTree.Element("gibs")
+            gibsxml.set("amount", "0")
+            gibsxml.set("blood", "0")
+            gibsxml.set("bone", "0")
+            gibsxml.set("eye", "0")
+            gibsxml.set("gut", "0")
+            gibsxml.set("large", "0")
+            xml.append(gibsxml)
+            return xml
         else:
-            return ""
+            return None

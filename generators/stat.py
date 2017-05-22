@@ -1,5 +1,6 @@
 import random
 from . import util
+from xml.etree import ElementTree
 
 # Common stats
 # Average stat bonus will be 3, balance around this number!
@@ -250,22 +251,22 @@ class IsaacStats:
         if self.flying != None:
             ret.append("flying")
         return ret
-    def gen_xml(self):
+    def gen_xml(self, xml):
         """
         Generate the XML definition for these stats
         """
         ret = ""
         if self.heal != 0:
-            ret = ret + " hearts=\"{}\" ".format(self.heal)
+            xml.set("hearts", str(self.heal))
         if self.hearts != 0:
-            ret = ret + " maxhearts=\"{}\" ".format(self.hearts)
+            xml.set("maxhearts", str(self.hearts))
         if self.hearts_black != 0:
-            ret = ret + " blackhearts=\"{}\" ".format(self.hearts_black)
+            xml.set("blackhearts", str(self.hearts_black))
         if self.hearts_spirit != 0:
-            ret = ret + " soulhearts=\"{}\" ".format(self.hearts_spirit)
+            xml.set("soulhearts", str(self.hearts_spirit))
         flags = self.get_cacheflags()
         if len(flags) > 0:
-            ret = ret + " cache=\"{}\" ".format(" ".join(flags))
+            xml.set("cache", " ".join(flags))
         return ret
     def does_mod_stats(self):
         """
