@@ -1,0 +1,13 @@
+{
+    "accessory_apple.png": ["1"],
+    "accessory_bow.png": ["1"],
+    "accessory_catears.png": ["1", "name-guppy"],
+    "accessory_empty.png": ["6"],
+    "accessory_glitter.png": ["1", "name-sparkle", "name-shin"],
+    "accessory_heart.png": ["1", "name-heart", "name-love"],
+    "accessory_horns.png": ["1", "name-horn", "name-goat", "name-evil", "name-curse"],
+    "accessory_sacredheart.png": ["1", "name-sacred", "name-holy"],
+    "accessory_spiders.png": ["1", "effect-fly"],
+    "accessory_thehalo.png": ["1", "name-sacred", "name-holy", "name-halo"],
+    "accessory_wings.png": ["1", "name-fly"]
+}

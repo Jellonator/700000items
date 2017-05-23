@@ -56,10 +56,9 @@ def generate_items(generator, numitems):
         name = namegen.generate_name()
         if generator.has_item(name) or name in HARDCODED_ITEM_NAMES:
             max_failed_tries -= 1
-            # print("Item name already exists, retrying: {}".format(name))
-            continue
-        full_name = str(numbers.pop()) + " " + name
-        generate_item(generator, name, full_name)
+        else:
+            full_name = str(numbers.pop()) + " " + name
+            generate_item(generator, name, full_name)
     for num, (name, desc) in HARDCODED_ITEMS.items():
         full_name = str(num) + " " + name
         generate_item(generator, name, full_name)
@@ -153,7 +152,3 @@ def main(args):
 
 # Enter main function here
 main(sys.argv[1:])
-# print("\nHints:")
-# filepicker.list_of_hints.sort()
-# for hint in filepicker.list_of_hints:
-#     print(hint)

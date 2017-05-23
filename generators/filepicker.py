@@ -4,8 +4,8 @@ import os
 import random
 import glob
 import math
-
-CONST_HINTS_PRE = ":"
+import json
+import sys
 
 cached_filepickers = {}
 
@@ -13,8 +13,6 @@ list_of_hints = []
 
 def path_to_name(path):
     name = os.path.splitext(os.path.basename(path))[0]
-    if CONST_HINTS_PRE in path:
-        name = name[:name.find(CONST_HINTS_PRE)]
     return name
 
 def get_path(path):
@@ -26,29 +24,14 @@ def get_path(path):
 
 class PickFile:
     weight = 1.0
-    def __init__(self, path):
-        self.hints = []
+    def __init__(self, path, tags):
+        self.hints = tags[1:]
         self.path = path
         self.name = path_to_name(path)
-        if CONST_HINTS_PRE in path:
-            (name, hint_a) = path.rsplit(CONST_HINTS_PRE)
-            (hint_txt, _ext) = hint_a.rsplit(".", 1)
-            weight = 0.0
-            for hint in hint_txt.split(','):
-                try:
-                    weight += float(hint)
-                except ValueError:
-                    value = 1
-                    if "=" in hint:
-                        (hint_txt, value_txt) = hint.split("=", 1)
-                        hint = hint_txt
-                        value = float(value_txt)
-                    if not hint in list_of_hints:
-                        list_of_hints.append(hint)
-                    self.hints.append((hint, value))
-            if weight > 0:
-                self.weight = weight
-        # print(self.name + ": " + ", ".join(["{}={}".format(x[0],x[1]) for x in self.hints]))
+        self.weight = float(tags[0])
+        if not os.path.isfile(path):
+            print("Error: No such file {}".format(path))
+            sys.exit()
     def get_weight(self, genstate, total_files):
         weight = self.weight
         mult = 1
@@ -62,8 +45,19 @@ class PickFile:
 class PickFolder:
     def __init__(self, path):
         self.path = path
-        selection = os.path.join(path, "**/*.*")
-        self.files = [PickFile(x) for x in glob.glob(selection, recursive=True)]
+        metafile = os.path.join(path, "meta.json")
+        if not os.path.isfile(metafile):
+            print("Error: no such metafile {}".format(metafile))
+            sys.exit()
+        with open(metafile) as fh:
+            meta = json.loads(fh.read())
+            self.files = [PickFile(os.path.join(path, name),tags)\
+                          for name, tags in meta.items()]
+            filenames = [x.path for x in self.files]
+            for x in glob.glob(os.path.join(path, "*.*"), recursive=False):
+                if x != metafile and x not in filenames:
+                    print("Warning: file {} not defined in metadata.".format(x))
+
     def choose_random(self):
         return random.choice(self.files)
     def choose_random_with_hint(self, genstate, base_weight=3, exclude=[]):
