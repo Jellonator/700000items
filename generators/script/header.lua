@@ -277,6 +277,32 @@ function Mod.callbacks:room_change()
 	_enemies = {}
 end
 
+function Mod.callbacks:game_started(is_savestate)
+	if is_savestate then
+		load_data()
+		Mod:call_callbacks_all("room_change")
+		for i = 1, game:GetNumPlayers() do
+			local player_items = _get_player_items(i);
+			local player = game:GetPlayer(i-1);
+			_signal_refresh_cache(player)
+		end
+	else
+		mod_reset()
+	end
+end
+
+function Mod.callbacks:game_end(is_gameover)
+	if is_gameover then
+		mod_reset()
+	end
+end
+
+function Mod.callbacks:pre_game_end(should_save)
+	if should_save then
+		save_output()
+	end
+end
+
 local _room_id = -1
 local _enemies = {}
 local _killers = {}
@@ -286,10 +312,6 @@ function Mod.callbacks:update()
 	local game = Game()
 	_timer = game:GetFrameCount()
 	_timerf = _timer / 30
-
-	if _timer == 1 then
-		mod_reset()
-	end
 
 	-- remove items that the player does not have
 	for i = 1, game:GetNumPlayers() do
@@ -468,6 +490,9 @@ Mod:AddCallback(ModCallbacks.MC_USE_PILL, Mod.callbacks.use_pill)
 Mod:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, Mod.callbacks.familiar_init)
 Mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, Mod.callbacks.familiar_update)
 Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, Mod.callbacks.room_change)
+Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Mod.callbacks.game_started)
+Mod:AddCallback(ModCallbacks.MC_POST_GAME_END, Mod.callbacks.game_end)
+Mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, Mod.callbacks.pre_game_end)
 
 --Uncomment for debug render
 -- Mod:AddCallback(ModCallbacks.MC_POST_RENDER, Mod.callbacks.render)
