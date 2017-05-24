@@ -198,3 +198,22 @@ mod. All that needs to be done now is to write its script to
 '700000items/main.lua', write its name, health ups, cache flags, etc. to
 '700000items/content/items.xml', and write out its item pools to
 '700000items/content/itempools.xml'.
+
+## What about Pills? Trinkets? ...Familiars?
+Trinkets and familiars use pretty much the exact same process as normal items! The
+only difference is that where normal items generate scripts using 
+'generators/script/item_passive.lua' or 'generators/script/item_active.lua',
+trinkets generate scripts starting from 'generators/script/trinket.lua' and familiars
+use 'generators/script/item_familiar.lua'.
+
+Trinkets have very similar effects to passive items, but familiars are a bit different.
+Each familiar has a different movement pattern and effect. Movement patterns include
+following the player like Brother Bobby, orbiting the player, and moving around
+randomly among other things. Familiar effects can be contact damage, shooting tears, etc.
+If a familiar shoots a tear, it can have one of many tear effects, such as explosive tears
+or parasitoid tears.
+
+Pills use a bit of a different system since pills don't use the standard name generator
+nor do they have sprites. Instead, their names are based on the description generator, and
+their script is loading 'generators/script/pill.lua'. Pills, unlike a majority items, can have
+negative effects.
