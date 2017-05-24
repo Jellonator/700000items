@@ -1,0 +1,22 @@
+{
+    "effect_enemy.lua": {
+        "tags": {},
+        "weight": 1
+    },
+    "effect_instant.lua": {
+        "tags": {},
+        "weight": 1.2
+    },
+    "explode.lua": {
+        "tags": {
+            "effect-explode": 1
+        },
+        "weight": 0.7
+    },
+    "spawn_effect.lua": {
+        "tags": {
+            "effect-super": 1
+        },
+        "weight": 0.8
+    }
+}

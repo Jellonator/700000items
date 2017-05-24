@@ -1,0 +1,103 @@
+{
+    "face_abel.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "face_acidbaby.png": {
+        "tags": {
+            "pickup-pill": 1
+        },
+        "weight": 1.0
+    },
+    "face_beggar.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "face_bestfriend.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "face_cricket.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "face_crybombs.png": {
+        "tags": {
+            "name-sad": 1
+        },
+        "weight": 1.0
+    },
+    "face_gimpy.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "face_goat.png": {
+        "tags": {
+            "name-goat": 1
+        },
+        "weight": 1.0
+    },
+    "face_greedy.png": {
+        "tags": {
+            "name-greed": 1,
+            "pickup-penny": 1
+        },
+        "weight": 1.0
+    },
+    "face_harlequinbaby.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "face_hivemind.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "face_lilchubby.png": {
+        "tags": {
+            "name-chub": 1
+        },
+        "weight": 1.0
+    },
+    "face_mamamega.png": {
+        "tags": {
+            "name-mama": 1
+        },
+        "weight": 1.0
+    },
+    "face_pyro.png": {
+        "tags": {
+            "name-ultra": 1
+        },
+        "weight": 1.0
+    },
+    "face_spider.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "face_squeezy.png": {
+        "tags": {
+            "heart-spirit": 1,
+            "stat-spirit": 1
+        },
+        "weight": 1.0
+    },
+    "face_ultra_satan.png": {
+        "tags": {
+            "name-satan": 1
+        },
+        "weight": 1.0
+    },
+    "face_whitepony.png": {
+        "tags": {
+            "name-horse": 1,
+            "name-pony": 1
+        },
+        "weight": 1.0
+    },
+    "ultraspider.png": {
+        "tags": {
+            "name-spider": 1
+        },
+        "weight": 1.0
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "add_itemeffect_sometimes.lua": {
+        "tags": {},
+        "weight": 0.5
+    },
+    "enemy_status_nearby.lua": {
+        "tags": {
+            "effect-aura": 1
+        },
+        "weight": 0.9
+    },
+    "spawn_creep.lua": {
+        "tags": {
+            "effect-creep": 1
+        },
+        "weight": 0.4
+    },
+    "tear_aura.lua": {
+        "tags": {
+            "effect-aura": 1,
+            "effect-tear": 1
+        },
+        "weight": 0.4
+    }
+}

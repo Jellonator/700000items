@@ -1,0 +1,14 @@
+{
+    "oh_hit.lua": {
+        "tags": {},
+        "weight": 1
+    },
+    "player_shoot.lua": {
+        "tags": {},
+        "weight": 1
+    },
+    "revenge.lua": {
+        "tags": {},
+        "weight": 1
+    }
+}

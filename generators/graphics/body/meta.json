@@ -1,3 +1,149 @@
 {
-    "body_bestfriend.png": ["1", "name-friend"]
+    "body_bestfriend.png": {
+        "tags": {
+            "name-friend": 1
+        },
+        "weight": 1.0
+    },
+    "body_bffs.png": {
+        "tags": {
+            "effect-fly": 1,
+            "name-arrow": 1,
+            "name-heart": 1
+        },
+        "weight": 1.0
+    },
+    "body_bogobombs.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "body_book.png": {
+        "tags": {
+            "name-book": 120.0
+        },
+        "weight": 0.2
+    },
+    "body_bumfriend.png": {
+        "tags": {
+            "name-bum": 1
+        },
+        "weight": 1.0
+    },
+    "body_crickets_head.png": {
+        "tags": {
+            "name-cricket": 1
+        },
+        "weight": 1.0
+    },
+    "body_drfetus.png": {
+        "tags": {
+            "name-fetus": 1,
+            "name-jar": 20.0
+        },
+        "weight": 1.0
+    },
+    "body_firemind.png": {
+        "tags": {
+            "name-burn": 1,
+            "name-fire": 1
+        },
+        "weight": 1.0
+    },
+    "body_gimpy.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "body_goathead.png": {
+        "tags": {
+            "name-goat": 1,
+            "name-head": 1
+        },
+        "weight": 1.0
+    },
+    "body_godhead.png": {
+        "tags": {
+            "name-god": 1
+        },
+        "weight": 1.0
+    },
+    "body_greedsgullet.png": {
+        "tags": {
+            "name-greed": 1
+        },
+        "weight": 1.0
+    },
+    "body_hivemind.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "body_lilchubby.png": {
+        "tags": {
+            "name-chub": 1
+        },
+        "weight": 1.0
+    },
+    "body_littlebaggy.png": {
+        "tags": {
+            "pickup-pill": 1
+        },
+        "weight": 1.0
+    },
+    "body_megasatansbreath.png": {
+        "tags": {
+            "name-satan": 1
+        },
+        "weight": 1.0
+    },
+    "body_mrdolly.png": {
+        "tags": {
+            "name-mr": 1
+        },
+        "weight": 1.0
+    },
+    "body_runebag.png": {
+        "tags": {
+            "name-sac": 1
+        },
+        "weight": 1.0
+    },
+    "body_sadbombs.png": {
+        "tags": {
+            "name-bomb": 1,
+            "pickup-bomb": 1
+        },
+        "weight": 1.0
+    },
+    "body_spidersbite.png": {
+        "tags": {
+            "name-spider": 1
+        },
+        "weight": 1.0
+    },
+    "body_sulfuricacid.png": {
+        "tags": {
+            "name-acid": 1,
+            "name-bottle": 1
+        },
+        "weight": 1.0
+    },
+    "body_syringe.png": {
+        "tags": {
+            "name-liquid": 1,
+            "name-syringe": 1
+        },
+        "weight": 1.0
+    },
+    "body_trinityshield.png": {
+        "tags": {
+            "name-shield": 1
+        },
+        "weight": 1.0
+    },
+    "mutantspider.png": {
+        "tags": {
+            "name-super": 1,
+            "name-ultra": 1
+        },
+        "weight": 1.0
+    }
 }

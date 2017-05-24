@@ -1,0 +1,72 @@
+{
+    "active_item_effect.lua": {
+        "tags": {},
+        "weight": 3.0
+    },
+    "charge_battery.lua": {
+        "tags": {
+            "effect-battery": 1
+        },
+        "weight": 1.0
+    },
+    "drop_pickup.lua": {
+        "tags": {
+            "effect-pickup": 1
+        },
+        "weight": 0.3
+    },
+    "for_every_enemy.lua": {
+        "tags": {
+            "effect-damage": 1,
+            "effect-tear": 1
+        },
+        "weight": 1.6
+    },
+    "maw_void.lua": {
+        "tags": {
+            "pool-devil": 1
+        },
+        "weight": 0.6
+    },
+    "random_enemy.lua": {
+        "tags": {
+            "effect-enemy": 1
+        },
+        "weight": 1.8
+    },
+    "shoot_tear.lua": {
+        "tags": {
+            "effect-tear": 1
+        },
+        "weight": 1
+    },
+    "shoot_thing.lua": {
+        "tags": {
+            "effect-damage": 1,
+            "effect-tear": 1
+        },
+        "weight": 1
+    },
+    "spawn_creep.lua": {
+        "tags": {
+            "effect-creep": 1
+        },
+        "weight": 1
+    },
+    "spawn_helpers.lua": {
+        "tags": {
+            "effect-fly": 1
+        },
+        "weight": 1
+    },
+    "temporary_item.lua": {
+        "tags": {},
+        "weight": 2.0
+    },
+    "temporary_stat_up.lua": {
+        "tags": {
+            "effect-stat": 1
+        },
+        "weight": 1
+    }
+}

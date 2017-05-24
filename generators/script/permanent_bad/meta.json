@@ -1,0 +1,14 @@
+{
+    "permanent_stat_down.lua": {
+        "tags": {
+            "effect-stat": 1
+        },
+        "weight": 1.0
+    },
+    "take_health.lua": {
+        "tags": {
+            "stat-health": 1
+        },
+        "weight": 1
+    }
+}

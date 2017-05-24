@@ -25,17 +25,17 @@ def get_path(path):
 class PickFile:
     weight = 1.0
     def __init__(self, path, tags):
-        self.hints = tags[1:]
+        self.hints = tags["tags"]
+        self.weight = tags["weight"]
         self.path = path
         self.name = path_to_name(path)
-        self.weight = float(tags[0])
         if not os.path.isfile(path):
             print("Error: No such file {}".format(path))
             sys.exit()
     def get_weight(self, genstate, total_files):
         weight = self.weight
         mult = 1
-        for (hint_name, hint_value) in self.hints:
+        for (hint_name, hint_value) in self.hints.items():
             hint_mult = hint_value*math.log(total_files+1, 1.25)
             mult += genstate.get_hint(hint_name)*hint_mult
         return weight*mult

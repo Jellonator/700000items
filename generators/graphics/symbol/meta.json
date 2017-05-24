@@ -1,0 +1,119 @@
+{
+    "epic_fetus.png": {
+        "tags": {
+            "name-fetus": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_ace_of_spades.png": {
+        "tags": {
+            "name-card": 1,
+            "pickup-card": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_anarchist_cookbook.png": {
+        "tags": {
+            "pickup-bomb": 1
+        },
+        "weight": 1
+    },
+    "symbol_bff.png": {
+        "tags": {
+            "name-friend": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_bible.png": {
+        "tags": {
+            "name-bible": 1,
+            "name-holy": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_bluemap.png": {
+        "tags": {
+            "name-map": 1,
+            "name-secret": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_bogo_bombs.png": {
+        "tags": {
+            "pickup-bomb": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_book_of_belial.png": {
+        "tags": {
+            "name-belial": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_book_of_secrets.png": {
+        "tags": {
+            "name-shadow": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_bookofsin.png": {
+        "tags": {
+            "effect-pickup": 1,
+            "name-sin": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_dollar.png": {
+        "tags": {
+            "name-greed": 1,
+            "pickup-penny": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_godhead.png": {
+        "tags": {
+            "name-eye": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_howtojump.png": {
+        "tags": {
+            "name-jump": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_necronomicon.png": {
+        "tags": {
+            "name-necro": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_pills.png": {
+        "tags": {
+            "pickup-pill": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_runes.png": {
+        "tags": {
+            "pickup-rune": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_telepathyfordummies.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "symbol_tornphoto.png": {
+        "tags": {
+            "name-photo": 1
+        },
+        "weight": 1.0
+    },
+    "symbol_trinity.png": {
+        "tags": {
+            "name-trinity": 1
+        },
+        "weight": 1.0
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "gamble.lua": {
+        "tags": {
+            "name-coin": 1,
+            "name-greed": 1,
+            "name-slot": 1
+        },
+        "weight": 1.0
+    },
+    "take_damage.lua": {
+        "tags": {
+            "name-blood": 1
+        },
+        "weight": 1.0
+    },
+    "use_bomb.lua": {
+        "tags": {
+            "name-bomb": 1
+        },
+        "weight": 1.0
+    },
+    "use_key.lua": {
+        "tags": {
+            "name-key": 1
+        },
+        "weight": 1.0
+    }
+}

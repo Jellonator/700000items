@@ -1,0 +1,26 @@
+{
+    "contact_damage.lua": {
+        "tags": {
+            "effect-contact": 1
+        },
+        "weight": 0.9
+    },
+    "shoot.lua": {
+        "tags": {
+            "effect-tear": 1
+        },
+        "weight": 1.8
+    },
+    "spawn_creep.lua": {
+        "tags": {
+            "effect-creep": 1
+        },
+        "weight": 0.5
+    },
+    "status_aura.lua": {
+        "tags": {
+            "effect-aura": 1
+        },
+        "weight": 0.5
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "at_full_charge.lua": {
+        "tags": {
+            "effect-charge": 1
+        },
+        "weight": 1.0
+    },
+    "damage_taken.lua": {
+        "tags": {
+            "effect-hurt": 1
+        },
+        "weight": 1.0
+    },
+    "free_pass.lua": {
+        "tags": {},
+        "weight": 8.0
+    },
+    "full_health.lua": {
+        "tags": {
+            "sacred": 1
+        },
+        "weight": 1
+    },
+    "if_i_feel_like_it.lua": {
+        "tags": {
+            "name-weird": 1
+        },
+        "weight": 2.0
+    },
+    "no_damage_taken.lua": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "random.lua": {
+        "tags": {
+            "name-strange": 1
+        },
+        "weight": 3.0
+    },
+    "screenshake_me.lua": {
+        "tags": {
+            "effect-shake": 1
+        },
+        "weight": 0.25
+    }
+}

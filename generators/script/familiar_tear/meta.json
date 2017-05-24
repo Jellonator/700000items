@@ -1,0 +1,16 @@
+{
+    "high_damage.lua": {
+        "tags": {},
+        "weight": 0.15
+    },
+    "modflag.lua": {
+        "tags": {},
+        "weight": 1
+    },
+    "soymilk.lua": {
+        "tags": {
+            "name-soy": 1
+        },
+        "weight": 0.15
+    }
+}

@@ -1,0 +1,71 @@
+{
+    "back_antigravity.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "back_crownoflight.png": {
+        "tags": {
+            "name-glow": 1,
+            "name-light": 1
+        },
+        "weight": 1.0
+    },
+    "back_darkmatter.png": {
+        "tags": {
+            "name-black": 1,
+            "name-curse": 1,
+            "name-dark": 1
+        },
+        "weight": 1.0
+    },
+    "back_distantadmiration.png": {
+        "tags": {
+            "effect-fly": 1
+        },
+        "weight": 1.0
+    },
+    "back_explosivo.png": {
+        "tags": {
+            "pickup-bomb": 1
+        },
+        "weight": 1.0
+    },
+    "back_holylight.png": {
+        "tags": {
+            "god": 1,
+            "holy": 1,
+            "sacred": 1
+        },
+        "weight": 1.0
+    },
+    "back_hotbombs.png": {
+        "tags": {
+            "effect-bomb": 1,
+            "name-fire": 1,
+            "name-hot": 1
+        },
+        "weight": 1.0
+    },
+    "back_kidneystone.png": {
+        "tags": {
+            "effect-creep": 1,
+            "name-blood": 1
+        },
+        "weight": 1.0
+    },
+    "back_moneyispower.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "back_pyro.png": {
+        "tags": {},
+        "weight": 0.5
+    },
+    "back_rainbow.png": {
+        "tags": {
+            "name-color": 1,
+            "name-rainbow": 1
+        },
+        "weight": 1.0
+    }
+}

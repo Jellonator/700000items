@@ -1,13 +1,70 @@
 {
-    "accessory_apple.png": ["1"],
-    "accessory_bow.png": ["1"],
-    "accessory_catears.png": ["1", "name-guppy"],
-    "accessory_empty.png": ["6"],
-    "accessory_glitter.png": ["1", "name-sparkle", "name-shin"],
-    "accessory_heart.png": ["1", "name-heart", "name-love"],
-    "accessory_horns.png": ["1", "name-horn", "name-goat", "name-evil", "name-curse"],
-    "accessory_sacredheart.png": ["1", "name-sacred", "name-holy"],
-    "accessory_spiders.png": ["1", "effect-fly"],
-    "accessory_thehalo.png": ["1", "name-sacred", "name-holy", "name-halo"],
-    "accessory_wings.png": ["1", "name-fly"]
+    "accessory_apple.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "accessory_bow.png": {
+        "tags": {},
+        "weight": 1.0
+    },
+    "accessory_catears.png": {
+        "tags": {
+            "name-guppy": 1
+        },
+        "weight": 1.0
+    },
+    "accessory_empty.png": {
+        "tags": {},
+        "weight": 6.0
+    },
+    "accessory_glitter.png": {
+        "tags": {
+            "name-shin": 1,
+            "name-sparkle": 1
+        },
+        "weight": 1.0
+    },
+    "accessory_heart.png": {
+        "tags": {
+            "name-heart": 1,
+            "name-love": 1
+        },
+        "weight": 1.0
+    },
+    "accessory_horns.png": {
+        "tags": {
+            "name-curse": 1,
+            "name-evil": 1,
+            "name-goat": 1,
+            "name-horn": 1
+        },
+        "weight": 1.0
+    },
+    "accessory_sacredheart.png": {
+        "tags": {
+            "name-holy": 1,
+            "name-sacred": 1
+        },
+        "weight": 1.0
+    },
+    "accessory_spiders.png": {
+        "tags": {
+            "effect-fly": 1
+        },
+        "weight": 1.0
+    },
+    "accessory_thehalo.png": {
+        "tags": {
+            "name-halo": 1,
+            "name-holy": 1,
+            "name-sacred": 1
+        },
+        "weight": 1.0
+    },
+    "accessory_wings.png": {
+        "tags": {
+            "name-fly": 1
+        },
+        "weight": 1.0
+    }
 }

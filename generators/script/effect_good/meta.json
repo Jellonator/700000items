@@ -1,0 +1,30 @@
+{
+    "drop_bomb_gold.lua": {
+        "tags": {
+            "pickup-bomb": 1
+        },
+        "weight": 1
+    },
+    "drop_key_gold.lua": {
+        "tags": {
+            "pickup-key": 1
+        },
+        "weight": 1
+    },
+    "effect_instant.lua": {
+        "tags": {},
+        "weight": 1
+    },
+    "guaranteed_pickup.lua": {
+        "tags": {
+            "effect-pickup": 1
+        },
+        "weight": 1
+    },
+    "spawn_some_helpers.lua": {
+        "tags": {
+            "effect-fly": 1
+        },
+        "weight": 1
+    }
+}
