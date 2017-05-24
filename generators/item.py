@@ -7,6 +7,7 @@ from . import util
 import random
 import os
 import string
+import json
 from xml.etree import ElementTree
 
 CONST_VALID_PATH_CHARACTERS = "_" + string.ascii_letters + string.digits
@@ -16,6 +17,10 @@ TRINKET_IMAGE_PATH = "700000items/resources/gfx/items/trinkets"
 FAMILIAR_IMAGE_PATH = "700000items/resources/gfx/familiar"
 ANIM_IMAGE_PATH = "700000items/resources/gfx"
 ANIM_BASE_XML_PATH = "generators/script/baseanim.xml"
+POTENTIAL_COSTUMES = [int(x) for x in json.load(open("costumenames.json"))]
+
+def get_random_costume():
+    return random.choice(POTENTIAL_COSTUMES)
 
 anim_base_xml = open(ANIM_BASE_XML_PATH, 'r').read()
 
@@ -100,6 +105,8 @@ class IsaacItem:
     chargeval = 2
     description = "It's a mystery!"
     collision_damage = 0
+    costume = None
+    familiar_base_hp = 0
     def __init__(self, name, seed, trinket=False, description=None):
         """
         Create a new item
@@ -114,6 +121,7 @@ class IsaacItem:
         self.genstate = IsaacGenState(self.name)
         self.pools = {}
         self.effect = ""
+        self.costume = get_random_costume()
         if trinket:
             self.type = "trinket"
         else:
@@ -253,6 +261,7 @@ class IsaacItem:
         elif self.type == "familiar":
             script = scriptgen.generate_item_familiar(self.genstate)
             self.collision_damage = script.get_var_default("collision_damage", 0)
+            self.familiar_base_hp = script.get_var_default("familiar_base_hp", 0)
         else:
             script = scriptgen.generate_item_active(self.genstate)
         self.effect += ','
@@ -302,14 +311,6 @@ class IsaacItem:
             self.stats.gen_eval_cache()) + self.effect +\
         "}\n"
     def gen_familiar_xml(self):
-        # CONST_FAMILIAR_XML_STRING = """
-        #     <entity anm2path="{}" baseHP="0" boss="0"
-        #     champion="0" collisionDamage="{}" collisionMass="3" collisionRadius="13"
-        #     friction="1" id="3" name="{}" numGridCollisionPoints="12"
-        #     shadowSize="14" stageHP="0">
-        #         <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-        #     </entity>
-        # "
         if self.type == "familiar":
             path = ANIM_IMAGE_PATH
             image_name = self.get_image_name()
@@ -320,7 +321,7 @@ class IsaacItem:
                 anim_write.write(anim_base_xml.replace("$IMAGEPATH", local_path))
             xml = ElementTree.Element("entity")
             xml.set("anm2path", anim_name)
-            xml.set("baseHP", "0")
+            xml.set("baseHP", str(self.familiar_base_hp))
             xml.set("boss", "0")
             xml.set("champion", "0")
             xml.set("collisionDamage", str(self.collision_damage))

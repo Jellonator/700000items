@@ -1,7 +1,7 @@
 for _, entity in pairs(Isaac.GetRoomEntities()) do
     if entity:IsVulnerableEnemy() then
         local enemy = entity:ToNPC()
-        if are_entities_near(enemy, familiar, 100) then
+        if are_entities_near(enemy, familiar, 64) then
             python[[
 duration = 2
 damage = "{:.2f}".format(random.uniform(3.0, 4.2))

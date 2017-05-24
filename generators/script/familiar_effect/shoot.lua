@@ -7,10 +7,11 @@ do
             dir = direction_to_vector(player:GetFireDirection())
             data.shoot_timer = 25
             local tear = familiar:FireProjectile(dir)
-            python[[gen.include("familiar_tear")]]
-            if random.random() < 0.3 then
-                python[[gen.include("familiar_tear")]]
-            end
+            python[[
+gen.include("familiar_tear")
+if random.random() < 0.3:
+    gen.include("familiar_tear")
+            ]]
         end
     else
         data.shoot_timer = data.shoot_timer - 1

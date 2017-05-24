@@ -16,6 +16,7 @@ class Generator:
         self.itemnames = []
         self.trinkets = {}
         self.pills = {}
+        self.costumes = {}
 
     def add_item(self, item, shortname=None):
         self.xml_item.append(item.gen_xml())
@@ -40,6 +41,8 @@ class Generator:
         if shortname != None:
             self.items[shortname] = item.name
         self.itemnames.append(item.name)
+        if item.costume != None:
+            self.costumes[item.name] = item.costume
 
     def add_trinket(self, trinket):
         self.trinkets[trinket.name] = trinket.name
@@ -57,6 +60,13 @@ class Generator:
         self.lua_script.write("Mod.item_names = {\n")
         for name in self.itemnames:
             self.lua_script.write("\t\"{}\",\n".format(name))
+        self.lua_script.write("}\n")
+        self.lua_script.write("Mod.costumes = {\n")
+        for name, costume in self.costumes.items():
+            if isinstance(costume, int):
+                self.lua_script.write("\t[\"{}\"] = {},\n".format(name, costume))
+            else:
+                self.lua_script.write("\t[\"{}\"] = \"{}\",\n".format(name, costume))
         self.lua_script.write("}\n")
 
     def add_pocket_pill(self, name, script):

@@ -143,6 +143,30 @@ local function _signal_refresh_cache(id)
 	player:EvaluateItems()
 end
 
+local function try_add_costume(player, name)
+	local costume_id = Mod.costumes[name]
+	if not costume_id then return end
+	if type(costume_id) == "number" then
+		local id = Isaac.GetItemConfig():GetCollectible(costume_id)
+		player:AddCostume(id, false)
+	else
+		local id = Isaac.GetCostumeIdByPath(costume_path)
+		player:AddNullCostume(id)
+	end
+end
+
+local function try_remove_costume(player, name)
+	local costume_id = Mod.costumes[name]
+	if not costume_id then return end
+	if type(costume_id) == "number" then
+		local id = Isaac.GetItemConfig():GetCollectible(costume_id)
+		player:RemoveCostume(id)
+	else
+		local id = Isaac.GetCostumeIdByPath(costume_path)
+		player:RemoveNullCostume(id)
+	end
+end
+
 -- Completely refreshing the cache is a slow operation that may take a second
 -- Use conservatively!
 local function _refresh_item_cache()
@@ -159,6 +183,7 @@ local function _refresh_item_cache()
 				if item_def.on_add then
 					item_def:on_add(player)
 				end
+				try_add_costume(player, item_def.item_name)
 			end
 		end
 		_signal_refresh_cache(i-1)
@@ -274,7 +299,7 @@ function Mod.callbacks:room_change()
 	Mod.args.damage_taken = 0
 	Mod.args.damage_dealt = 0
 	Mod:call_callbacks_all("room_change")
-	_enemies = {}
+	_killers = {}
 end
 
 function Mod.callbacks:game_started(is_savestate)
@@ -304,7 +329,6 @@ function Mod.callbacks:pre_game_end(should_save)
 end
 
 local _room_id = -1
-local _enemies = {}
 local _killers = {}
 local _timer = 0
 local _timerf = 0
@@ -324,6 +348,7 @@ function Mod.callbacks:update()
 				if item_def.on_remove then
 					item_def:on_remove(player)
 				end
+				try_remove_costume(player, item_def.item_name)
 				list[item_id] = nil
 				Isaac.DebugString(("Removed item %d!"):format(item_id))
 				_signal_refresh_cache(i-1)
@@ -366,6 +391,7 @@ function Mod.callbacks:update()
 				if item_def.on_add then
 					item_def:on_add(player)
 				end
+				try_add_costume(player, item_def.item_name)
 			else
 				player_items.potential[item_id] = player_items.potential[item_id] - 1
 				if player_items.potential[item_id] <= 0 then
@@ -377,15 +403,12 @@ function Mod.callbacks:update()
 	end
 
 	-- check for dead enemies
-	for id, entity in pairs(_enemies) do
+	for id, def in pairs(_killers) do
+		local entity = def.Entity
 		if not entity:Exists() then
-			_enemies[id] = nil
-			if entity:IsActiveEnemy(false) then
-				local enemy = entity:ToNPC()
-				Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy, _killers[id])
-				Isaac.DebugString("An enemy died!")
-			end
 			_killers[id] = nil
+			local enemy = entity:ToNPC()
+			Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_died", enemy, _killers[id])
 		end
 	end
 
@@ -435,6 +458,7 @@ function Mod.callbacks:enemy_take_damage(enemy, amount, flag, source, ...)
 	if not enemy:IsVulnerableEnemy() then return end
 	_killers[enemy.Index] = _killers[enemy.Index] or {}
 	if source then
+		_killers[enemy.Index].Entity = enemy
 		_killers[enemy.Index].Variant = source.Variant
 		_killers[enemy.Index].Type = source.Type
 		_killers[enemy.Index].SubType = source.SubType
@@ -442,6 +466,14 @@ function Mod.callbacks:enemy_take_damage(enemy, amount, flag, source, ...)
 	Mod.args.damage_dealt = Mod.args.damage_dealt + amount
 	Mod:call_callbacks(Isaac.GetPlayer(0), "enemy_take_damage",
 		enemy, amount, flag, source, ...)
+end
+
+function Mod.callbacks:familiar_take_damage(familiar, amount, flag, source, ...)
+	local player = familiar.Player
+	local def = Mod.familiars[familiar.Variant]
+	if def and def.familiar_init then
+		def:familiar_take_damage(player, familiar, amount, flag, source, ...)
+	end
 end
 
 function Mod.callbacks:use_pill(pill_effect)
@@ -484,6 +516,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, Mod.callbacks.update)
 Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, Mod.callbacks.evaluate_cache)
 Mod:AddCallback(ModCallbacks.MC_USE_ITEM, Mod.callbacks.use_item)
 Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.player_take_damage, EntityType.ENTITY_PLAYER)
+Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.familiar_take_damage, EntityType.ENTITY_FAMILIAR)
 Mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, Mod.callbacks.enemy_take_damage)
 Mod:AddCallback(ModCallbacks.MC_USE_CARD, Mod.callbacks.use_card)
 Mod:AddCallback(ModCallbacks.MC_USE_PILL, Mod.callbacks.use_pill)

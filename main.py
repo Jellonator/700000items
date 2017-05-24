@@ -91,7 +91,7 @@ def main(args):
     if len(args) > 0:
         arg = args[0]
         if arg == "release":
-            arg = RELEASE_NUM
+            arg = NUM_ITEMS_RELEASE
         numitems = int(arg)
 
     # Remove previous mod folder

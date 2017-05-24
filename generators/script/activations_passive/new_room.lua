@@ -4,7 +4,6 @@ python[[gen.genstate.add_descriptors(["Enter"])]]
 room_change = function(self, player)
 	local pos = player.Position
 	if Game():GetRoom():IsFirstVisit() then
-		python[[gen.include("stipulations")]]
 		python[[gen.include("effect_instant", exclude=["temporary_item", "temporary_stat_up"])]]
 	end
 end

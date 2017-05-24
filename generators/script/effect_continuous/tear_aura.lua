@@ -2,7 +2,7 @@ python[[gen.inc_var("value", 1)]]
 do
     local _tears = {}
     local _enemies = {}
-    local distance = 64
+    local distance = 48
     -- Get tears and enemies
     for _, entity in pairs(Isaac.GetRoomEntities()) do
         if entity:IsVulnerableEnemy() then

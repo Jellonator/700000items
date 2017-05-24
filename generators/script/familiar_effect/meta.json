@@ -3,7 +3,7 @@
         "tags": {
             "effect-contact": 1
         },
-        "weight": 0.9
+        "weight": 0.8
     },
     "shoot.lua": {
         "tags": {
@@ -21,6 +21,10 @@
         "tags": {
             "effect-aura": 1
         },
-        "weight": 0.5
+        "weight": 0.6
+    },
+    "effect_instant.lua": {
+        "tags": {},
+        "weight": 1.5
     }
 }
