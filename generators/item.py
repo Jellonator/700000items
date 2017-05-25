@@ -121,7 +121,6 @@ class IsaacItem:
         self.genstate = IsaacGenState(self.name)
         self.pools = {}
         self.effect = ""
-        self.costume = get_random_costume()
         if trinket:
             self.type = "trinket"
         else:
@@ -162,6 +161,9 @@ class IsaacItem:
         self._init_stats()
         # Generate description
         self._init_description(description)
+        # Pick a costume if necessary
+        if trinket == False and self.type == "passive":
+            self.costume = get_random_costume()
         # Reset random state
         if self.seed:
             random.setstate(rand_state)
