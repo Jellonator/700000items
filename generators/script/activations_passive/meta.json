@@ -3,7 +3,7 @@
         "tags": {
             "effect-drop": 1
         },
-        "weight": 0.2
+        "weight": 0.25
     },
     "enemy_death.lua": {
         "tags": {
@@ -29,6 +29,6 @@
     },
     "update.lua": {
         "tags": {},
-        "weight": 0.7
+        "weight": 0.4
     }
 }
